@@ -1,0 +1,12 @@
+{
+  "title": "오진우 | Developer Portfolio",
+  "description": "풀스택 개발자 오진우의 포트폴리오. Fintag, CoChat, Gopssl 등 AI/풀스택 프로젝트와 기술 스택을 소개합니다.",
+  "language": "ko",
+  "robots": {
+    "index": true
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

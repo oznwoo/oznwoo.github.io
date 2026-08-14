@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Hahmlet:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Hahmlet', 'Noto Serif KR', Georgia, serif;
+  --font-body: 'Noto Sans KR', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes blob-a {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  33%       { transform: translate(6%, -8%) scale(1.08); }
+  66%       { transform: translate(-5%, 5%) scale(0.95); }
+}
+@keyframes blob-b {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  33%       { transform: translate(-7%, 6%) scale(1.06); }
+  66%       { transform: translate(5%, -4%) scale(0.97); }
+}
+@keyframes blob-c {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  50%       { transform: translate(4%, 7%) scale(1.1); }
+}
+
+.gradient-blob-a { animation: blob-a 14s ease-in-out infinite; }
+.gradient-blob-b { animation: blob-b 18s ease-in-out infinite; }
+.gradient-blob-c { animation: blob-c 22s ease-in-out infinite; }
+
+body {
+  font-family: var(--font-body);
+  background-color: #F0F3F9;
+  color: #0C0F1A;
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+  line-height: 1.8;
+}
+
+::-webkit-scrollbar { display: none; }
+* { scrollbar-width: none; }
