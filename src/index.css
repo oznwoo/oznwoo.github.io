@@ -13,22 +13,28 @@ html {
 
 @keyframes blob-a {
   0%, 100% { transform: translate(0%, 0%) scale(1); }
-  33%       { transform: translate(6%, -8%) scale(1.08); }
-  66%       { transform: translate(-5%, 5%) scale(0.95); }
+  18%       { transform: translate(9%, -11%) scale(1.12); }
+  40%       { transform: translate(-7%, 4%) scale(0.9); }
+  63%       { transform: translate(5%, 10%) scale(1.06); }
+  85%       { transform: translate(-10%, -3%) scale(0.96); }
 }
 @keyframes blob-b {
   0%, 100% { transform: translate(0%, 0%) scale(1); }
-  33%       { transform: translate(-7%, 6%) scale(1.06); }
-  66%       { transform: translate(5%, -4%) scale(0.97); }
+  22%       { transform: translate(-10%, 8%) scale(1.1); }
+  48%       { transform: translate(7%, -9%) scale(0.92); }
+  72%       { transform: translate(-4%, -6%) scale(1.07); }
+  90%       { transform: translate(8%, 3%) scale(0.95); }
 }
 @keyframes blob-c {
   0%, 100% { transform: translate(0%, 0%) scale(1); }
-  50%       { transform: translate(4%, 7%) scale(1.1); }
+  28%       { transform: translate(6%, 9%) scale(1.14); }
+  55%       { transform: translate(-8%, -7%) scale(0.88); }
+  80%       { transform: translate(4%, -5%) scale(1.05); }
 }
 
-.gradient-blob-a { animation: blob-a 14s ease-in-out infinite; }
-.gradient-blob-b { animation: blob-b 18s ease-in-out infinite; }
-.gradient-blob-c { animation: blob-c 22s ease-in-out infinite; }
+.gradient-blob-a { animation: blob-a 9s ease-in-out infinite; }
+.gradient-blob-b { animation: blob-b 11s ease-in-out infinite; }
+.gradient-blob-c { animation: blob-c 13s ease-in-out infinite; }
 
 body {
   font-family: var(--font-body);

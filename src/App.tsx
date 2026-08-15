@@ -113,8 +113,8 @@ const EXP_COLS = [
 
 // ─── Gradient Background ──────────────────────────────────────────────────────
 
-function GradientBackground({ page, total }: { page: number; total: number }) {
-  const p = total > 1 ? page / (total - 1) : 0;
+function GradientBackground({ progress }: { progress: number }) {
+  const p = progress;
 
   return (
     <div
@@ -132,9 +132,9 @@ function GradientBackground({ page, total }: { page: number; total: number }) {
           translate: `${p * -10}vw ${p * 16}vh`,
           borderRadius: "50%",
           background:
-            "radial-gradient(ellipse at center, rgba(199,210,254,0.65) 0%, transparent 70%)",
-          filter: "blur(48px)",
-          transition: "translate 0.9s cubic-bezier(0.4,0,0.2,1)",
+            "radial-gradient(ellipse at center, rgba(199,210,254,0.8) 0%, transparent 70%)",
+          filter: "blur(40px)",
+          transition: "translate 0.5s cubic-bezier(0.22,1,0.36,1)",
         }}
       />
       <div
@@ -147,9 +147,9 @@ function GradientBackground({ page, total }: { page: number; total: number }) {
           translate: `${p * 8}vw ${p * -12}vh`,
           borderRadius: "50%",
           background:
-            "radial-gradient(ellipse at center, rgba(165,180,252,0.55) 0%, transparent 70%)",
-          filter: "blur(56px)",
-          transition: "translate 0.9s cubic-bezier(0.4,0,0.2,1)",
+            "radial-gradient(ellipse at center, rgba(165,180,252,0.7) 0%, transparent 70%)",
+          filter: "blur(46px)",
+          transition: "translate 0.65s cubic-bezier(0.22,1,0.36,1)",
         }}
       />
       <div
@@ -162,9 +162,9 @@ function GradientBackground({ page, total }: { page: number; total: number }) {
           translate: `${p * -5}vw ${p * 8}vh`,
           borderRadius: "50%",
           background:
-            "radial-gradient(ellipse at center, rgba(224,231,255,0.5) 0%, transparent 65%)",
-          filter: "blur(64px)",
-          transition: "translate 1.1s cubic-bezier(0.4,0,0.2,1)",
+            "radial-gradient(ellipse at center, rgba(224,231,255,0.62) 0%, transparent 65%)",
+          filter: "blur(54px)",
+          transition: "translate 0.8s cubic-bezier(0.22,1,0.36,1)",
         }}
       />
     </div>
@@ -191,11 +191,11 @@ function DotNav({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* 로고 — Intro 페이지 dot 역할 */}
+      {/* 로고 — Home 페이지 dot 역할 */}
       <button
         onClick={() => onChange(0)}
         className="flex items-center gap-2.5 shrink-0"
-        aria-label="Intro"
+        aria-label="Home"
         style={{ height: "20px" }}
       >
         <span
@@ -299,7 +299,7 @@ function Page({ children }: { children: React.ReactNode }) {
 
 // ─── Pages ────────────────────────────────────────────────────────────────────
 
-function PageIntro({ goTo }: { goTo: (i: number) => void }) {
+function PageHome({ goTo }: { goTo: (i: number) => void }) {
   return (
     <Page>
       <div className="flex flex-col gap-8">
@@ -805,10 +805,36 @@ function PageContact() {
 
 const TOTAL = SECTIONS.length;
 
+// 휠 delta(px)가 dragOffset 1 (한 페이지 분량)에 대응하는 크기
+const WHEEL_PAGE_PX = 600;
+// 스크롤/드래그가 멈춘 뒤 dragOffset을 0으로 되돌리기까지의 유휴 시간(ms)
+const DRAG_IDLE_MS = 220;
+
 export default function App() {
   const [current, setCurrent] = useState(0);
+  // 페이지 스냅과 별개로, 진행 중인 휠/드래그 제스처를 실시간 반영하는 -1~1 범위의 보조 오프셋.
+  // 그라디언트 배경이 스냅 잠금 중에도 스크롤을 따라 계속 흔들리는("일렁이는") 느낌을 내기 위함.
+  const [dragOffset, setDragOffset] = useState(0);
+  const dragOffsetRaw = useRef(0);
+  const dragIdleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const animating = useRef(false);
   const touchStart = useRef<number | null>(null);
+
+  const resetDragOffset = useCallback(() => {
+    dragOffsetRaw.current = 0;
+    setDragOffset(0);
+  }, []);
+
+  const nudgeDragOffset = useCallback((deltaPx: number) => {
+    dragOffsetRaw.current = Math.max(
+      -1,
+      Math.min(1, dragOffsetRaw.current + deltaPx / WHEEL_PAGE_PX),
+    );
+    setDragOffset(dragOffsetRaw.current);
+
+    if (dragIdleTimer.current) clearTimeout(dragIdleTimer.current);
+    dragIdleTimer.current = setTimeout(resetDragOffset, DRAG_IDLE_MS);
+  }, [resetDragOffset]);
 
   const goTo = useCallback(
     (idx: number) => {
@@ -816,11 +842,12 @@ export default function App() {
       if (next === current || animating.current) return;
       animating.current = true;
       setCurrent(next);
+      resetDragOffset();
       setTimeout(() => {
         animating.current = false;
       }, 800);
     },
-    [current],
+    [current, resetDragOffset],
   );
 
   const prev = useCallback(() => goTo(current - 1), [current, goTo]);
@@ -830,12 +857,14 @@ export default function App() {
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
+      // 페이지 스냅 잠금 여부와 무관하게 그라디언트는 계속 델타를 따라감
+      nudgeDragOffset(e.deltaY);
       if (Math.abs(e.deltaY) < 20) return;
       e.deltaY > 0 ? next() : prev();
     };
     window.addEventListener("wheel", onWheel, { passive: false });
     return () => window.removeEventListener("wheel", onWheel);
-  }, [next, prev]);
+  }, [next, prev, nudgeDragOffset]);
 
   // keyboard
   useEffect(() => {
@@ -852,22 +881,35 @@ export default function App() {
     const onStart = (e: TouchEvent) => {
       touchStart.current = e.touches[0].clientY;
     };
+    const onMove = (e: TouchEvent) => {
+      if (touchStart.current === null) return;
+      const delta = touchStart.current - e.touches[0].clientY;
+      nudgeDragOffset(delta);
+    };
     const onEnd = (e: TouchEvent) => {
       if (touchStart.current === null) return;
       const delta = touchStart.current - e.changedTouches[0].clientY;
       if (Math.abs(delta) > 50) delta > 0 ? next() : prev();
+      else resetDragOffset();
       touchStart.current = null;
     };
     window.addEventListener("touchstart", onStart, { passive: true });
+    window.addEventListener("touchmove", onMove, { passive: true });
     window.addEventListener("touchend", onEnd, { passive: true });
     return () => {
       window.removeEventListener("touchstart", onStart);
+      window.removeEventListener("touchmove", onMove);
       window.removeEventListener("touchend", onEnd);
     };
-  }, [next, prev]);
+  }, [next, prev, nudgeDragOffset, resetDragOffset]);
+
+  const progress =
+    TOTAL > 1
+      ? Math.max(0, Math.min(1, (current + dragOffset) / (TOTAL - 1)))
+      : 0;
 
   const pages = [
-    <PageIntro goTo={goTo} />,
+    <PageHome goTo={goTo} />,
     <PageAbout />,
     <PageProjects />,
     <PageSkills />,
@@ -877,7 +919,7 @@ export default function App() {
 
   return (
     <div className="fixed inset-0 overflow-hidden">
-      <GradientBackground page={current} total={TOTAL} />
+      <GradientBackground progress={progress} />
 
       <DotNav current={current} total={TOTAL} onChange={goTo} />
 
