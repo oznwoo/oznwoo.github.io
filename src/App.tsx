@@ -1698,6 +1698,11 @@ const TOTAL = SECTIONS.length;
 export default function App() {
   const [current, setCurrent] = useState(0);
   const [activeProject, setActiveProject] = useState<string | null>(null);
+  // 상세 패널에 실제로 마운트되는 프로젝트. 닫힐 때는 가로 슬라이드(0.75s)가
+  // 끝날 때까지 activeProject보다 늦게 null이 되어, 애니메이션 도중 콘텐츠가
+  // 먼저 사라지지 않도록 한다.
+  const [renderedProject, setRenderedProject] = useState<string | null>(null);
+  const closeDetailTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const animating = useRef(false);
   const touchStart = useRef<number | null>(null);
   // 페이지가 실제로 전환될 때만 잠깐 켜지는 "웜프" 상태 — 색 강조/스케일/블러 펄스에 쓰인다.
@@ -1730,6 +1735,18 @@ export default function App() {
   const isDetail = activeProject !== null;
   const isDetailRef = useRef(isDetail);
   isDetailRef.current = isDetail;
+
+  useEffect(() => {
+    if (closeDetailTimer.current) clearTimeout(closeDetailTimer.current);
+    if (activeProject !== null) {
+      setRenderedProject(activeProject);
+    } else {
+      closeDetailTimer.current = setTimeout(
+        () => setRenderedProject(null),
+        750,
+      );
+    }
+  }, [activeProject]);
 
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
@@ -1829,9 +1846,9 @@ export default function App() {
 
         {/* 상세 세로 슬라이더 */}
         <div className="w-screen h-screen shrink-0">
-          {activeProject && (
+          {renderedProject && (
             <ProjectDetailView
-              projectId={activeProject}
+              projectId={renderedProject}
               onClose={() => setActiveProject(null)}
             />
           )}
