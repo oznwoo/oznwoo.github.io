@@ -13,6 +13,28 @@ const SECTIONS = [
   "Contact",
 ];
 
+// 프로젝트 카드 호버 시 반영할 브랜드 컬러 (로고/배너 기반). 로고를 받은 프로젝트만
+// 등록되어 있고, 없는 프로젝트는 호버해도 색이 바뀌지 않는다.
+// - primary: DotNav dot, 캔버스 톤, 태그 pill처럼 단색이 필요한 곳
+// - blobs: 배경 blob a/b/c 각각에 입힐 색 — 그라디언트 브랜드는 여러 색을 넣어 재현
+type ProjectAccent = { primary: string; blobs: [string, string, string] };
+
+const PROJECT_ACCENT: Record<string, ProjectAccent> = {
+  "01": {
+    // Fintag — 로고의 # 심볼 레드, 단색이라 세 blob 모두 동일
+    primary: "#F0283C",
+    blobs: ["#F0283C", "#F0283C", "#F0283C"],
+  },
+};
+
+function hexToRgba(hex: string, alpha: number): string {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 const PROJECTS = [
   {
     id: "01",
@@ -306,11 +328,15 @@ function GradientBackground({
   page,
   warping,
   rotation,
+  accentColor,
+  accentActive,
 }: {
   progress: number;
   page: number;
   warping: boolean;
   rotation: number;
+  accentColor: ProjectAccent;
+  accentActive: boolean;
 }) {
   const p = progress;
 
@@ -326,6 +352,18 @@ function GradientBackground({
       className="fixed inset-0 -z-10 overflow-hidden pointer-events-none"
       style={{ background: "#EEF1F9" }}
     >
+      {/* 프로젝트 호버 시 캔버스 바탕색 자체도 브랜드 컬러 쪽으로 은은하게 물든다.
+          blob과 별개로 회전 wrapper 바깥에 둬서 화면 전체가 고르게 톤이 바뀐다 */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundColor: accentColor.primary,
+          opacity: accentActive ? 0.09 : 0,
+          transition: accentActive
+            ? "opacity 0.3s ease-out"
+            : "opacity 0.7s ease-in",
+        }}
+      />
       {/* 전환마다 화면 중앙을 기준으로 조금씩 더 돌아간다(아래로 이동=시계, 위로 이동=반시계)
           — 되돌아오지 않고 누적된 각도에 머무른 채 강조색만 자연스럽게 옅어진다 */}
       <div
@@ -378,6 +416,18 @@ function GradientBackground({
                 : "opacity 0.55s ease-in",
             }}
           />
+          {/* 프로젝트 카드 호버 시 브랜드 컬러로 완전히 갈아치움 — base blob과 동일한
+              falloff로 덮어써서 밑에 깔린 파란/보라가 비쳐 보이지 않게 한다 */}
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: `radial-gradient(ellipse at center, ${hexToRgba(accentColor.blobs[0], 0.6)} 0%, transparent 70%)`,
+              opacity: accentActive ? 0.75 : 0,
+              transition: accentActive
+                ? "opacity 0.28s ease-out"
+                : "opacity 0.6s ease-in",
+            }}
+          />
         </div>
         <div
           className="gradient-blob-b absolute"
@@ -406,6 +456,16 @@ function GradientBackground({
               transition: warping
                 ? "opacity 0.2s ease-out"
                 : "opacity 0.6s ease-in",
+            }}
+          />
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: `radial-gradient(ellipse at center, ${hexToRgba(accentColor.blobs[1], 0.5)} 0%, transparent 70%)`,
+              opacity: accentActive ? 0.65 : 0,
+              transition: accentActive
+                ? "opacity 0.34s ease-out"
+                : "opacity 0.65s ease-in",
             }}
           />
         </div>
@@ -438,6 +498,16 @@ function GradientBackground({
                 : "opacity 0.65s ease-in",
             }}
           />
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: `radial-gradient(ellipse at center, ${hexToRgba(accentColor.blobs[2], 0.42)} 0%, transparent 65%)`,
+              opacity: accentActive ? 0.55 : 0,
+              transition: accentActive
+                ? "opacity 0.4s ease-out"
+                : "opacity 0.7s ease-in",
+            }}
+          />
         </div>
       </div>
     </div>
@@ -450,10 +520,12 @@ function DotNav({
   current,
   total,
   onChange,
+  accentColor = "#4F6EF7",
 }: {
   current: number;
   total: number;
   onChange: (i: number) => void;
+  accentColor?: string;
 }) {
   const [hovered, setHovered] = useState(false);
   return (
@@ -529,7 +601,7 @@ function DotNav({
                 style={{
                   width: i === current ? "20px" : "6px",
                   height: "6px",
-                  background: i === current ? "#4F6EF7" : "rgba(12,15,26,0.22)",
+                  background: i === current ? accentColor : "rgba(12,15,26,0.22)",
                 }}
               />
             </span>
@@ -756,7 +828,13 @@ function PageAbout() {
   );
 }
 
-function PageProjects({ onOpen }: { onOpen: (id: string) => void }) {
+function PageProjects({
+  onOpen,
+  onHoverColor,
+}: {
+  onOpen: (id: string) => void;
+  onHoverColor: (color: ProjectAccent | null) => void;
+}) {
   const [hovered, setHovered] = useState<string | null>(null);
   return (
     <Page>
@@ -791,8 +869,14 @@ function PageProjects({ onOpen }: { onOpen: (id: string) => void }) {
             <button
               key={p.id}
               onClick={() => onOpen(p.id)}
-              onMouseEnter={() => setHovered(p.id)}
-              onMouseLeave={() => setHovered(null)}
+              onMouseEnter={() => {
+                setHovered(p.id);
+                onHoverColor(PROJECT_ACCENT[p.id] ?? null);
+              }}
+              onMouseLeave={() => {
+                setHovered(null);
+                onHoverColor(null);
+              }}
               className="group text-left rounded-2xl p-6 flex flex-col gap-4 transition-all duration-200"
               style={{
                 background:
@@ -806,15 +890,28 @@ function PageProjects({ onOpen }: { onOpen: (id: string) => void }) {
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex flex-wrap gap-1.5">
-                  {p.tags.map((t) => (
-                    <span
-                      key={t}
-                      style={{ fontFamily: "var(--font-mono)" }}
-                      className="text-[10px] px-2 py-0.5 rounded-full bg-[#4F6EF7]/8 text-[#4F6EF7]/70 tracking-wide"
-                    >
-                      {t}
-                    </span>
-                  ))}
+                  {p.tags.map((t) => {
+                    const accent =
+                      hovered === p.id ? PROJECT_ACCENT[p.id] : null;
+                    return (
+                      <span
+                        key={t}
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          background: accent
+                            ? hexToRgba(accent.primary, 0.1)
+                            : undefined,
+                          color: accent
+                            ? hexToRgba(accent.primary, 0.8)
+                            : undefined,
+                          transition: "background 0.25s, color 0.25s",
+                        }}
+                        className="text-[10px] px-2 py-0.5 rounded-full bg-[#4F6EF7]/8 text-[#4F6EF7]/70 tracking-wide"
+                      >
+                        {t}
+                      </span>
+                    );
+                  })}
                 </div>
                 <span
                   style={{ fontFamily: "var(--font-mono)" }}
@@ -1710,6 +1807,17 @@ export default function App() {
   const warpTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // 배경 전체의 누적 회전각 — 전환마다 시계 방향으로 더해지기만 하고 되돌아오지 않는다.
   const [rotation, setRotation] = useState(0);
+  // 프로젝트 카드 호버 시 blob에 반영할 브랜드 컬러. hoverAccent는 현재 호버 중인
+  // 색(null이면 미호버), lastAccent는 페이드아웃 도중에도 그라디언트가 유지할
+  // 마지막 색 — background는 애니메이션이 안 되므로 opacity만 움직여서 자연스럽게 없앤다.
+  const [hoverAccent, setHoverAccent] = useState<ProjectAccent | null>(null);
+  const [lastAccent, setLastAccent] = useState<ProjectAccent>({
+    primary: "#4F6EF7",
+    blobs: ["#4F6EF7", "#4F6EF7", "#4F6EF7"],
+  });
+  useEffect(() => {
+    if (hoverAccent) setLastAccent(hoverAccent);
+  }, [hoverAccent]);
 
   const goTo = useCallback(
     (idx: number) => {
@@ -1792,7 +1900,7 @@ export default function App() {
   const pages = [
     <PageHome />,
     <PageAbout />,
-    <PageProjects onOpen={setActiveProject} />,
+    <PageProjects onOpen={setActiveProject} onHoverColor={setHoverAccent} />,
     <PageSkills />,
     <PageExperience />,
     <PageContact />,
@@ -1805,6 +1913,8 @@ export default function App() {
         page={current}
         warping={warping}
         rotation={rotation}
+        accentColor={lastAccent}
+        accentActive={hoverAccent !== null}
       />
 
       {/* 가로 슬라이드: 메인(0) ↔ 상세(1) */}
@@ -1819,7 +1929,12 @@ export default function App() {
       >
         {/* 메인 세로 슬라이더 */}
         <div className="w-screen h-screen shrink-0 relative overflow-hidden">
-          <DotNav current={current} total={TOTAL} onChange={goTo} />
+          <DotNav
+            current={current}
+            total={TOTAL}
+            onChange={goTo}
+            accentColor={hoverAccent?.primary}
+          />
           <div
             className="flex flex-col h-full"
             style={{
