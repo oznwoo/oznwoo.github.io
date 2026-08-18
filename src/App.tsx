@@ -301,8 +301,24 @@ const EXP_COLS = [
 
 // ─── Gradient Background ──────────────────────────────────────────────────────
 
-function GradientBackground({ progress }: { progress: number }) {
+function GradientBackground({
+  progress,
+  page,
+  warping,
+  rotation,
+}: {
+  progress: number;
+  page: number;
+  warping: boolean;
+  rotation: number;
+}) {
   const p = progress;
+
+  // 페이지 슬라이드(0.75s)와 정확히 같은 속도로 튕기듯 크게 움직였다가,
+  // 워프가 끝나면 훨씬 느린 이징으로 가라앉는다.
+  const warpEase = "cubic-bezier(0.34,1.56,0.64,1)";
+  const settleEase = "cubic-bezier(0.22,1,0.36,1)";
+  const SLIDE_S = "0.75s";
 
   return (
     <div
@@ -310,51 +326,120 @@ function GradientBackground({ progress }: { progress: number }) {
       className="fixed inset-0 -z-10 overflow-hidden pointer-events-none"
       style={{ background: "#EEF1F9" }}
     >
+      {/* 전환마다 화면 중앙을 기준으로 조금씩 더 돌아간다(아래로 이동=시계, 위로 이동=반시계)
+          — 되돌아오지 않고 누적된 각도에 머무른 채 강조색만 자연스럽게 옅어진다 */}
       <div
-        className="gradient-blob-a absolute"
+        className="absolute inset-0"
         style={{
-          width: "70vw",
-          height: "70vw",
-          top: "-20%",
-          left: "-15%",
-          translate: `${p * -10}vw ${p * 16}vh`,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(ellipse at center, rgba(199,210,254,0.8) 0%, transparent 70%)",
-          filter: "blur(40px)",
-          transition: "translate 0.5s cubic-bezier(0.22,1,0.36,1)",
+          rotate: `${rotation}deg`,
+          transition: `rotate ${SLIDE_S} ${warpEase}`,
         }}
-      />
-      <div
-        className="gradient-blob-b absolute"
-        style={{
-          width: "60vw",
-          height: "60vw",
-          bottom: "-10%",
-          right: "-10%",
-          translate: `${p * 8}vw ${p * -12}vh`,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(ellipse at center, rgba(165,180,252,0.7) 0%, transparent 70%)",
-          filter: "blur(46px)",
-          transition: "translate 0.65s cubic-bezier(0.22,1,0.36,1)",
-        }}
-      />
-      <div
-        className="gradient-blob-c absolute"
-        style={{
-          width: "55vw",
-          height: "55vw",
-          top: "30%",
-          left: "28%",
-          translate: `${p * -5}vw ${p * 8}vh`,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(ellipse at center, rgba(224,231,255,0.62) 0%, transparent 65%)",
-          filter: "blur(54px)",
-          transition: "translate 0.8s cubic-bezier(0.22,1,0.36,1)",
-        }}
-      />
+      >
+        <div
+          key={page}
+          className="gradient-warp-burst absolute rounded-full"
+          style={{
+            width: "42vw",
+            height: "42vw",
+            top: "50%",
+            left: "50%",
+            marginTop: "-21vw",
+            marginLeft: "-21vw",
+            background:
+              "radial-gradient(circle, rgba(79,110,247,0.32) 0%, rgba(79,110,247,0) 70%)",
+          }}
+        />
+        <div
+          className="gradient-blob-a absolute"
+          style={{
+            width: "70vw",
+            height: "70vw",
+            top: "-20%",
+            left: "-15%",
+            translate: `${p * -16}vw ${p * 26}vh`,
+            scale: warping ? 1.16 : 1,
+            borderRadius: "50%",
+            background:
+              "radial-gradient(ellipse at center, rgba(199,210,254,0.8) 0%, transparent 70%)",
+            filter: warping ? "blur(58px)" : "blur(40px)",
+            transition: warping
+              ? `translate ${SLIDE_S} ${warpEase}, scale 0.5s ${warpEase}, filter 0.35s ease-out`
+              : `translate 0.5s ${settleEase}, scale 0.6s ${settleEase}, filter 0.6s ease-out`,
+          }}
+        >
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle at 28% 32%, rgba(79,110,247,0.9) 0%, rgba(79,110,247,0.25) 42%, transparent 70%)",
+              opacity: warping ? 0.65 : 0,
+              transition: warping
+                ? "opacity 0.16s ease-out"
+                : "opacity 0.55s ease-in",
+            }}
+          />
+        </div>
+        <div
+          className="gradient-blob-b absolute"
+          style={{
+            width: "60vw",
+            height: "60vw",
+            bottom: "-10%",
+            right: "-10%",
+            translate: `${p * 13}vw ${p * -19}vh`,
+            scale: warping ? 1.11 : 1,
+            borderRadius: "50%",
+            background:
+              "radial-gradient(ellipse at center, rgba(165,180,252,0.7) 0%, transparent 70%)",
+            filter: warping ? "blur(64px)" : "blur(46px)",
+            transition: warping
+              ? `translate ${SLIDE_S} ${warpEase}, scale 0.55s ${warpEase}, filter 0.35s ease-out`
+              : `translate 0.65s ${settleEase}, scale 0.65s ${settleEase}, filter 0.65s ease-out`,
+          }}
+        >
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle at 72% 30%, rgba(67,93,235,0.85) 0%, rgba(67,93,235,0.22) 42%, transparent 70%)",
+              opacity: warping ? 0.6 : 0,
+              transition: warping
+                ? "opacity 0.2s ease-out"
+                : "opacity 0.6s ease-in",
+            }}
+          />
+        </div>
+        <div
+          className="gradient-blob-c absolute"
+          style={{
+            width: "55vw",
+            height: "55vw",
+            top: "30%",
+            left: "28%",
+            translate: `${p * -9}vw ${p * 13}vh`,
+            scale: warping ? 1.19 : 1,
+            borderRadius: "50%",
+            background:
+              "radial-gradient(ellipse at center, rgba(224,231,255,0.62) 0%, transparent 65%)",
+            filter: warping ? "blur(70px)" : "blur(54px)",
+            transition: warping
+              ? `translate ${SLIDE_S} ${warpEase}, scale 0.6s ${warpEase}, filter 0.35s ease-out`
+              : `translate 0.8s ${settleEase}, scale 0.7s ${settleEase}, filter 0.7s ease-out`,
+          }}
+        >
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              background:
+                "radial-gradient(ellipse at center, rgba(124,95,212,0.6) 0%, transparent 65%)",
+              opacity: warping ? 0.55 : 0,
+              transition: warping
+                ? "opacity 0.24s ease-out"
+                : "opacity 0.65s ease-in",
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
@@ -1610,53 +1695,32 @@ function ProjectDetailView({
 
 const TOTAL = SECTIONS.length;
 
-// 휠 delta(px)가 dragOffset 1 (한 페이지 분량)에 대응하는 크기
-const WHEEL_PAGE_PX = 600;
-// 스크롤/드래그가 멈춘 뒤 dragOffset을 0으로 되돌리기까지의 유휴 시간(ms)
-const DRAG_IDLE_MS = 220;
-
 export default function App() {
   const [current, setCurrent] = useState(0);
   const [activeProject, setActiveProject] = useState<string | null>(null);
-  // 페이지 스냅과 별개로, 진행 중인 휠/드래그 제스처를 실시간 반영하는 -1~1 범위의 보조 오프셋.
-  // 그라디언트 배경이 스냅 잠금 중에도 스크롤을 따라 계속 흔들리는("일렁이는") 느낌을 내기 위함.
-  const [dragOffset, setDragOffset] = useState(0);
-  const dragOffsetRaw = useRef(0);
-  const dragIdleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const animating = useRef(false);
   const touchStart = useRef<number | null>(null);
-
-  const resetDragOffset = useCallback(() => {
-    dragOffsetRaw.current = 0;
-    setDragOffset(0);
-  }, []);
-
-  const nudgeDragOffset = useCallback(
-    (deltaPx: number) => {
-      dragOffsetRaw.current = Math.max(
-        -1,
-        Math.min(1, dragOffsetRaw.current + deltaPx / WHEEL_PAGE_PX),
-      );
-      setDragOffset(dragOffsetRaw.current);
-
-      if (dragIdleTimer.current) clearTimeout(dragIdleTimer.current);
-      dragIdleTimer.current = setTimeout(resetDragOffset, DRAG_IDLE_MS);
-    },
-    [resetDragOffset],
-  );
+  // 페이지가 실제로 전환될 때만 잠깐 켜지는 "웜프" 상태 — 색 강조/스케일/블러 펄스에 쓰인다.
+  const [warping, setWarping] = useState(false);
+  const warpTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // 배경 전체의 누적 회전각 — 전환마다 시계 방향으로 더해지기만 하고 되돌아오지 않는다.
+  const [rotation, setRotation] = useState(0);
 
   const goTo = useCallback(
     (idx: number) => {
       const n = Math.max(0, Math.min(TOTAL - 1, idx));
       if (n === current || animating.current) return;
       animating.current = true;
+      setWarping(true);
+      setRotation((r) => r + (n > current ? 34 : -34));
+      if (warpTimer.current) clearTimeout(warpTimer.current);
+      warpTimer.current = setTimeout(() => setWarping(false), 750);
       setCurrent(n);
-      resetDragOffset();
       setTimeout(() => {
         animating.current = false;
       }, 800);
     },
-    [current, resetDragOffset],
+    [current],
   );
 
   const prev = useCallback(() => goTo(current - 1), [current, goTo]);
@@ -1671,14 +1735,12 @@ export default function App() {
     const onWheel = (e: WheelEvent) => {
       if (isDetailRef.current) return;
       e.preventDefault();
-      // 페이지 스냅 잠금 여부와 무관하게 그라디언트는 계속 델타를 따라감
-      nudgeDragOffset(e.deltaY);
       if (Math.abs(e.deltaY) < 20) return;
       e.deltaY > 0 ? next() : prev();
     };
     window.addEventListener("wheel", onWheel, { passive: false });
     return () => window.removeEventListener("wheel", onWheel);
-  }, [next, prev, nudgeDragOffset]);
+  }, [next, prev]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -1694,32 +1756,21 @@ export default function App() {
     const onStart = (e: TouchEvent) => {
       touchStart.current = e.touches[0].clientY;
     };
-    const onMove = (e: TouchEvent) => {
-      if (isDetailRef.current || touchStart.current === null) return;
-      const delta = touchStart.current - e.touches[0].clientY;
-      nudgeDragOffset(delta);
-    };
     const onEnd = (e: TouchEvent) => {
       if (isDetailRef.current || touchStart.current === null) return;
       const delta = touchStart.current - e.changedTouches[0].clientY;
       if (Math.abs(delta) > 50) delta > 0 ? next() : prev();
-      else resetDragOffset();
       touchStart.current = null;
     };
     window.addEventListener("touchstart", onStart, { passive: true });
-    window.addEventListener("touchmove", onMove, { passive: true });
     window.addEventListener("touchend", onEnd, { passive: true });
     return () => {
       window.removeEventListener("touchstart", onStart);
-      window.removeEventListener("touchmove", onMove);
       window.removeEventListener("touchend", onEnd);
     };
-  }, [next, prev, nudgeDragOffset, resetDragOffset]);
+  }, [next, prev]);
 
-  const progress =
-    TOTAL > 1
-      ? Math.max(0, Math.min(1, (current + dragOffset) / (TOTAL - 1)))
-      : 0;
+  const progress = TOTAL > 1 ? current / (TOTAL - 1) : 0;
 
   const pages = [
     <PageHome />,
@@ -1732,7 +1783,12 @@ export default function App() {
 
   return (
     <div className="fixed inset-0 overflow-hidden">
-      <GradientBackground progress={progress} />
+      <GradientBackground
+        progress={progress}
+        page={current}
+        warping={warping}
+        rotation={rotation}
+      />
 
       {/* 가로 슬라이드: 메인(0) ↔ 상세(1) */}
       <div

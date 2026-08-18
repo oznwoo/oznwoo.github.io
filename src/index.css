@@ -38,6 +38,16 @@ html {
 .gradient-blob-b { animation: blob-b 11s ease-in-out infinite; }
 .gradient-blob-c { animation: blob-c 13s ease-in-out infinite; }
 
+@keyframes warp-burst {
+  0% { scale: 0.3; opacity: 0; }
+  35% { opacity: 0.4; }
+  100% { scale: 2.5; opacity: 0; }
+}
+.gradient-warp-burst {
+  animation: warp-burst 0.7s cubic-bezier(0.16,1,0.3,1) both;
+  pointer-events: none;
+}
+
 body {
   font-family: var(--font-body);
   background-color: #F0F3F9;
