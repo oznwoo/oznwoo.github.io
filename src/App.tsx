@@ -451,7 +451,7 @@ function GradientBackground({
             className="absolute inset-0"
             style={{
               backgroundColor: accentSlots[slot].primary,
-              opacity: isVisible ? 0.14 : 0,
+              opacity: isVisible ? 0.09 : 0,
               transition: isVisible
                 ? "opacity 0.3s ease-out"
                 : "opacity 0.7s ease-in",
@@ -498,7 +498,7 @@ function GradientBackground({
               left: "50%",
               marginTop: `calc(-23vw + ${burstOffset.y}vh)`,
               marginLeft: `calc(-23vw + ${burstOffset.x}vw)`,
-              background: `radial-gradient(circle, ${hexToRgba(flashColor, 0.55)} 0%, ${hexToRgba(flashColor, 0)} 70%)`,
+              background: `radial-gradient(circle, ${hexToRgba(flashColor, 0.7)} 0%, ${hexToRgba(flashColor, 0)} 70%)`,
             }}
           />
         )}
@@ -543,7 +543,7 @@ function GradientBackground({
               transition: pulseTransition,
             }}
           >
-            {renderAccentSlots(0, 0.72, 0.88, 300, 600)}
+            {renderAccentSlots(0, 0.6, 0.75, 300, 600)}
           </div>
         </div>
         <div
@@ -583,7 +583,7 @@ function GradientBackground({
               transition: pulseTransition,
             }}
           >
-            {renderAccentSlots(1, 0.62, 0.78, 340, 650)}
+            {renderAccentSlots(1, 0.5, 0.65, 340, 650)}
           </div>
         </div>
         <div
@@ -623,7 +623,7 @@ function GradientBackground({
               transition: pulseTransition,
             }}
           >
-            {renderAccentSlots(2, 0.54, 0.68, 400, 700)}
+            {renderAccentSlots(2, 0.42, 0.55, 400, 700)}
           </div>
         </div>
       </div>
