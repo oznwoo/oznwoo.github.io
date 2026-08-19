@@ -74,6 +74,19 @@ function accentGradient(accent: ProjectAccent): string {
   return `linear-gradient(135deg, ${accent.blobs[0]}, ${accent.blobs[1]}, ${accent.blobs[2]})`;
 }
 
+// hex를 흰색과 섞어 옅게 만든다. 상세 페이지에서는 opacity를 낮추는 대신 이걸
+// 써서 색 자체를 옅은 톤으로 바꾼다 — opacity만 낮추면 blob overlay가 밑에
+// 깔린 파랑/보라 앰비언트 base를 다 못 가려서 색이 탁하게 섞여 보이기 때문.
+function mixWithWhite(hex: string, ratio: number): string {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  const mix = (c: number) => Math.round(c + (255 - c) * ratio);
+  const toHex = (c: number) => c.toString(16).padStart(2, "0");
+  return `#${toHex(mix(r))}${toHex(mix(g))}${toHex(mix(b))}`;
+}
+
 const PROJECTS = [
   {
     id: "01",
@@ -375,6 +388,9 @@ function GradientBackground({
   burstOffset,
   pull,
   pulseActive,
+  detailMode,
+  detailSectionWarp,
+  enteringDetail,
 }: {
   progress: number;
   page: number;
@@ -396,6 +412,20 @@ function GradientBackground({
   pull: { x: number; y: number };
   // 호버 대상이 바뀔 때마다 짧게 튕기며 "살아있는" 느낌을 주는 펄스.
   pulseActive: boolean;
+  // 상세 페이지에서는 이 색이 잠깐의 호버가 아니라 계속 떠 있는 배경이라,
+  // 리스트 호버와 같은 강도면 텍스트 가독성을 해친다 — blob 강도를 낮추고
+  // 대신 전체 wash를 살짝 올려 "너무 하얗지도, 너무 진하지도 않게" 만든다.
+  detailMode: boolean;
+  // 상세 페이지에 진입/퇴장하는 가로 슬라이드는 웜프 버스트 없이 조용히
+  // 넘어가지만, 상세 내부에서 섹션을 넘기는 세로 슬라이드는 메인 페이지
+  // 전환과 동일한 버스트를 재생해야 한다 — 이 플래그가 그 경우만 구분한다.
+  detailSectionWarp: boolean;
+  // 리스트에서 상세로 가로 슬라이드가 진행되는 동안(detailMode가 늦게 켜지기
+  // 전까지) true. 이 동안은 리스트 호버 강도의 blob이 카드와 상관없이 화면에
+  // 그대로 떠 있으면 어색하므로 blob 자체를 꺼서 자연스럽게 페이드아웃시키고,
+  // 슬라이드가 끝나 detailMode가 켜지면 그 자리에서 프로젝트 색으로 다시
+  // 페이드인한다.
+  enteringDetail: boolean;
 }) {
   const p = progress;
 
@@ -414,20 +444,33 @@ function GradientBackground({
     outMs: number,
   ) {
     return [0, 1].map((slot) => {
-      const isVisible = accentOn && activeSlot === slot;
+      const isVisible = accentOn && activeSlot === slot && !enteringDetail;
+      // 상세 페이지는 메인 페이지의 파랑 앰비언트 base를 꺼둔 상태라(위 background:
+      // detailMode ? "transparent" 참고) 이 색이 화면에 남는 유일한 색이다.
+      // 메인 페이지 배경(연한 파스텔 톤)과 밝기를 맞추기 위해 흰색을 넉넉히 섞는다.
+      const color = detailMode
+        ? mixWithWhite(accentSlots[slot].blobs[blobIndex], 0.6)
+        : accentSlots[slot].blobs[blobIndex];
+      // 배경 밝기(위 흰색 혼합 비율)는 그대로 두고, 그라디언트 자체의 존재감만
+      // alpha(커버리지)를 살짝 올려서 더 뚜렷하게 만든다 — 메인 페이지 호버 강도에는
+      // 영향을 주지 않도록 detailMode일 때만 적용한다.
+      const effectiveAlpha = detailMode ? Math.min(1, alpha * 1.35) : alpha;
       return (
         <div
           key={slot}
           className="absolute inset-0 rounded-full"
           style={{
             background: `radial-gradient(ellipse at center, ${hexToRgba(
-              accentSlots[slot].blobs[blobIndex],
-              alpha,
+              color,
+              effectiveAlpha,
             )} 0%, transparent ${blobIndex === 2 ? 65 : 70}%)`,
             opacity: isVisible ? targetOpacity : 0,
+            // background(색 자체)도 함께 트랜지션시켜, 상세 페이지 진입 슬라이드가
+            // 끝난 뒤 detailMode가 늦게 켜질 때 색이 툭 바뀌지 않고 서서히 옅어지듯
+            // 바뀌게 한다.
             transition: isVisible
-              ? `opacity ${inMs}ms ease-out`
-              : `opacity ${outMs}ms ease-in`,
+              ? `opacity ${inMs}ms ease-out, background 0.6s ease`
+              : `opacity ${outMs}ms ease-in, background 0.6s ease`,
           }}
         />
       );
@@ -451,14 +494,14 @@ function GradientBackground({
           여기도 두 슬롯을 겹쳐 크로스페이드시켜 호버 대상이 바로 바뀌어도
           이전 색에서 다음 색으로 자연스럽게 섞이며 넘어가게 한다 */}
       {[0, 1].map((slot) => {
-        const isVisible = accentOn && activeSlot === slot;
+        const isVisible = accentOn && activeSlot === slot && !enteringDetail;
         return (
           <div
             key={slot}
             className="absolute inset-0"
             style={{
               backgroundColor: accentSlots[slot].primary,
-              opacity: isVisible ? 0.09 : 0,
+              opacity: isVisible ? (detailMode ? 0.13 : 0.09) : 0,
               transition: isVisible
                 ? "opacity 0.3s ease-out"
                 : "opacity 0.7s ease-in",
@@ -519,20 +562,34 @@ function GradientBackground({
             translate: `${p * -16}vw ${p * 26}vh`,
             scale: warping ? 1.16 : 1,
             borderRadius: "50%",
-            background:
-              "radial-gradient(ellipse at center, rgba(199,210,254,0.8) 0%, transparent 70%)",
+            // 상세 페이지(detailMode)뿐 아니라 상세로 넘어가는 슬라이드 도중
+            // (enteringDetail)에도 이 메인 파란/보라 앰비언트 base를 꺼서, 슬라이드
+            // 내내 이 blob이 카드와 무관하게 떠 있지 않고 다른 blob들과 함께 자연스럽게
+            // 페이드아웃되게 한다. "transparent" 키워드 대신 같은 그래디언트에서
+            // alpha만 0으로 낮춰, 값이 바뀔 때 background가 매끄럽게 트랜지션되게
+            // 한다("transparent" ↔ 그래디언트는 매끄럽게 보간되지 않는다).
+            background: `radial-gradient(ellipse at center, rgba(199,210,254,${detailMode || enteringDetail ? 0 : 0.8}) 0%, transparent 70%)`,
             filter: warping ? "blur(58px)" : "blur(40px)",
-            transition: warping
-              ? `translate ${SLIDE_S} ${warpEase}, scale 0.5s ${warpEase}, filter 0.35s ease-out`
-              : `translate 0.5s ${settleEase}, scale 0.6s ${settleEase}, filter 0.6s ease-out`,
+            transition: (
+              warping
+                ? `translate ${SLIDE_S} ${warpEase}, scale 0.5s ${warpEase}, filter 0.35s ease-out`
+                : `translate 0.5s ${settleEase}, scale 0.6s ${settleEase}, filter 0.6s ease-out`
+            ) + ", background 0.6s ease",
           }}
         >
           <div
             className="absolute inset-0 rounded-full"
             style={{
-              background:
-                "radial-gradient(circle at 28% 32%, rgba(79,110,247,0.9) 0%, rgba(79,110,247,0.25) 42%, transparent 70%)",
-              opacity: warping ? 0.65 : 0,
+              // detailSectionWarp가 아니라 detailMode로 색을 고른다 — detailSectionWarp는
+              // warping과 같은 타이밍(750ms)에 꺼지는데, opacity는 그 뒤로도 0.55s에 걸쳐
+              // 서서히 페이드아웃된다. detailSectionWarp로 갈랐다면 opacity가 아직 다 안
+              // 꺼진 상태에서 배경색만 먼저 파란색으로 툭 바뀌어 보이는 문제가 생긴다.
+              // detailMode는 상세 페이지에 머무는 동안 계속 true이므로 페이드아웃 내내
+              // 프로젝트 색을 유지한다.
+              background: detailMode
+                ? `radial-gradient(circle at 28% 32%, ${hexToRgba(accentSlots[activeSlot].blobs[0], 0.9)} 0%, ${hexToRgba(accentSlots[activeSlot].blobs[0], 0.25)} 42%, transparent 70%)`
+                : "radial-gradient(circle at 28% 32%, rgba(79,110,247,0.9) 0%, rgba(79,110,247,0.25) 42%, transparent 70%)",
+              opacity: warping && (!detailMode || detailSectionWarp) ? 0.65 : 0,
               transition: warping
                 ? "opacity 0.16s ease-out"
                 : "opacity 0.55s ease-in",
@@ -563,20 +620,22 @@ function GradientBackground({
             translate: `${p * 13}vw ${p * -19}vh`,
             scale: warping ? 1.11 : 1,
             borderRadius: "50%",
-            background:
-              "radial-gradient(ellipse at center, rgba(165,180,252,0.7) 0%, transparent 70%)",
+            background: `radial-gradient(ellipse at center, rgba(165,180,252,${detailMode || enteringDetail ? 0 : 0.7}) 0%, transparent 70%)`,
             filter: warping ? "blur(64px)" : "blur(46px)",
-            transition: warping
-              ? `translate ${SLIDE_S} ${warpEase}, scale 0.55s ${warpEase}, filter 0.35s ease-out`
-              : `translate 0.65s ${settleEase}, scale 0.65s ${settleEase}, filter 0.65s ease-out`,
+            transition: (
+              warping
+                ? `translate ${SLIDE_S} ${warpEase}, scale 0.55s ${warpEase}, filter 0.35s ease-out`
+                : `translate 0.65s ${settleEase}, scale 0.65s ${settleEase}, filter 0.65s ease-out`
+            ) + ", background 0.6s ease",
           }}
         >
           <div
             className="absolute inset-0 rounded-full"
             style={{
-              background:
-                "radial-gradient(circle at 72% 30%, rgba(67,93,235,0.85) 0%, rgba(67,93,235,0.22) 42%, transparent 70%)",
-              opacity: warping ? 0.6 : 0,
+              background: detailMode
+                ? `radial-gradient(circle at 72% 30%, ${hexToRgba(accentSlots[activeSlot].blobs[1], 0.85)} 0%, ${hexToRgba(accentSlots[activeSlot].blobs[1], 0.22)} 42%, transparent 70%)`
+                : "radial-gradient(circle at 72% 30%, rgba(67,93,235,0.85) 0%, rgba(67,93,235,0.22) 42%, transparent 70%)",
+              opacity: warping && (!detailMode || detailSectionWarp) ? 0.6 : 0,
               transition: warping
                 ? "opacity 0.2s ease-out"
                 : "opacity 0.6s ease-in",
@@ -603,20 +662,22 @@ function GradientBackground({
             translate: `${p * -9}vw ${p * 13}vh`,
             scale: warping ? 1.19 : 1,
             borderRadius: "50%",
-            background:
-              "radial-gradient(ellipse at center, rgba(224,231,255,0.62) 0%, transparent 65%)",
+            background: `radial-gradient(ellipse at center, rgba(224,231,255,${detailMode || enteringDetail ? 0 : 0.62}) 0%, transparent 65%)`,
             filter: warping ? "blur(70px)" : "blur(54px)",
-            transition: warping
-              ? `translate ${SLIDE_S} ${warpEase}, scale 0.6s ${warpEase}, filter 0.35s ease-out`
-              : `translate 0.8s ${settleEase}, scale 0.7s ${settleEase}, filter 0.7s ease-out`,
+            transition: (
+              warping
+                ? `translate ${SLIDE_S} ${warpEase}, scale 0.6s ${warpEase}, filter 0.35s ease-out`
+                : `translate 0.8s ${settleEase}, scale 0.7s ${settleEase}, filter 0.7s ease-out`
+            ) + ", background 0.6s ease",
           }}
         >
           <div
             className="absolute inset-0 rounded-full"
             style={{
-              background:
-                "radial-gradient(ellipse at center, rgba(124,95,212,0.6) 0%, transparent 65%)",
-              opacity: warping ? 0.55 : 0,
+              background: detailMode
+                ? `radial-gradient(ellipse at center, ${hexToRgba(accentSlots[activeSlot].blobs[2], 0.6)} 0%, transparent 65%)`
+                : "radial-gradient(ellipse at center, rgba(124,95,212,0.6) 0%, transparent 65%)",
+              opacity: warping && (!detailMode || detailSectionWarp) ? 0.55 : 0,
               transition: warping
                 ? "opacity 0.24s ease-out"
                 : "opacity 0.65s ease-in",
@@ -1058,7 +1119,9 @@ function PageProjects({
                         key={t}
                         style={{
                           fontFamily: "var(--font-mono)",
-                          color: active ? hexToRgba(accent!.primary, 0.85) : undefined,
+                          color: active
+                            ? hexToRgba(accent!.primary, 0.85)
+                            : undefined,
                           transition: "color 0.4s ease-out",
                         }}
                         className="relative overflow-hidden text-[10px] px-2 py-0.5 rounded-full bg-[#4F6EF7]/8 text-[#4F6EF7]/70 tracking-wide"
@@ -1939,7 +2002,12 @@ function ProjectDetailView({
           비쳐 보이게 둔다 — 리스트 호버와 같은 방식으로 이 프로젝트의 색이
           깔린다 */}
       {/* 좌측 네비게이터 — 메인과 동일한 구조 */}
-      <DetailNav slide={slide} onClose={onClose} goSlide={goSlide} accent={accent} />
+      <DetailNav
+        slide={slide}
+        onClose={onClose}
+        goSlide={goSlide}
+        accent={accent}
+      />
 
       {/* 세로 슬라이드 트랙 */}
       <div
@@ -1982,10 +2050,19 @@ export default function App() {
   // 먼저 사라지지 않도록 한다.
   const [renderedProject, setRenderedProject] = useState<string | null>(null);
   const closeDetailTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // 배경이 "상세 페이지 색 모드"로 들어갈지 여부. renderedProject와 달리 열릴 때도
+  // 가로 슬라이드(0.75s)가 끝날 때까지 기다렸다가 바뀐다 — 그래야 슬라이드 도중에는
+  // 기존 파란 배경이 그대로 보이고, 상세 페이지로 다 넘어간 뒤에야 서서히 프로젝트
+  // 색으로 바뀐다. 닫힐 때도 같은 타이밍으로 되돌아간다.
+  const [detailBgActive, setDetailBgActive] = useState(false);
+  const detailBgTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const animating = useRef(false);
   const touchStart = useRef<number | null>(null);
   // 페이지가 실제로 전환될 때만 잠깐 켜지는 "웜프" 상태 — 색 강조/스케일/블러 펄스에 쓰인다.
   const [warping, setWarping] = useState(false);
+  // 지금의 웜프가 상세 페이지 "내부" 섹션 전환에서 온 것인지 표시 — true일 때만
+  // 상세 모드에서도 색 버스트를 (프로젝트 색으로) 재생한다.
+  const [detailSectionWarp, setDetailSectionWarp] = useState(false);
   const warpTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // 배경 전체의 누적 회전각 — 전환마다 시계 방향으로 더해지기만 하고 되돌아오지 않는다.
   const [rotation, setRotation] = useState(0);
@@ -1995,12 +2072,15 @@ export default function App() {
   // 크로스페이드·펄스·플래시 효과로 상세 페이지 색을 표시한다.
   const [hoverId, setHoverId] = useState<string | null>(null);
   const displayAccentId = renderedProject ?? hoverId;
-  const hoverAccent = displayAccentId ? (PROJECT_ACCENT[displayAccentId] ?? null) : null;
+  const hoverAccent = displayAccentId
+    ? (PROJECT_ACCENT[displayAccentId] ?? null)
+    : null;
   // 두 슬롯에 색을 번갈아 담아둔다. 호버 대상이 A→B로 바로 바뀔 때 A가 담긴
   // 슬롯은 페이드아웃, B가 담긴 슬롯은 페이드인 되며 실제로 색이 크로스페이드된다.
-  const [slotColors, setSlotColors] = useState<[ProjectAccent, ProjectAccent]>(
-    [DEFAULT_ACCENT, DEFAULT_ACCENT],
-  );
+  const [slotColors, setSlotColors] = useState<[ProjectAccent, ProjectAccent]>([
+    DEFAULT_ACCENT,
+    DEFAULT_ACCENT,
+  ]);
   const [activeSlot, setActiveSlot] = useState<0 | 1>(0);
   // 호버 대상이 바뀔 때마다(호버→호버 직행 포함) 짧게 튕기는 펄스를 재생한다.
   const [pulseActive, setPulseActive] = useState(false);
@@ -2048,20 +2128,28 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayAccentId, hoverAccent]);
 
-  const pull = hoverId ? (PROJECT_PULL[hoverId] ?? { x: 0, y: 0 }) : { x: 0, y: 0 };
+  const pull = hoverId
+    ? (PROJECT_PULL[hoverId] ?? { x: 0, y: 0 })
+    : { x: 0, y: 0 };
 
   // 페이지 전환마다 배경을 회전·웜프시키는 공통 트리거. 세로 섹션 이동뿐 아니라
   // 상세 페이지 열기/닫기, 상세 내부 슬라이드에도 동일하게 재사용해 어떤
   // 전환이든 같은 애니메이션 언어를 쓰게 한다. resetHover가 true면 전환 시작과
   // 동시에 리스트 호버를 해제한다 — 상세를 여는 순간에는 열리는 프로젝트의 색이
-  // 끊기지 않아야 하므로 false로 호출한다.
+  // 끊기지 않아야 하므로 false로 호출한다. isDetailSection이 true면 상세
+  // 페이지 "내부" 섹션 전환임을 표시해, 진입/퇴장 슬라이드는 조용히 넘어가되
+  // 내부 섹션 전환만 메인 페이지와 같은 색 버스트를 (프로젝트 색으로) 재생한다.
   const triggerWarp = useCallback(
-    (direction: 1 | -1, resetHover: boolean = true) => {
+    (direction: 1 | -1, resetHover: boolean = true, isDetailSection: boolean = false) => {
       setWarping(true);
+      setDetailSectionWarp(isDetailSection);
       if (resetHover) setHoverId(null);
       setRotation((r) => r + direction * 34);
       if (warpTimer.current) clearTimeout(warpTimer.current);
-      warpTimer.current = setTimeout(() => setWarping(false), 750);
+      warpTimer.current = setTimeout(() => {
+        setWarping(false);
+        setDetailSectionWarp(false);
+      }, 750);
     },
     [],
   );
@@ -2098,6 +2186,13 @@ export default function App() {
         750,
       );
     }
+  }, [activeProject]);
+
+  useEffect(() => {
+    if (detailBgTimer.current) clearTimeout(detailBgTimer.current);
+    detailBgTimer.current = setTimeout(() => {
+      setDetailBgActive(activeProject !== null);
+    }, 750);
   }, [activeProject]);
 
   useEffect(() => {
@@ -2174,6 +2269,9 @@ export default function App() {
         burstOffset={burstOffset}
         pull={pull}
         pulseActive={pulseActive}
+        detailMode={detailBgActive}
+        detailSectionWarp={detailSectionWarp}
+        enteringDetail={activeProject !== null && !detailBgActive}
       />
 
       {/* 가로 슬라이드: 메인(0) ↔ 상세(1) */}
@@ -2229,7 +2327,7 @@ export default function App() {
                 triggerWarp(-1);
                 setActiveProject(null);
               }}
-              onTransition={(direction) => triggerWarp(direction, false)}
+              onTransition={(direction) => triggerWarp(direction, false, true)}
             />
           )}
         </div>
