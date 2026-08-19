@@ -2042,6 +2042,9 @@ export default function App() {
       if (n === current || animating.current) return;
       animating.current = true;
       setWarping(true);
+      // 세로 슬라이드 도중 마우스가 우연히 프로젝트 카드 위를 지나가며
+      // 호버가 걸리는 것을 막기 위해, 전환이 시작되는 즉시 호버를 해제한다.
+      setHoverId(null);
       setRotation((r) => r + (n > current ? 34 : -34));
       if (warpTimer.current) clearTimeout(warpTimer.current);
       warpTimer.current = setTimeout(() => setWarping(false), 750);
@@ -2117,7 +2120,14 @@ export default function App() {
   const pages = [
     <PageHome />,
     <PageAbout />,
-    <PageProjects onOpen={setActiveProject} onHover={setHoverId} />,
+    <PageProjects
+      onOpen={setActiveProject}
+      // 세로 슬라이드 중에는 마우스가 카드를 스쳐도 호버로 잡지 않아, 전환
+      // 도중에는 슬라이드 애니메이션만 보이고 색 반응은 끼어들지 않는다.
+      onHover={(id) => {
+        if (!warping) setHoverId(id);
+      }}
+    />,
     <PageSkills />,
     <PageExperience />,
     <PageContact />,
