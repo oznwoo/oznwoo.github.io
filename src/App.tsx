@@ -67,6 +67,13 @@ function hexToRgba(hex: string, alpha: number): string {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
+// DotNav dot·태그 pill처럼 작은 UI에 브랜드 컬러를 입힐 때 쓰는 그라디언트.
+// blobs 3색이 모두 같은 단색 프로젝트는 자연히 flat color로 보이고,
+// CoChat/CoChat for Business처럼 3색이 다른 프로젝트는 그 다색이 그대로 드러난다.
+function accentGradient(accent: ProjectAccent): string {
+  return `linear-gradient(135deg, ${accent.blobs[0]}, ${accent.blobs[1]}, ${accent.blobs[2]})`;
+}
+
 const PROJECTS = [
   {
     id: "01",
@@ -637,12 +644,19 @@ function DotNav({
   current,
   total,
   onChange,
-  accentColor = "#4F6EF7",
+  accentSlots,
+  activeSlot,
+  accentOn,
 }: {
   current: number;
   total: number;
   onChange: (i: number) => void;
-  accentColor?: string;
+  // 현재 페이지 dot의 색. 두 슬롯을 크로스페이드시켜, 호버 대상이 바로 다른
+  // 프로젝트로 바뀌어도 dot 색이 스냅되지 않고 배경과 같은 방식으로 섞이며
+  // 전환된다. 프로젝트가 다색 브랜드면 그라디언트로 그 다색이 그대로 보인다.
+  accentSlots: [ProjectAccent, ProjectAccent];
+  activeSlot: 0 | 1;
+  accentOn: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
   return (
@@ -714,13 +728,42 @@ function DotNav({
               style={{ width: "24px", height: "20px" }}
             >
               <span
-                className="block rounded-full transition-all duration-300"
+                className="relative block rounded-full overflow-hidden transition-all duration-300"
                 style={{
                   width: i === current ? "20px" : "6px",
                   height: "6px",
-                  background: i === current ? accentColor : "rgba(12,15,26,0.22)",
+                  background: i === current ? "#4F6EF7" : "rgba(12,15,26,0.22)",
                 }}
-              />
+              >
+                {i === current && (
+                  <>
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0"
+                      style={{
+                        background: accentGradient(accentSlots[0]),
+                        opacity: accentOn && activeSlot === 0 ? 1 : 0,
+                        transition:
+                          accentOn && activeSlot === 0
+                            ? "opacity 0.45s ease-out"
+                            : "opacity 0.6s ease-in",
+                      }}
+                    />
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0"
+                      style={{
+                        background: accentGradient(accentSlots[1]),
+                        opacity: accentOn && activeSlot === 1 ? 1 : 0,
+                        transition:
+                          accentOn && activeSlot === 1
+                            ? "opacity 0.45s ease-out"
+                            : "opacity 0.6s ease-in",
+                      }}
+                    />
+                  </>
+                )}
+              </span>
             </span>
             <span
               style={{
@@ -1008,24 +1051,35 @@ function PageProjects({
               <div className="flex items-start justify-between gap-2">
                 <div className="flex flex-wrap gap-1.5">
                   {p.tags.map((t) => {
-                    const accent =
-                      hovered === p.id ? PROJECT_ACCENT[p.id] : null;
+                    const accent = PROJECT_ACCENT[p.id] ?? null;
+                    const active = hovered === p.id && accent !== null;
                     return (
                       <span
                         key={t}
                         style={{
                           fontFamily: "var(--font-mono)",
-                          background: accent
-                            ? hexToRgba(accent.primary, 0.1)
-                            : undefined,
-                          color: accent
-                            ? hexToRgba(accent.primary, 0.8)
-                            : undefined,
-                          transition: "background 0.25s, color 0.25s",
+                          color: active ? hexToRgba(accent!.primary, 0.85) : undefined,
+                          transition: "color 0.4s ease-out",
                         }}
-                        className="text-[10px] px-2 py-0.5 rounded-full bg-[#4F6EF7]/8 text-[#4F6EF7]/70 tracking-wide"
+                        className="relative overflow-hidden text-[10px] px-2 py-0.5 rounded-full bg-[#4F6EF7]/8 text-[#4F6EF7]/70 tracking-wide"
                       >
-                        {t}
+                        {/* 배경은 그라디언트라 색 값 자체는 애니메이션할 수 없으므로,
+                            항상 이 프로젝트 고유 색으로 고정해두고 opacity만 은은하게
+                            페이드시킨다 — 다색 브랜드(CoChat 등)도 그 색이 그대로 보인다 */}
+                        {accent && (
+                          <span
+                            aria-hidden="true"
+                            className="absolute inset-0 rounded-full"
+                            style={{
+                              background: accentGradient(accent),
+                              opacity: active ? 0.16 : 0,
+                              transition: active
+                                ? "opacity 0.4s ease-out"
+                                : "opacity 0.6s ease-in",
+                            }}
+                          />
+                        )}
+                        <span className="relative">{t}</span>
                       </span>
                     );
                   })}
@@ -2102,7 +2156,9 @@ export default function App() {
             current={current}
             total={TOTAL}
             onChange={goTo}
-            accentColor={hoverAccent?.primary}
+            accentSlots={slotColors}
+            activeSlot={activeSlot}
+            accentOn={hoverAccent !== null}
           />
           <div
             className="flex flex-col h-full"
