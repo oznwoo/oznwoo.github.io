@@ -1111,35 +1111,30 @@ function PageProjects({
                   {p.tags.map((t) => {
                     const accent = PROJECT_ACCENT[p.id] ?? null
                     const active = hovered === p.id && accent !== null
+                    // 카드 자체와 같은 언어: 평소엔 배경/그림자 없이 그냥 텍스트로
+                    // 앉아있다가, 카드를 호버하면 카드의 필드 톤(rgba(248,250,255,..))과
+                    // 같은 표면이 pill 모양으로 떠오르며 그림자가 붙고, 텍스트는
+                    // 프로젝트 고유 색으로 물든다.
                     return (
                       <span
                         key={t}
                         style={{
                           fontFamily: "var(--font-mono)",
+                          background: active
+                            ? "rgba(248,250,255,0.92)"
+                            : "transparent",
+                          boxShadow: active
+                            ? `0 6px 16px ${hexToRgba(accent!.primary, 0.16)}, 0 1px 3px rgba(12,15,26,0.06)`
+                            : "none",
                           color: active
-                            ? hexToRgba(accent!.primary, 0.85)
-                            : undefined,
-                          transition: "color 0.4s ease-out",
+                            ? hexToRgba(accent!.primary, 0.9)
+                            : "rgba(12,15,26,0.38)",
+                          transition:
+                            "background 0.35s ease-out, box-shadow 0.35s ease-out, color 0.35s ease-out",
                         }}
-                        className="relative overflow-hidden text-[10px] px-2 py-0.5 rounded-full bg-[#4F6EF7]/8 text-[#4F6EF7]/70 tracking-wide"
+                        className="relative flex items-center text-[9px] px-2.5 py-1 rounded-full uppercase tracking-[0.08em]"
                       >
-                        {/* 배경은 그라디언트라 색 값 자체는 애니메이션할 수 없으므로,
-                            항상 이 프로젝트 고유 색으로 고정해두고 opacity만 은은하게
-                            페이드시킨다 — 다색 브랜드(CoChat 등)도 그 색이 그대로 보인다 */}
-                        {accent && (
-                          <span
-                            aria-hidden="true"
-                            className="absolute inset-0 rounded-full"
-                            style={{
-                              background: accentGradient(accent),
-                              opacity: active ? 0.16 : 0,
-                              transition: active
-                                ? "opacity 0.4s ease-out"
-                                : "opacity 0.6s ease-in",
-                            }}
-                          />
-                        )}
-                        <span className="relative">{t}</span>
+                        {t}
                       </span>
                     )
                   })}
