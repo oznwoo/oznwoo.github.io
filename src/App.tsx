@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import profilePhoto from "@/imports/____________________.jpeg";
-import logoImg from "@/imports/______________.png";
+import { useState, useEffect, useRef, useCallback } from "react"
+import profilePhoto from "@/imports/____________________.jpeg"
+import logoImg from "@/imports/______________.png"
+import { SkillIcon } from "@/lib/skillIcons"
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -11,13 +12,13 @@ const SECTIONS = [
   "Skills",
   "Experience",
   "Contact",
-];
+]
 
 // 프로젝트 카드 호버 시 반영할 브랜드 컬러 (로고/배너 기반). 로고를 받은 프로젝트만
 // 등록되어 있고, 없는 프로젝트는 호버해도 색이 바뀌지 않는다.
 // - primary: DotNav dot, 캔버스 톤, 태그 pill처럼 단색이 필요한 곳
 // - blobs: 배경 blob a/b/c 각각에 입힐 색 — 그라디언트 브랜드는 여러 색을 넣어 재현
-type ProjectAccent = { primary: string; blobs: [string, string, string] };
+type ProjectAccent = { primary: string; blobs: [string, string, string] }
 
 const PROJECT_ACCENT: Record<string, ProjectAccent> = {
   "01": {
@@ -43,7 +44,7 @@ const PROJECT_ACCENT: Record<string, ProjectAccent> = {
     primary: "#B8241E",
     blobs: ["#B8860A", "#1A2B6B", "#B8241E"],
   },
-};
+}
 
 // 카드 그리드(2열)에서 프로젝트가 위치한 사분면 방향으로 blob이 살짝 쏠리게 해
 // 호버할 때마다 그라디언트가 실제로 "반응"하는 느낌을 준다. x/y는 -1~1.
@@ -52,39 +53,39 @@ const PROJECT_PULL: Record<string, { x: number; y: number }> = {
   "02": { x: 1, y: -1 },
   "03": { x: -1, y: 1 },
   "04": { x: 1, y: 1 },
-};
+}
 
 const DEFAULT_ACCENT: ProjectAccent = {
   primary: "#4F6EF7",
   blobs: ["#4F6EF7", "#4F6EF7", "#4F6EF7"],
-};
+}
 
 function hexToRgba(hex: string, alpha: number): string {
-  const h = hex.replace("#", "");
-  const r = parseInt(h.slice(0, 2), 16);
-  const g = parseInt(h.slice(2, 4), 16);
-  const b = parseInt(h.slice(4, 6), 16);
-  return `rgba(${r},${g},${b},${alpha})`;
+  const h = hex.replace("#", "")
+  const r = parseInt(h.slice(0, 2), 16)
+  const g = parseInt(h.slice(2, 4), 16)
+  const b = parseInt(h.slice(4, 6), 16)
+  return `rgba(${r},${g},${b},${alpha})`
 }
 
 // DotNav dot·태그 pill처럼 작은 UI에 브랜드 컬러를 입힐 때 쓰는 그라디언트.
 // blobs 3색이 모두 같은 단색 프로젝트는 자연히 flat color로 보이고,
 // CoChat/CoChat for Business처럼 3색이 다른 프로젝트는 그 다색이 그대로 드러난다.
 function accentGradient(accent: ProjectAccent): string {
-  return `linear-gradient(135deg, ${accent.blobs[0]}, ${accent.blobs[1]}, ${accent.blobs[2]})`;
+  return `linear-gradient(135deg, ${accent.blobs[0]}, ${accent.blobs[1]}, ${accent.blobs[2]})`
 }
 
 // hex를 흰색과 섞어 옅게 만든다. 상세 페이지에서는 opacity를 낮추는 대신 이걸
 // 써서 색 자체를 옅은 톤으로 바꾼다 — opacity만 낮추면 blob overlay가 밑에
 // 깔린 파랑/보라 앰비언트 base를 다 못 가려서 색이 탁하게 섞여 보이기 때문.
 function mixWithWhite(hex: string, ratio: number): string {
-  const h = hex.replace("#", "");
-  const r = parseInt(h.slice(0, 2), 16);
-  const g = parseInt(h.slice(2, 4), 16);
-  const b = parseInt(h.slice(4, 6), 16);
-  const mix = (c: number) => Math.round(c + (255 - c) * ratio);
-  const toHex = (c: number) => c.toString(16).padStart(2, "0");
-  return `#${toHex(mix(r))}${toHex(mix(g))}${toHex(mix(b))}`;
+  const h = hex.replace("#", "")
+  const r = parseInt(h.slice(0, 2), 16)
+  const g = parseInt(h.slice(2, 4), 16)
+  const b = parseInt(h.slice(4, 6), 16)
+  const mix = (c: number) => Math.round(c + (255 - c) * ratio)
+  const toHex = (c: number) => c.toString(16).padStart(2, "0")
+  return `#${toHex(mix(r))}${toHex(mix(g))}${toHex(mix(b))}`
 }
 
 const PROJECTS = [
@@ -128,20 +129,17 @@ const PROJECTS = [
     year: "2024",
     link: "https://github.com/oznwoo",
   },
-];
+]
 
-const PROJECT_DETAILS: Record<
-  string,
-  {
-    period: string;
-    role: string;
-    overview: string;
-    problem: { title: string; body: string }[];
-    solution: { title: string; body: string }[];
-    outcome: { stat: string; label: string }[];
-    tech: { category: string; items: string[] }[];
-  }
-> = {
+const PROJECT_DETAILS: Record<string, {
+  period: string
+  role: string
+  overview: string
+  problem: { title: string; body: string }[]
+  solution: { title: string; body: string }[]
+  outcome: { stat: string; label: string }[]
+  tech: { category: string; items: string[] }[]
+}> = {
   "01": {
     period: "2026.04 – 2026.06",
     role: "백엔드 개발 · ML 엔지니어링 (인턴십)",
@@ -316,7 +314,7 @@ const PROJECT_DETAILS: Record<
       { category: "Backend", items: ["FastAPI", "Firebase", "PostgreSQL"] },
     ],
   },
-};
+}
 
 const SKILLS = [
   {
@@ -335,7 +333,7 @@ const SKILLS = [
     category: "AI / ML",
     items: ["LLM Integration", "예측 모델링", "SHAP / LIME", "RAG"],
   },
-];
+]
 
 const EXP_COLS = [
   {
@@ -371,7 +369,7 @@ const EXP_COLS = [
       { name: "GTQ 1급", sub: "한국생산성본부", date: "2024.09" },
     ],
   },
-];
+]
 
 // ─── Gradient Background ──────────────────────────────────────────────────────
 
@@ -391,48 +389,48 @@ function GradientBackground({
   detailMode,
   detailSectionWarp,
   enteringDetail,
-}: {
-  progress: number;
-  page: number;
-  warping: boolean;
-  rotation: number;
   // 두 슬롯에 색을 번갈아 담아, 호버 대상이 바로 다른 프로젝트로 바뀌어도
   // (A 색 슬롯이 빠지는 동안 B 색 슬롯이 들어오며) 실제로 색이 섞여 보이는
   // 크로스페이드가 일어나게 한다 — 하나의 배경에 색만 스냅되는 것을 방지.
-  accentSlots: [ProjectAccent, ProjectAccent];
-  activeSlot: 0 | 1;
-  accentOn: boolean;
   // 미호버 → 호버로 처음 진입할 때마다 1씩 증가 — 값이 바뀔 때마다 웜프 버스트를
   // remount시켜 페이지 전환과 같은 버스트 애니메이션을 프로젝트 색으로 재생한다.
-  flashNonce: number;
-  flashColor: string;
   // 버스트가 매번 다른 지점에서 퍼지도록 살짝 흔드는 무작위 오프셋(vw/vh).
-  burstOffset: { x: number; y: number };
   // 호버 중인 카드의 사분면 방향으로 blob을 밀어 위치 자체도 반응하게 한다.
-  pull: { x: number; y: number };
   // 호버 대상이 바뀔 때마다 짧게 튕기며 "살아있는" 느낌을 주는 펄스.
-  pulseActive: boolean;
   // 상세 페이지에서는 이 색이 잠깐의 호버가 아니라 계속 떠 있는 배경이라,
   // 리스트 호버와 같은 강도면 텍스트 가독성을 해친다 — blob 강도를 낮추고
   // 대신 전체 wash를 살짝 올려 "너무 하얗지도, 너무 진하지도 않게" 만든다.
-  detailMode: boolean;
   // 상세 페이지에 진입/퇴장하는 가로 슬라이드는 웜프 버스트 없이 조용히
   // 넘어가지만, 상세 내부에서 섹션을 넘기는 세로 슬라이드는 메인 페이지
   // 전환과 동일한 버스트를 재생해야 한다 — 이 플래그가 그 경우만 구분한다.
-  detailSectionWarp: boolean;
   // 리스트에서 상세로 가로 슬라이드가 진행되는 동안(detailMode가 늦게 켜지기
   // 전까지) true. 이 동안은 리스트 호버 강도의 blob이 카드와 상관없이 화면에
   // 그대로 떠 있으면 어색하므로 blob 자체를 꺼서 자연스럽게 페이드아웃시키고,
   // 슬라이드가 끝나 detailMode가 켜지면 그 자리에서 프로젝트 색으로 다시
   // 페이드인한다.
-  enteringDetail: boolean;
+}: {
+  progress: number
+  page: number
+  warping: boolean
+  rotation: number
+  accentSlots: [ProjectAccent, ProjectAccent]
+  activeSlot: 0 | 1
+  accentOn: boolean
+  flashNonce: number
+  flashColor: string
+  burstOffset: { x: number; y: number }
+  pull: { x: number; y: number }
+  pulseActive: boolean
+  detailMode: boolean
+  detailSectionWarp: boolean
+  enteringDetail: boolean
 }) {
-  const p = progress;
+  const p = progress
 
   const pulseTransition = pulseActive
     ? "scale 0.16s cubic-bezier(0.34,1.56,0.64,1), translate 0.5s cubic-bezier(0.22,1,0.36,1)"
-    : "scale 0.45s cubic-bezier(0.22,1,0.36,1), translate 0.5s cubic-bezier(0.22,1,0.36,1)";
-  const pulseScale = pulseActive ? 1.1 : 1;
+    : "scale 0.45s cubic-bezier(0.22,1,0.36,1), translate 0.5s cubic-bezier(0.22,1,0.36,1)"
+  const pulseScale = pulseActive ? 1.1 : 1
 
   // 슬롯별 crossfade 오버레이 두 장을 렌더링하는 헬퍼. alpha/targetOpacity/전환
   // 속도는 blob마다 달라 인자로 받는다.
@@ -444,17 +442,17 @@ function GradientBackground({
     outMs: number,
   ) {
     return [0, 1].map((slot) => {
-      const isVisible = accentOn && activeSlot === slot && !enteringDetail;
+      const isVisible = accentOn && activeSlot === slot && !enteringDetail
       // 상세 페이지는 메인 페이지의 파랑 앰비언트 base를 꺼둔 상태라(위 background:
       // detailMode ? "transparent" 참고) 이 색이 화면에 남는 유일한 색이다.
       // 메인 페이지 배경(연한 파스텔 톤)과 밝기를 맞추기 위해 흰색을 넉넉히 섞는다.
       const color = detailMode
         ? mixWithWhite(accentSlots[slot].blobs[blobIndex], 0.6)
-        : accentSlots[slot].blobs[blobIndex];
+        : accentSlots[slot].blobs[blobIndex]
       // 배경 밝기(위 흰색 혼합 비율)는 그대로 두고, 그라디언트 자체의 존재감만
       // alpha(커버리지)를 살짝 올려서 더 뚜렷하게 만든다 — 메인 페이지 호버 강도에는
       // 영향을 주지 않도록 detailMode일 때만 적용한다.
-      const effectiveAlpha = detailMode ? Math.min(1, alpha * 1.35) : alpha;
+      const effectiveAlpha = detailMode ? Math.min(1, alpha * 1.35) : alpha
       return (
         <div
           key={slot}
@@ -473,15 +471,15 @@ function GradientBackground({
               : `opacity ${outMs}ms ease-in, background 0.6s ease`,
           }}
         />
-      );
-    });
+      )
+    })
   }
 
   // 페이지 슬라이드(0.75s)와 정확히 같은 속도로 튕기듯 크게 움직였다가,
   // 워프가 끝나면 훨씬 느린 이징으로 가라앉는다.
-  const warpEase = "cubic-bezier(0.34,1.56,0.64,1)";
-  const settleEase = "cubic-bezier(0.22,1,0.36,1)";
-  const SLIDE_S = "0.75s";
+  const warpEase = "cubic-bezier(0.34,1.56,0.64,1)"
+  const settleEase = "cubic-bezier(0.22,1,0.36,1)"
+  const SLIDE_S = "0.75s"
 
   return (
     <div
@@ -494,7 +492,7 @@ function GradientBackground({
           여기도 두 슬롯을 겹쳐 크로스페이드시켜 호버 대상이 바로 바뀌어도
           이전 색에서 다음 색으로 자연스럽게 섞이며 넘어가게 한다 */}
       {[0, 1].map((slot) => {
-        const isVisible = accentOn && activeSlot === slot && !enteringDetail;
+        const isVisible = accentOn && activeSlot === slot && !enteringDetail
         return (
           <div
             key={slot}
@@ -507,7 +505,7 @@ function GradientBackground({
                 : "opacity 0.7s ease-in",
             }}
           />
-        );
+        )
       })}
       {/* 전환마다 화면 중앙을 기준으로 조금씩 더 돌아간다(아래로 이동=시계, 위로 이동=반시계)
           — 되돌아오지 않고 누적된 각도에 머무른 채 강조색만 자연스럽게 옅어진다.
@@ -568,13 +566,15 @@ function GradientBackground({
             // 페이드아웃되게 한다. "transparent" 키워드 대신 같은 그래디언트에서
             // alpha만 0으로 낮춰, 값이 바뀔 때 background가 매끄럽게 트랜지션되게
             // 한다("transparent" ↔ 그래디언트는 매끄럽게 보간되지 않는다).
-            background: `radial-gradient(ellipse at center, rgba(199,210,254,${detailMode || enteringDetail ? 0 : 0.8}) 0%, transparent 70%)`,
+            background: `radial-gradient(ellipse at center, rgba(199,210,254,${
+              detailMode || enteringDetail ? 0 : 0.8
+            }) 0%, transparent 70%)`,
             filter: warping ? "blur(58px)" : "blur(40px)",
-            transition: (
-              warping
+            transition:
+              (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.5s ${warpEase}, filter 0.35s ease-out`
-                : `translate 0.5s ${settleEase}, scale 0.6s ${settleEase}, filter 0.6s ease-out`
-            ) + ", background 0.6s ease",
+                : `translate 0.5s ${settleEase}, scale 0.6s ${settleEase}, filter 0.6s ease-out`) +
+              ", background 0.6s ease",
           }}
         >
           <div
@@ -620,13 +620,15 @@ function GradientBackground({
             translate: `${p * 13}vw ${p * -19}vh`,
             scale: warping ? 1.11 : 1,
             borderRadius: "50%",
-            background: `radial-gradient(ellipse at center, rgba(165,180,252,${detailMode || enteringDetail ? 0 : 0.7}) 0%, transparent 70%)`,
+            background: `radial-gradient(ellipse at center, rgba(165,180,252,${
+              detailMode || enteringDetail ? 0 : 0.7
+            }) 0%, transparent 70%)`,
             filter: warping ? "blur(64px)" : "blur(46px)",
-            transition: (
-              warping
+            transition:
+              (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.55s ${warpEase}, filter 0.35s ease-out`
-                : `translate 0.65s ${settleEase}, scale 0.65s ${settleEase}, filter 0.65s ease-out`
-            ) + ", background 0.6s ease",
+                : `translate 0.65s ${settleEase}, scale 0.65s ${settleEase}, filter 0.65s ease-out`) +
+              ", background 0.6s ease",
           }}
         >
           <div
@@ -662,13 +664,15 @@ function GradientBackground({
             translate: `${p * -9}vw ${p * 13}vh`,
             scale: warping ? 1.19 : 1,
             borderRadius: "50%",
-            background: `radial-gradient(ellipse at center, rgba(224,231,255,${detailMode || enteringDetail ? 0 : 0.62}) 0%, transparent 65%)`,
+            background: `radial-gradient(ellipse at center, rgba(224,231,255,${
+              detailMode || enteringDetail ? 0 : 0.62
+            }) 0%, transparent 65%)`,
             filter: warping ? "blur(70px)" : "blur(54px)",
-            transition: (
-              warping
+            transition:
+              (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.6s ${warpEase}, filter 0.35s ease-out`
-                : `translate 0.8s ${settleEase}, scale 0.7s ${settleEase}, filter 0.7s ease-out`
-            ) + ", background 0.6s ease",
+                : `translate 0.8s ${settleEase}, scale 0.7s ${settleEase}, filter 0.7s ease-out`) +
+              ", background 0.6s ease",
           }}
         >
           <div
@@ -696,7 +700,7 @@ function GradientBackground({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // ─── Dot Nav ──────────────────────────────────────────────────────────────────
@@ -708,18 +712,18 @@ function DotNav({
   accentSlots,
   activeSlot,
   accentOn,
-}: {
-  current: number;
-  total: number;
-  onChange: (i: number) => void;
   // 현재 페이지 dot의 색. 두 슬롯을 크로스페이드시켜, 호버 대상이 바로 다른
   // 프로젝트로 바뀌어도 dot 색이 스냅되지 않고 배경과 같은 방식으로 섞이며
   // 전환된다. 프로젝트가 다색 브랜드면 그라디언트로 그 다색이 그대로 보인다.
-  accentSlots: [ProjectAccent, ProjectAccent];
-  activeSlot: 0 | 1;
-  accentOn: boolean;
+}: {
+  current: number
+  total: number
+  onChange: (i: number) => void
+  accentSlots: [ProjectAccent, ProjectAccent]
+  activeSlot: 0 | 1
+  accentOn: boolean
 }) {
-  const [hovered, setHovered] = useState(false);
+  const [hovered, setHovered] = useState(false)
   return (
     <nav
       aria-label="페이지 이동"
@@ -775,7 +779,7 @@ function DotNav({
 
       {/* 나머지 섹션 dot */}
       {Array.from({ length: total - 1 }).map((_, idx) => {
-        const i = idx + 1;
+        const i = idx + 1
         return (
           <button
             key={i}
@@ -842,10 +846,10 @@ function DotNav({
               {SECTIONS[i]}
             </span>
           </button>
-        );
+        )
       })}
     </nav>
-  );
+  )
 }
 
 // ─── Top Nav ──────────────────────────────────────────────────────────────────
@@ -860,7 +864,7 @@ function Page({ children }: { children: React.ReactNode }) {
     >
       <div className="w-full max-w-5xl">{children}</div>
     </div>
-  );
+  )
 }
 
 // ─── Pages ────────────────────────────────────────────────────────────────────
@@ -872,30 +876,30 @@ const STATUS_MESSAGES = [
   "오늘도 코드를 작성하고 있습니다",
   "좋은 팀을 만나고 싶습니다",
   "사용자의 문제를 해결하고 싶습니다",
-];
+]
 
 function StatusTicker() {
-  const [index, setIndex] = useState(0);
-  const [phase, setPhase] = useState<"visible" | "exit" | "enter">("visible");
+  const [index, setIndex] = useState(0)
+  const [phase, setPhase] = useState<"visible" | "exit" | "enter">("visible")
 
   useEffect(() => {
     const id = setInterval(() => {
-      setPhase("exit");
+      setPhase("exit")
       setTimeout(() => {
-        setIndex((i) => (i + 1) % STATUS_MESSAGES.length);
-        setPhase("enter");
-        setTimeout(() => setPhase("visible"), 20);
-      }, 300);
-    }, 2800);
-    return () => clearInterval(id);
-  }, []);
+        setIndex((i) => (i + 1) % STATUS_MESSAGES.length)
+        setPhase("enter")
+        setTimeout(() => setPhase("visible"), 20)
+      }, 300)
+    }, 2800)
+    return () => clearInterval(id)
+  }, [])
 
   const transform =
     phase === "exit"
       ? "translateY(-8px)"
       : phase === "enter"
         ? "translateY(8px)"
-        : "translateY(0)";
+        : "translateY(0)"
 
   return (
     <span
@@ -912,7 +916,7 @@ function StatusTicker() {
     >
       {STATUS_MESSAGES[index]}
     </span>
-  );
+  )
 }
 
 function PageHome() {
@@ -965,7 +969,7 @@ function PageHome() {
         </div>
       </div>
     </Page>
-  );
+  )
 }
 
 function PageAbout() {
@@ -1046,17 +1050,17 @@ function PageAbout() {
         </div>
       </div>
     </Page>
-  );
+  )
 }
 
 function PageProjects({
   onOpen,
   onHover,
 }: {
-  onOpen: (id: string) => void;
-  onHover: (id: string | null) => void;
+  onOpen: (id: string) => void
+  onHover: (id: string | null) => void
 }) {
-  const [hovered, setHovered] = useState<string | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null)
   return (
     <Page>
       <div>
@@ -1091,12 +1095,12 @@ function PageProjects({
               key={p.id}
               onClick={() => onOpen(p.id)}
               onMouseEnter={() => {
-                setHovered(p.id);
-                onHover(p.id);
+                setHovered(p.id)
+                onHover(p.id)
               }}
               onMouseLeave={() => {
-                setHovered(null);
-                onHover(null);
+                setHovered(null)
+                onHover(null)
               }}
               className="group text-left rounded-2xl p-6 flex flex-col gap-4 transition-all duration-200"
               style={{
@@ -1112,8 +1116,8 @@ function PageProjects({
               <div className="flex items-start justify-between gap-2">
                 <div className="flex flex-wrap gap-1.5">
                   {p.tags.map((t) => {
-                    const accent = PROJECT_ACCENT[p.id] ?? null;
-                    const active = hovered === p.id && accent !== null;
+                    const accent = PROJECT_ACCENT[p.id] ?? null
+                    const active = hovered === p.id && accent !== null
                     return (
                       <span
                         key={t}
@@ -1144,7 +1148,7 @@ function PageProjects({
                         )}
                         <span className="relative">{t}</span>
                       </span>
-                    );
+                    )
                   })}
                 </div>
                 <span
@@ -1181,7 +1185,7 @@ function PageProjects({
         </div>
       </div>
     </Page>
-  );
+  )
 }
 
 function PageSkills() {
@@ -1200,24 +1204,28 @@ function PageSkills() {
         >
           기술 스택
         </h2>
-        <div className="space-y-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-9">
           {SKILLS.map((group) => (
-            <div key={group.category} className="flex gap-6 items-start">
+            <div key={group.category}>
               <div
                 style={{ fontFamily: "var(--font-mono)" }}
-                className="text-[10px] text-[#4F6EF7]/60 uppercase tracking-[0.04em] w-20 shrink-0 pt-0.5"
+                className="text-[10px] text-[#4F6EF7]/60 uppercase tracking-[0.04em] mb-4"
               >
                 {group.category}
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="space-y-3">
                 {group.items.map((item) => (
-                  <span
-                    key={item}
-                    style={{ fontFamily: "var(--font-body)" }}
-                    className="text-sm text-[#0C0F1A]/60 font-light px-3 py-1 rounded-full border border-[#0C0F1A]/10 hover:border-[#4F6EF7]/30 hover:text-[#0C0F1A]/80 transition-colors duration-150"
-                  >
-                    {item}
-                  </span>
+                  <div key={item} className="group flex items-center gap-3">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#0C0F1A]/10 p-[7px] text-[#0C0F1A]/45 transition-colors duration-150 group-hover:border-[#4F6EF7]/40 group-hover:text-[#4F6EF7]">
+                      <SkillIcon name={item} />
+                    </span>
+                    <span
+                      style={{ fontFamily: "var(--font-body)" }}
+                      className="text-sm font-light text-[#0C0F1A]/60 transition-colors duration-150 group-hover:text-[#0C0F1A]/80"
+                    >
+                      {item}
+                    </span>
+                  </div>
                 ))}
               </div>
             </div>
@@ -1225,14 +1233,14 @@ function PageSkills() {
         </div>
       </div>
     </Page>
-  );
+  )
 }
 
 const CATEGORY_COLOR: Record<string, string> = {
   교육: "#4F6EF7",
   활동: "#7C5FD4",
   자격증: "#2BA68A",
-};
+}
 
 // 6 items → 6 equally-spaced columns
 const EXP_ITEMS = [
@@ -1284,10 +1292,10 @@ const EXP_ITEMS = [
     duration: false,
     side: "below" as const,
   },
-];
+]
 
 function PageExperience() {
-  const c = (cat: string) => CATEGORY_COLOR[cat];
+  const c = (cat: string) => CATEGORY_COLOR[cat]
 
   return (
     <Page>
@@ -1430,26 +1438,26 @@ function PageExperience() {
         </div>
       </div>
     </Page>
-  );
+  )
 }
 
 function PageContact() {
-  const [status, setStatus] = useState<"idle" | "sent">("idle");
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "sent">("idle")
+  const [form, setForm] = useState({ name: "", email: "", message: "" })
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("sent");
-  };
+    e.preventDefault()
+    setStatus("sent")
+  }
 
   const inputCls =
-    "w-full rounded-xl px-4 py-3 text-sm text-[#0C0F1A] placeholder-[#0C0F1A]/20 focus:outline-none transition-all duration-200";
+    "w-full rounded-xl px-4 py-3 text-sm text-[#0C0F1A] placeholder-[#0C0F1A]/20 focus:outline-none transition-all duration-200"
   const inputStyle = {
     fontFamily: "var(--font-body)",
     background: "rgba(255,255,255,0.45)",
     border: "1px solid rgba(12,15,26,0.08)",
-  };
-  const focusStyle = "focus:bg-white/70 focus:border-[#4F6EF7]/30";
+  }
+  const focusStyle = "focus:bg-white/70 focus:border-[#4F6EF7]/30"
 
   return (
     <Page>
@@ -1551,7 +1559,7 @@ function PageContact() {
                     type={type}
                     required
                     placeholder={placeholder}
-                    value={form[id as keyof typeof form]}
+                    value={form[(id as keyof typeof form)]}
                     onChange={(e) => setForm({ ...form, [id]: e.target.value })}
                     className={`${inputCls} ${focusStyle}`}
                     style={inputStyle}
@@ -1601,7 +1609,7 @@ function PageContact() {
         </div>
       </div>
     </Page>
-  );
+  )
 }
 
 // ─── Project Detail Pages (세로 슬라이더) ────────────────────────────────────
@@ -1612,22 +1620,22 @@ const DETAIL_PAGE_LABELS = [
   "Solution",
   "Outcome",
   "Stack",
-];
+]
 
 function DetailNav({
   slide,
   onClose,
   goSlide,
   accent,
-}: {
-  slide: number;
-  onClose: () => void;
-  goSlide: (i: number) => void;
   // 등록된 프로젝트면 그 브랜드 그라디언트를, 아니면 기본 블루를 dot에 쓴다.
-  accent: ProjectAccent | null;
+}: {
+  slide: number
+  onClose: () => void
+  goSlide: (i: number) => void
+  accent: ProjectAccent | null
 }) {
-  const dotBackground = accent ? accentGradient(accent) : "#4F6EF7";
-  const [hovered, setHovered] = useState(false);
+  const dotBackground = accent ? accentGradient(accent) : "#4F6EF7"
+  const [hovered, setHovered] = useState(false)
   return (
     <nav
       className="absolute left-6 top-1/2 -translate-y-1/2 z-50 flex flex-col items-start"
@@ -1710,88 +1718,88 @@ function DetailNav({
         </button>
       ))}
     </nav>
-  );
+  )
 }
 
 function ProjectDetailView({
   projectId,
   onClose,
   onTransition,
-}: {
-  projectId: string;
-  onClose: () => void;
   // 상세 내부 슬라이드 전환마다 공유 배경의 웜프(회전·버스트)를 같이 재생해
   // 메인 페이지 전환과 동일한 애니메이션 언어를 쓰게 한다.
-  onTransition: (direction: 1 | -1) => void;
+}: {
+  projectId: string
+  onClose: () => void
+  onTransition: (direction: 1 | -1) => void
 }) {
-  const [slide, setSlide] = useState(0);
-  const animating = useRef(false);
-  const touchStart = useRef<number | null>(null);
-  const detail = PROJECT_DETAILS[projectId];
-  const project = PROJECTS.find((p) => p.id === projectId)!;
-  const TOTAL_D = DETAIL_PAGE_LABELS.length;
+  const [slide, setSlide] = useState(0)
+  const animating = useRef(false)
+  const touchStart = useRef<number | null>(null)
+  const detail = PROJECT_DETAILS[projectId]
+  const project = PROJECTS.find((p) => p.id === projectId)!
+  const TOTAL_D = DETAIL_PAGE_LABELS.length
 
   useEffect(() => {
-    setSlide(0);
-  }, [projectId]);
+    setSlide(0)
+  }, [projectId])
 
   const goSlide = useCallback(
     (idx: number) => {
-      const next = Math.max(0, Math.min(TOTAL_D - 1, idx));
-      if (next === slide || animating.current) return;
-      animating.current = true;
-      onTransition(next > slide ? 1 : -1);
-      setSlide(next);
+      const next = Math.max(0, Math.min(TOTAL_D - 1, idx))
+      if (next === slide || animating.current) return
+      animating.current = true
+      onTransition(next > slide ? 1 : -1)
+      setSlide(next)
       setTimeout(() => {
-        animating.current = false;
-      }, 800);
+        animating.current = false
+      }, 800)
     },
     [slide, onTransition],
-  );
+  )
 
-  const prevSlide = useCallback(() => goSlide(slide - 1), [slide, goSlide]);
-  const nextSlide = useCallback(() => goSlide(slide + 1), [slide, goSlide]);
+  const prevSlide = useCallback(() => goSlide(slide - 1), [slide, goSlide])
+  const nextSlide = useCallback(() => goSlide(slide + 1), [slide, goSlide])
 
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      if (Math.abs(e.deltaY) < 20) return;
-      e.deltaY > 0 ? nextSlide() : prevSlide();
-    };
-    window.addEventListener("wheel", onWheel, { passive: false });
-    return () => window.removeEventListener("wheel", onWheel);
-  }, [nextSlide, prevSlide]);
+      e.preventDefault()
+      if (Math.abs(e.deltaY) < 20) return
+      e.deltaY > 0 ? nextSlide() : prevSlide()
+    }
+    window.addEventListener("wheel", onWheel, { passive: false })
+    return () => window.removeEventListener("wheel", onWheel)
+  }, [nextSlide, prevSlide])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onClose();
-        return;
+        onClose()
+        return
       }
-      if (e.key === "ArrowDown") nextSlide();
-      if (e.key === "ArrowUp") prevSlide();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [nextSlide, prevSlide, onClose]);
+      if (e.key === "ArrowDown") nextSlide()
+      if (e.key === "ArrowUp") prevSlide()
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [nextSlide, prevSlide, onClose])
 
   useEffect(() => {
     const onStart = (e: TouchEvent) => {
-      touchStart.current = e.touches[0].clientY;
-    };
+      touchStart.current = e.touches[0].clientY
+    }
     const onEnd = (e: TouchEvent) => {
-      if (touchStart.current === null) return;
-      const delta = touchStart.current - e.changedTouches[0].clientY;
-      if (Math.abs(delta) > 50) delta > 0 ? nextSlide() : prevSlide();
-      touchStart.current = null;
-    };
-    window.addEventListener("touchstart", onStart, { passive: true });
-    window.addEventListener("touchend", onEnd, { passive: true });
+      if (touchStart.current === null) return
+      const delta = touchStart.current - e.changedTouches[0].clientY
+      if (Math.abs(delta) > 50) delta > 0 ? nextSlide() : prevSlide()
+      touchStart.current = null
+    }
+    window.addEventListener("touchstart", onStart, { passive: true })
+    window.addEventListener("touchend", onEnd, { passive: true })
     return () => {
-      window.removeEventListener("touchstart", onStart);
-      window.removeEventListener("touchend", onEnd);
-    };
-  }, [nextSlide, prevSlide]);
+      window.removeEventListener("touchstart", onStart)
+      window.removeEventListener("touchend", onEnd)
+    }
+  }, [nextSlide, prevSlide])
 
   const slides = [
     // 개요
@@ -1992,9 +2000,9 @@ function ProjectDetailView({
         </a>
       </div>
     </div>,
-  ];
+  ]
 
-  const accent = PROJECT_ACCENT[projectId] ?? null;
+  const accent = PROJECT_ACCENT[projectId] ?? null
 
   return (
     <div className="w-screen h-screen relative overflow-hidden">
@@ -2035,102 +2043,102 @@ function ProjectDetailView({
         {String(TOTAL_D).padStart(2, "0")}
       </div>
     </div>
-  );
+  )
 }
 
 // ─── App ──────────────────────────────────────────────────────────────────────
 
-const TOTAL = SECTIONS.length;
+const TOTAL = SECTIONS.length
 
 export default function App() {
-  const [current, setCurrent] = useState(0);
-  const [activeProject, setActiveProject] = useState<string | null>(null);
+  const [current, setCurrent] = useState(0)
+  const [activeProject, setActiveProject] = useState<string | null>(null)
   // 상세 패널에 실제로 마운트되는 프로젝트. 닫힐 때는 가로 슬라이드(0.75s)가
   // 끝날 때까지 activeProject보다 늦게 null이 되어, 애니메이션 도중 콘텐츠가
   // 먼저 사라지지 않도록 한다.
-  const [renderedProject, setRenderedProject] = useState<string | null>(null);
-  const closeDetailTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [renderedProject, setRenderedProject] = useState<string | null>(null)
+  const closeDetailTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   // 배경이 "상세 페이지 색 모드"로 들어갈지 여부. renderedProject와 달리 열릴 때도
   // 가로 슬라이드(0.75s)가 끝날 때까지 기다렸다가 바뀐다 — 그래야 슬라이드 도중에는
   // 기존 파란 배경이 그대로 보이고, 상세 페이지로 다 넘어간 뒤에야 서서히 프로젝트
   // 색으로 바뀐다. 닫힐 때도 같은 타이밍으로 되돌아간다.
-  const [detailBgActive, setDetailBgActive] = useState(false);
-  const detailBgTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const animating = useRef(false);
-  const touchStart = useRef<number | null>(null);
+  const [detailBgActive, setDetailBgActive] = useState(false)
+  const detailBgTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const animating = useRef(false)
+  const touchStart = useRef<number | null>(null)
   // 페이지가 실제로 전환될 때만 잠깐 켜지는 "웜프" 상태 — 색 강조/스케일/블러 펄스에 쓰인다.
-  const [warping, setWarping] = useState(false);
+  const [warping, setWarping] = useState(false)
   // 지금의 웜프가 상세 페이지 "내부" 섹션 전환에서 온 것인지 표시 — true일 때만
   // 상세 모드에서도 색 버스트를 (프로젝트 색으로) 재생한다.
-  const [detailSectionWarp, setDetailSectionWarp] = useState(false);
-  const warpTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [detailSectionWarp, setDetailSectionWarp] = useState(false)
+  const warpTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   // 배경 전체의 누적 회전각 — 전환마다 시계 방향으로 더해지기만 하고 되돌아오지 않는다.
-  const [rotation, setRotation] = useState(0);
+  const [rotation, setRotation] = useState(0)
   // 프로젝트 카드 호버 시 blob에 반영할 브랜드 컬러. hoverId는 현재 호버 중인
   // 카드(없으면 null). 상세 페이지가 열려있으면 그 프로젝트 색이 우선한다 —
   // 배경/DotNav/상세 네비게이터가 모두 이 값을 공유해 리스트 호버와 동일한
   // 크로스페이드·펄스·플래시 효과로 상세 페이지 색을 표시한다.
-  const [hoverId, setHoverId] = useState<string | null>(null);
-  const displayAccentId = renderedProject ?? hoverId;
+  const [hoverId, setHoverId] = useState<string | null>(null)
+  const displayAccentId = renderedProject ?? hoverId
   const hoverAccent = displayAccentId
     ? (PROJECT_ACCENT[displayAccentId] ?? null)
-    : null;
+    : null
   // 두 슬롯에 색을 번갈아 담아둔다. 호버 대상이 A→B로 바로 바뀔 때 A가 담긴
   // 슬롯은 페이드아웃, B가 담긴 슬롯은 페이드인 되며 실제로 색이 크로스페이드된다.
   const [slotColors, setSlotColors] = useState<[ProjectAccent, ProjectAccent]>([
     DEFAULT_ACCENT,
     DEFAULT_ACCENT,
-  ]);
-  const [activeSlot, setActiveSlot] = useState<0 | 1>(0);
+  ])
+  const [activeSlot, setActiveSlot] = useState<0 | 1>(0)
   // 호버 대상이 바뀔 때마다(호버→호버 직행 포함) 짧게 튕기는 펄스를 재생한다.
-  const [pulseActive, setPulseActive] = useState(false);
-  const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const prevDisplayId = useRef<string | null>(null);
+  const [pulseActive, setPulseActive] = useState(false)
+  const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const prevDisplayId = useRef<string | null>(null)
   // 미호버 → 호버로 "처음" 진입하는 순간에만, 페이지 전환에 쓰이는 웜프 버스트를
   // 프로젝트 색으로 재생한다. 호버 중인 카드가 바로 다른 카드로 바뀌는 전환에는
   // 켜지지 않아, 크로스페이드와 역할이 겹치지 않고 "지금 막 반응을 시작했다"는
   // 신호로만 쓰인다.
-  const [flashNonce, setFlashNonce] = useState(0);
-  const [flashColor, setFlashColor] = useState(DEFAULT_ACCENT.primary);
-  const [burstOffset, setBurstOffset] = useState({ x: 0, y: 0 });
-  const prevAccentOn = useRef(false);
+  const [flashNonce, setFlashNonce] = useState(0)
+  const [flashColor, setFlashColor] = useState(DEFAULT_ACCENT.primary)
+  const [burstOffset, setBurstOffset] = useState({ x: 0, y: 0 })
+  const prevAccentOn = useRef(false)
 
   useEffect(() => {
     if (hoverAccent && slotColors[activeSlot].primary !== hoverAccent.primary) {
-      const nextSlot: 0 | 1 = activeSlot === 0 ? 1 : 0;
+      const nextSlot: 0 | 1 = activeSlot === 0 ? 1 : 0
       setSlotColors((prev) => {
-        const next = [...prev] as [ProjectAccent, ProjectAccent];
-        next[nextSlot] = hoverAccent;
-        return next;
-      });
-      setActiveSlot(nextSlot);
+        const next = [...prev] as [ProjectAccent, ProjectAccent]
+        next[nextSlot] = hoverAccent
+        return next
+      })
+      setActiveSlot(nextSlot)
     }
     if (displayAccentId && displayAccentId !== prevDisplayId.current) {
-      setPulseActive(true);
-      if (pulseTimer.current) clearTimeout(pulseTimer.current);
-      pulseTimer.current = setTimeout(() => setPulseActive(false), 420);
+      setPulseActive(true)
+      if (pulseTimer.current) clearTimeout(pulseTimer.current)
+      pulseTimer.current = setTimeout(() => setPulseActive(false), 420)
     }
-    const accentOn = hoverAccent !== null;
+    const accentOn = hoverAccent !== null
     if (accentOn && !prevAccentOn.current && hoverAccent) {
-      setFlashColor(hoverAccent.primary);
-      setFlashNonce((n) => n + 1);
+      setFlashColor(hoverAccent.primary)
+      setFlashNonce((n) => n + 1)
       setBurstOffset({
         x: (Math.random() - 0.5) * 26,
         y: (Math.random() - 0.5) * 26,
-      });
+      })
       // 페이지 전환의 회전을 그대로 재사용하되, 이번엔 방향에 매이지 않고
       // 무작위 각도·방향으로 돌려 매번 다른 방식으로 흩어지게 한다.
-      const spin = (Math.random() * 50 + 20) * (Math.random() < 0.5 ? 1 : -1);
-      setRotation((r) => r + spin);
+      const spin = (Math.random() * 50 + 20) * (Math.random() < 0.5 ? 1 : -1)
+      setRotation((r) => r + spin)
     }
-    prevAccentOn.current = accentOn;
-    prevDisplayId.current = displayAccentId;
+    prevAccentOn.current = accentOn
+    prevDisplayId.current = displayAccentId
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [displayAccentId, hoverAccent]);
+  }, [displayAccentId, hoverAccent])
 
   const pull = hoverId
     ? (PROJECT_PULL[hoverId] ?? { x: 0, y: 0 })
-    : { x: 0, y: 0 };
+    : { x: 0, y: 0 }
 
   // 페이지 전환마다 배경을 회전·웜프시키는 공통 트리거. 세로 섹션 이동뿐 아니라
   // 상세 페이지 열기/닫기, 상세 내부 슬라이드에도 동일하게 재사용해 어떤
@@ -2140,101 +2148,102 @@ export default function App() {
   // 페이지 "내부" 섹션 전환임을 표시해, 진입/퇴장 슬라이드는 조용히 넘어가되
   // 내부 섹션 전환만 메인 페이지와 같은 색 버스트를 (프로젝트 색으로) 재생한다.
   const triggerWarp = useCallback(
-    (direction: 1 | -1, resetHover: boolean = true, isDetailSection: boolean = false) => {
-      setWarping(true);
-      setDetailSectionWarp(isDetailSection);
-      if (resetHover) setHoverId(null);
-      setRotation((r) => r + direction * 34);
-      if (warpTimer.current) clearTimeout(warpTimer.current);
+    (
+      direction: 1 | -1,
+      resetHover: boolean = true,
+      isDetailSection: boolean = false,
+    ) => {
+      setWarping(true)
+      setDetailSectionWarp(isDetailSection)
+      if (resetHover) setHoverId(null)
+      setRotation((r) => r + direction * 34)
+      if (warpTimer.current) clearTimeout(warpTimer.current)
       warpTimer.current = setTimeout(() => {
-        setWarping(false);
-        setDetailSectionWarp(false);
-      }, 750);
+        setWarping(false)
+        setDetailSectionWarp(false)
+      }, 750)
     },
     [],
-  );
+  )
 
   const goTo = useCallback(
     (idx: number) => {
-      const n = Math.max(0, Math.min(TOTAL - 1, idx));
-      if (n === current || animating.current) return;
-      animating.current = true;
-      triggerWarp(n > current ? 1 : -1);
-      setCurrent(n);
+      const n = Math.max(0, Math.min(TOTAL - 1, idx))
+      if (n === current || animating.current) return
+      animating.current = true
+      triggerWarp(n > current ? 1 : -1)
+      setCurrent(n)
       setTimeout(() => {
-        animating.current = false;
-      }, 800);
+        animating.current = false
+      }, 800)
     },
     [current, triggerWarp],
-  );
+  )
 
-  const prev = useCallback(() => goTo(current - 1), [current, goTo]);
-  const next = useCallback(() => goTo(current + 1), [current, goTo]);
+  const prev = useCallback(() => goTo(current - 1), [current, goTo])
+  const next = useCallback(() => goTo(current + 1), [current, goTo])
 
   // ref로 최신 isDetail 값을 읽어 deps 배열 크기를 고정
-  const isDetail = activeProject !== null;
-  const isDetailRef = useRef(isDetail);
-  isDetailRef.current = isDetail;
+  const isDetail = activeProject !== null
+  const isDetailRef = useRef(isDetail)
+  isDetailRef.current = isDetail
 
   useEffect(() => {
-    if (closeDetailTimer.current) clearTimeout(closeDetailTimer.current);
+    if (closeDetailTimer.current) clearTimeout(closeDetailTimer.current)
     if (activeProject !== null) {
-      setRenderedProject(activeProject);
+      setRenderedProject(activeProject)
     } else {
-      closeDetailTimer.current = setTimeout(
-        () => setRenderedProject(null),
-        750,
-      );
+      closeDetailTimer.current = setTimeout(() => setRenderedProject(null), 750)
     }
-  }, [activeProject]);
+  }, [activeProject])
 
   useEffect(() => {
-    if (detailBgTimer.current) clearTimeout(detailBgTimer.current);
+    if (detailBgTimer.current) clearTimeout(detailBgTimer.current)
     detailBgTimer.current = setTimeout(() => {
-      setDetailBgActive(activeProject !== null);
-    }, 750);
-  }, [activeProject]);
+      setDetailBgActive(activeProject !== null)
+    }, 750)
+  }, [activeProject])
 
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
-      if (isDetailRef.current) return;
-      e.preventDefault();
-      if (Math.abs(e.deltaY) < 20) return;
-      e.deltaY > 0 ? next() : prev();
-    };
-    window.addEventListener("wheel", onWheel, { passive: false });
-    return () => window.removeEventListener("wheel", onWheel);
-  }, [next, prev]);
+      if (isDetailRef.current) return
+      e.preventDefault()
+      if (Math.abs(e.deltaY) < 20) return
+      e.deltaY > 0 ? next() : prev()
+    }
+    window.addEventListener("wheel", onWheel, { passive: false })
+    return () => window.removeEventListener("wheel", onWheel)
+  }, [next, prev])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (isDetailRef.current) return;
-      if (e.key === "ArrowDown") next();
-      if (e.key === "ArrowUp") prev();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [next, prev]);
+      if (isDetailRef.current) return
+      if (e.key === "ArrowDown") next()
+      if (e.key === "ArrowUp") prev()
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [next, prev])
 
   useEffect(() => {
     const onStart = (e: TouchEvent) => {
-      touchStart.current = e.touches[0].clientY;
-    };
+      touchStart.current = e.touches[0].clientY
+    }
     const onEnd = (e: TouchEvent) => {
-      if (isDetailRef.current || touchStart.current === null) return;
-      const delta = touchStart.current - e.changedTouches[0].clientY;
-      if (Math.abs(delta) > 50) delta > 0 ? next() : prev();
-      touchStart.current = null;
-    };
-    window.addEventListener("touchstart", onStart, { passive: true });
-    window.addEventListener("touchend", onEnd, { passive: true });
+      if (isDetailRef.current || touchStart.current === null) return
+      const delta = touchStart.current - e.changedTouches[0].clientY
+      if (Math.abs(delta) > 50) delta > 0 ? next() : prev()
+      touchStart.current = null
+    }
+    window.addEventListener("touchstart", onStart, { passive: true })
+    window.addEventListener("touchend", onEnd, { passive: true })
     return () => {
-      window.removeEventListener("touchstart", onStart);
-      window.removeEventListener("touchend", onEnd);
-    };
-  }, [next, prev]);
+      window.removeEventListener("touchstart", onStart)
+      window.removeEventListener("touchend", onEnd)
+    }
+  }, [next, prev])
 
-  const progress = TOTAL > 1 ? current / (TOTAL - 1) : 0;
+  const progress = TOTAL > 1 ? current / (TOTAL - 1) : 0
 
   const pages = [
     <PageHome />,
@@ -2246,13 +2255,13 @@ export default function App() {
       // 세로 슬라이드 중에는 마우스가 카드를 스쳐도 호버로 잡지 않아, 전환
       // 도중에는 슬라이드 애니메이션만 보이고 색 반응은 끼어들지 않는다.
       onHover={(id) => {
-        if (!warping) setHoverId(id);
+        if (!warping) setHoverId(id)
       }}
     />,
     <PageSkills />,
     <PageExperience />,
     <PageContact />,
-  ];
+  ]
 
   return (
     <div className="fixed inset-0 overflow-hidden">
@@ -2324,8 +2333,8 @@ export default function App() {
             <ProjectDetailView
               projectId={renderedProject}
               onClose={() => {
-                triggerWarp(-1);
-                setActiveProject(null);
+                triggerWarp(-1)
+                setActiveProject(null)
               }}
               onTransition={(direction) => triggerWarp(direction, false, true)}
             />
@@ -2333,5 +2342,5 @@ export default function App() {
         </div>
       </div>
     </div>
-  );
+  )
 }
