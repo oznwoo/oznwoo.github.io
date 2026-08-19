@@ -45,6 +45,20 @@ const PROJECT_ACCENT: Record<string, ProjectAccent> = {
   },
 };
 
+// 카드 그리드(2열)에서 프로젝트가 위치한 사분면 방향으로 blob이 살짝 쏠리게 해
+// 호버할 때마다 그라디언트가 실제로 "반응"하는 느낌을 준다. x/y는 -1~1.
+const PROJECT_PULL: Record<string, { x: number; y: number }> = {
+  "01": { x: -1, y: -1 },
+  "02": { x: 1, y: -1 },
+  "03": { x: -1, y: 1 },
+  "04": { x: 1, y: 1 },
+};
+
+const DEFAULT_ACCENT: ProjectAccent = {
+  primary: "#4F6EF7",
+  blobs: ["#4F6EF7", "#4F6EF7", "#4F6EF7"],
+};
+
 function hexToRgba(hex: string, alpha: number): string {
   const h = hex.replace("#", "");
   const r = parseInt(h.slice(0, 2), 16);
@@ -346,17 +360,72 @@ function GradientBackground({
   page,
   warping,
   rotation,
-  accentColor,
-  accentActive,
+  accentSlots,
+  activeSlot,
+  accentOn,
+  flashNonce,
+  flashColor,
+  burstOffset,
+  pull,
+  pulseActive,
 }: {
   progress: number;
   page: number;
   warping: boolean;
   rotation: number;
-  accentColor: ProjectAccent;
-  accentActive: boolean;
+  // 두 슬롯에 색을 번갈아 담아, 호버 대상이 바로 다른 프로젝트로 바뀌어도
+  // (A 색 슬롯이 빠지는 동안 B 색 슬롯이 들어오며) 실제로 색이 섞여 보이는
+  // 크로스페이드가 일어나게 한다 — 하나의 배경에 색만 스냅되는 것을 방지.
+  accentSlots: [ProjectAccent, ProjectAccent];
+  activeSlot: 0 | 1;
+  accentOn: boolean;
+  // 미호버 → 호버로 처음 진입할 때마다 1씩 증가 — 값이 바뀔 때마다 웜프 버스트를
+  // remount시켜 페이지 전환과 같은 버스트 애니메이션을 프로젝트 색으로 재생한다.
+  flashNonce: number;
+  flashColor: string;
+  // 버스트가 매번 다른 지점에서 퍼지도록 살짝 흔드는 무작위 오프셋(vw/vh).
+  burstOffset: { x: number; y: number };
+  // 호버 중인 카드의 사분면 방향으로 blob을 밀어 위치 자체도 반응하게 한다.
+  pull: { x: number; y: number };
+  // 호버 대상이 바뀔 때마다 짧게 튕기며 "살아있는" 느낌을 주는 펄스.
+  pulseActive: boolean;
 }) {
   const p = progress;
+
+  const pulseTransition = pulseActive
+    ? "scale 0.16s cubic-bezier(0.34,1.56,0.64,1), translate 0.5s cubic-bezier(0.22,1,0.36,1)"
+    : "scale 0.45s cubic-bezier(0.22,1,0.36,1), translate 0.5s cubic-bezier(0.22,1,0.36,1)";
+  const pulseScale = pulseActive ? 1.1 : 1;
+
+  // 슬롯별 crossfade 오버레이 두 장을 렌더링하는 헬퍼. alpha/targetOpacity/전환
+  // 속도는 blob마다 달라 인자로 받는다.
+  function renderAccentSlots(
+    blobIndex: 0 | 1 | 2,
+    alpha: number,
+    targetOpacity: number,
+    inMs: number,
+    outMs: number,
+  ) {
+    return [0, 1].map((slot) => {
+      const isVisible = accentOn && activeSlot === slot;
+      return (
+        <div
+          key={slot}
+          className="absolute inset-0 rounded-full"
+          style={{
+            background: `radial-gradient(ellipse at center, ${hexToRgba(
+              accentSlots[slot].blobs[blobIndex],
+              alpha,
+            )} 0%, transparent ${blobIndex === 2 ? 65 : 70}%)`,
+            opacity: isVisible ? targetOpacity : 0,
+            transition: isVisible
+              ? `opacity ${inMs}ms ease-out`
+              : `opacity ${outMs}ms ease-in`,
+          }}
+        />
+      );
+    });
+  }
 
   // 페이지 슬라이드(0.75s)와 정확히 같은 속도로 튕기듯 크게 움직였다가,
   // 워프가 끝나면 훨씬 느린 이징으로 가라앉는다.
@@ -371,19 +440,29 @@ function GradientBackground({
       style={{ background: "#EEF1F9" }}
     >
       {/* 프로젝트 호버 시 캔버스 바탕색 자체도 브랜드 컬러 쪽으로 은은하게 물든다.
-          blob과 별개로 회전 wrapper 바깥에 둬서 화면 전체가 고르게 톤이 바뀐다 */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundColor: accentColor.primary,
-          opacity: accentActive ? 0.09 : 0,
-          transition: accentActive
-            ? "opacity 0.3s ease-out"
-            : "opacity 0.7s ease-in",
-        }}
-      />
+          blob과 별개로 회전 wrapper 바깥에 둬서 화면 전체가 고르게 톤이 바뀐다.
+          여기도 두 슬롯을 겹쳐 크로스페이드시켜 호버 대상이 바로 바뀌어도
+          이전 색에서 다음 색으로 자연스럽게 섞이며 넘어가게 한다 */}
+      {[0, 1].map((slot) => {
+        const isVisible = accentOn && activeSlot === slot;
+        return (
+          <div
+            key={slot}
+            className="absolute inset-0"
+            style={{
+              backgroundColor: accentSlots[slot].primary,
+              opacity: isVisible ? 0.09 : 0,
+              transition: isVisible
+                ? "opacity 0.3s ease-out"
+                : "opacity 0.7s ease-in",
+            }}
+          />
+        );
+      })}
       {/* 전환마다 화면 중앙을 기준으로 조금씩 더 돌아간다(아래로 이동=시계, 위로 이동=반시계)
-          — 되돌아오지 않고 누적된 각도에 머무른 채 강조색만 자연스럽게 옅어진다 */}
+          — 되돌아오지 않고 누적된 각도에 머무른 채 강조색만 자연스럽게 옅어진다.
+          프로젝트 호버가 처음 시작될 때도 같은 회전을 쓰되, 이번엔 방향 없이
+          무작위 각도로 돌아 페이지 전환과는 다른 우발적인 움직임을 준다 */}
       <div
         className="absolute inset-0"
         style={{
@@ -392,7 +471,7 @@ function GradientBackground({
         }}
       >
         <div
-          key={page}
+          key={`page-${page}`}
           className="gradient-warp-burst absolute rounded-full"
           style={{
             width: "42vw",
@@ -405,6 +484,24 @@ function GradientBackground({
               "radial-gradient(circle, rgba(79,110,247,0.32) 0%, rgba(79,110,247,0) 70%)",
           }}
         />
+        {/* 미호버 → 호버로 처음 진입하는 순간에만 재생되는 버스트 — 페이지 전환의
+            웜프 버스트를 그대로 재사용하되 프로젝트 색으로 물들이고, 매번 중심
+            위치를 살짝 무작위로 흔들어 퍼지는 느낌을 다양하게 준다 */}
+        {flashNonce > 0 && (
+          <div
+            key={`hover-${flashNonce}`}
+            className="gradient-warp-burst absolute rounded-full"
+            style={{
+              width: "46vw",
+              height: "46vw",
+              top: "50%",
+              left: "50%",
+              marginTop: `calc(-23vw + ${burstOffset.y}vh)`,
+              marginLeft: `calc(-23vw + ${burstOffset.x}vw)`,
+              background: `radial-gradient(circle, ${hexToRgba(flashColor, 0.45)} 0%, ${hexToRgba(flashColor, 0)} 70%)`,
+            }}
+          />
+        )}
         <div
           className="gradient-blob-a absolute"
           style={{
@@ -435,17 +532,19 @@ function GradientBackground({
             }}
           />
           {/* 프로젝트 카드 호버 시 브랜드 컬러로 완전히 갈아치움 — base blob과 동일한
-              falloff로 덮어써서 밑에 깔린 파란/보라가 비쳐 보이지 않게 한다 */}
+              falloff로 덮어써서 밑에 깔린 파란/보라가 비쳐 보이지 않게 한다.
+              pull/pulse 래퍼로 감싸서 호버할 때마다 위치가 밀리고 튕기며
+              들어오게 한다 */}
           <div
-            className="absolute inset-0 rounded-full"
+            className="absolute inset-0"
             style={{
-              background: `radial-gradient(ellipse at center, ${hexToRgba(accentColor.blobs[0], 0.6)} 0%, transparent 70%)`,
-              opacity: accentActive ? 0.75 : 0,
-              transition: accentActive
-                ? "opacity 0.28s ease-out"
-                : "opacity 0.6s ease-in",
+              translate: `${pull.x * 5}vw ${pull.y * 5}vh`,
+              scale: pulseScale,
+              transition: pulseTransition,
             }}
-          />
+          >
+            {renderAccentSlots(0, 0.6, 0.75, 300, 600)}
+          </div>
         </div>
         <div
           className="gradient-blob-b absolute"
@@ -477,15 +576,15 @@ function GradientBackground({
             }}
           />
           <div
-            className="absolute inset-0 rounded-full"
+            className="absolute inset-0"
             style={{
-              background: `radial-gradient(ellipse at center, ${hexToRgba(accentColor.blobs[1], 0.5)} 0%, transparent 70%)`,
-              opacity: accentActive ? 0.65 : 0,
-              transition: accentActive
-                ? "opacity 0.34s ease-out"
-                : "opacity 0.65s ease-in",
+              translate: `${pull.x * -4}vw ${pull.y * -4}vh`,
+              scale: pulseScale,
+              transition: pulseTransition,
             }}
-          />
+          >
+            {renderAccentSlots(1, 0.5, 0.65, 340, 650)}
+          </div>
         </div>
         <div
           className="gradient-blob-c absolute"
@@ -517,15 +616,15 @@ function GradientBackground({
             }}
           />
           <div
-            className="absolute inset-0 rounded-full"
+            className="absolute inset-0"
             style={{
-              background: `radial-gradient(ellipse at center, ${hexToRgba(accentColor.blobs[2], 0.42)} 0%, transparent 65%)`,
-              opacity: accentActive ? 0.55 : 0,
-              transition: accentActive
-                ? "opacity 0.4s ease-out"
-                : "opacity 0.7s ease-in",
+              translate: `${pull.x * 3}vw ${pull.y * 6}vh`,
+              scale: pulseScale,
+              transition: pulseTransition,
             }}
-          />
+          >
+            {renderAccentSlots(2, 0.42, 0.55, 400, 700)}
+          </div>
         </div>
       </div>
     </div>
@@ -848,10 +947,10 @@ function PageAbout() {
 
 function PageProjects({
   onOpen,
-  onHoverColor,
+  onHover,
 }: {
   onOpen: (id: string) => void;
-  onHoverColor: (color: ProjectAccent | null) => void;
+  onHover: (id: string | null) => void;
 }) {
   const [hovered, setHovered] = useState<string | null>(null);
   return (
@@ -889,11 +988,11 @@ function PageProjects({
               onClick={() => onOpen(p.id)}
               onMouseEnter={() => {
                 setHovered(p.id);
-                onHoverColor(PROJECT_ACCENT[p.id] ?? null);
+                onHover(p.id);
               }}
               onMouseLeave={() => {
                 setHovered(null);
-                onHoverColor(null);
+                onHover(null);
               }}
               className="group text-left rounded-2xl p-6 flex flex-col gap-4 transition-all duration-200"
               style={{
@@ -1825,17 +1924,63 @@ export default function App() {
   const warpTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // 배경 전체의 누적 회전각 — 전환마다 시계 방향으로 더해지기만 하고 되돌아오지 않는다.
   const [rotation, setRotation] = useState(0);
-  // 프로젝트 카드 호버 시 blob에 반영할 브랜드 컬러. hoverAccent는 현재 호버 중인
-  // 색(null이면 미호버), lastAccent는 페이드아웃 도중에도 그라디언트가 유지할
-  // 마지막 색 — background는 애니메이션이 안 되므로 opacity만 움직여서 자연스럽게 없앤다.
-  const [hoverAccent, setHoverAccent] = useState<ProjectAccent | null>(null);
-  const [lastAccent, setLastAccent] = useState<ProjectAccent>({
-    primary: "#4F6EF7",
-    blobs: ["#4F6EF7", "#4F6EF7", "#4F6EF7"],
-  });
+  // 프로젝트 카드 호버 시 blob에 반영할 브랜드 컬러. hoverId는 현재 호버 중인
+  // 카드(없으면 null), hoverAccent는 그 색상 데이터.
+  const [hoverId, setHoverId] = useState<string | null>(null);
+  const hoverAccent = hoverId ? (PROJECT_ACCENT[hoverId] ?? null) : null;
+  // 두 슬롯에 색을 번갈아 담아둔다. 호버 대상이 A→B로 바로 바뀔 때 A가 담긴
+  // 슬롯은 페이드아웃, B가 담긴 슬롯은 페이드인 되며 실제로 색이 크로스페이드된다.
+  const [slotColors, setSlotColors] = useState<[ProjectAccent, ProjectAccent]>(
+    [DEFAULT_ACCENT, DEFAULT_ACCENT],
+  );
+  const [activeSlot, setActiveSlot] = useState<0 | 1>(0);
+  // 호버 대상이 바뀔 때마다(호버→호버 직행 포함) 짧게 튕기는 펄스를 재생한다.
+  const [pulseActive, setPulseActive] = useState(false);
+  const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const prevHoverId = useRef<string | null>(null);
+  // 미호버 → 호버로 "처음" 진입하는 순간에만, 페이지 전환에 쓰이는 웜프 버스트를
+  // 프로젝트 색으로 재생한다. 호버 중인 카드가 바로 다른 카드로 바뀌는 전환에는
+  // 켜지지 않아, 크로스페이드와 역할이 겹치지 않고 "지금 막 반응을 시작했다"는
+  // 신호로만 쓰인다.
+  const [flashNonce, setFlashNonce] = useState(0);
+  const [flashColor, setFlashColor] = useState(DEFAULT_ACCENT.primary);
+  const [burstOffset, setBurstOffset] = useState({ x: 0, y: 0 });
+  const prevAccentOn = useRef(false);
+
   useEffect(() => {
-    if (hoverAccent) setLastAccent(hoverAccent);
-  }, [hoverAccent]);
+    if (hoverAccent && slotColors[activeSlot].primary !== hoverAccent.primary) {
+      const nextSlot: 0 | 1 = activeSlot === 0 ? 1 : 0;
+      setSlotColors((prev) => {
+        const next = [...prev] as [ProjectAccent, ProjectAccent];
+        next[nextSlot] = hoverAccent;
+        return next;
+      });
+      setActiveSlot(nextSlot);
+    }
+    if (hoverId && hoverId !== prevHoverId.current) {
+      setPulseActive(true);
+      if (pulseTimer.current) clearTimeout(pulseTimer.current);
+      pulseTimer.current = setTimeout(() => setPulseActive(false), 420);
+    }
+    const accentOn = hoverAccent !== null;
+    if (accentOn && !prevAccentOn.current && hoverAccent) {
+      setFlashColor(hoverAccent.primary);
+      setFlashNonce((n) => n + 1);
+      setBurstOffset({
+        x: (Math.random() - 0.5) * 26,
+        y: (Math.random() - 0.5) * 26,
+      });
+      // 페이지 전환의 회전을 그대로 재사용하되, 이번엔 방향에 매이지 않고
+      // 무작위 각도·방향으로 돌려 매번 다른 방식으로 흩어지게 한다.
+      const spin = (Math.random() * 50 + 20) * (Math.random() < 0.5 ? 1 : -1);
+      setRotation((r) => r + spin);
+    }
+    prevAccentOn.current = accentOn;
+    prevHoverId.current = hoverId;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hoverId, hoverAccent]);
+
+  const pull = hoverId ? (PROJECT_PULL[hoverId] ?? { x: 0, y: 0 }) : { x: 0, y: 0 };
 
   const goTo = useCallback(
     (idx: number) => {
@@ -1918,7 +2063,7 @@ export default function App() {
   const pages = [
     <PageHome />,
     <PageAbout />,
-    <PageProjects onOpen={setActiveProject} onHoverColor={setHoverAccent} />,
+    <PageProjects onOpen={setActiveProject} onHover={setHoverId} />,
     <PageSkills />,
     <PageExperience />,
     <PageContact />,
@@ -1931,8 +2076,14 @@ export default function App() {
         page={current}
         warping={warping}
         rotation={rotation}
-        accentColor={lastAccent}
-        accentActive={hoverAccent !== null}
+        accentSlots={slotColors}
+        activeSlot={activeSlot}
+        accentOn={hoverAccent !== null}
+        flashNonce={flashNonce}
+        flashColor={flashColor}
+        burstOffset={burstOffset}
+        pull={pull}
+        pulseActive={pulseActive}
       />
 
       {/* 가로 슬라이드: 메인(0) ↔ 상세(1) */}
