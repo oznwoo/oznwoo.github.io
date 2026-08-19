@@ -2145,13 +2145,9 @@ export default function App() {
     <PageHome />,
     <PageAbout />,
     <PageProjects
-      onOpen={(id) => {
-        // 상세 페이지를 여는 것도 다른 전환과 같은 웜프 애니메이션을 탄다.
-        // resetHover는 false — 지금 막 호버 중이던 프로젝트 색이 그대로
-        // 상세 페이지 색으로 이어져야 하므로 여기서 끊지 않는다.
-        triggerWarp(1, false);
-        setActiveProject(id);
-      }}
+      // 상세 페이지로 들어갈 때는 웜프(회전·blob 강조) 없이 가로 슬라이드만
+      // 재생한다. 호버 중이던 색은 renderedProject가 이어받아 끊기지 않는다.
+      onOpen={setActiveProject}
       // 세로 슬라이드 중에는 마우스가 카드를 스쳐도 호버로 잡지 않아, 전환
       // 도중에는 슬라이드 애니메이션만 보이고 색 반응은 끼어들지 않는다.
       onHover={(id) => {
