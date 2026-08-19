@@ -2,14 +2,15 @@ import {
   siPython,
   siTypescript,
   siJavascript,
-  siDart,
   siReact,
   siNextdotjs,
-  siFlutter,
   siTailwindcss,
   siFastapi,
   siNodedotjs,
   siPostgresql,
+  siMysql,
+  siClaudecode,
+  siGooglegemini,
 } from "simple-icons"
 
 // 브랜드 로고가 있는 기술만 실제 심볼을 사용 — currentColor로 렌더링해
@@ -18,24 +19,22 @@ const SKILL_ICON_PATHS: Record<string, string> = {
   Python: siPython.path,
   TypeScript: siTypescript.path,
   JavaScript: siJavascript.path,
-  Dart: siDart.path,
   React: siReact.path,
   "Next.js": siNextdotjs.path,
-  Flutter: siFlutter.path,
   "Tailwind CSS": siTailwindcss.path,
   FastAPI: siFastapi.path,
   "Node.js": siNodedotjs.path,
   PostgreSQL: siPostgresql.path,
+  MySQL: siMysql.path,
+  "Claude Code": siClaudecode.path,
+  Gemini: siGooglegemini.path,
 }
 
-// 브랜드 로고가 없는 개념/기법형 항목은 실제 로고를 지어내지 않고
-// 모노스페이스 이니셜로 대체한다.
+// 브랜드 로고가 없는 항목은 실제 로고를 지어내지 않고 모노스페이스
+// 이니셜로 대체한다 (simple-icons에 React Native·GPT 전용 로고 없음).
 const SKILL_INITIALS: Record<string, string> = {
-  "REST API": "API",
-  "LLM Integration": "LLM",
-  "예측 모델링": "PM",
-  "SHAP / LIME": "SL",
-  RAG: "RAG",
+  "React Native": "RN",
+  GPT: "GPT",
 }
 
 export function SkillIcon({ name }: { name: string }) {

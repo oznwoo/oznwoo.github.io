@@ -312,19 +312,19 @@ const PROJECT_DETAILS: Record<string, {
 const SKILLS = [
   {
     category: "Languages",
-    items: ["Python", "TypeScript", "JavaScript", "Dart"],
+    items: ["Python", "JavaScript", "TypeScript"],
   },
   {
     category: "Frontend",
-    items: ["React", "Next.js", "Flutter", "Tailwind CSS"],
+    items: ["React", "Next.js", "Tailwind CSS", "React Native"],
   },
   {
     category: "Backend",
-    items: ["FastAPI", "Node.js", "REST API", "PostgreSQL"],
+    items: ["FastAPI", "Node.js", "PostgreSQL", "MySQL"],
   },
   {
-    category: "AI / ML",
-    items: ["LLM Integration", "예측 모델링", "SHAP / LIME", "RAG"],
+    category: "AI",
+    items: ["Claude Code", "Gemini", "GPT"],
   },
 ]
 
@@ -1188,6 +1188,9 @@ const CATEGORY_COLOR: Record<string, string> = {
 }
 
 function PageResume() {
+  const education = EXP_COLS.find((col) => col.title === "교육")
+  const experienceCols = EXP_COLS.filter((col) => col.title !== "교육")
+
   return (
     <Page>
       <div>
@@ -1205,41 +1208,82 @@ function PageResume() {
         </h2>
         <div className="grid grid-cols-1 gap-x-14 gap-y-10 md:grid-cols-2">
           <div>
-            <div
-              style={{ fontFamily: "var(--font-mono)" }}
-              className="mb-5 text-[10px] uppercase tracking-[0.04em] text-[#0C0F1A]/25"
-            >
-              Skills
-            </div>
-            <div className="grid grid-cols-2 gap-x-6 gap-y-5">
-              {SKILLS.map((group) => (
-                <div key={group.category}>
-                  <div
-                    style={{ fontFamily: "var(--font-mono)" }}
-                    className="mb-2.5 text-[9px] uppercase tracking-[0.04em] text-[#4F6EF7]/60"
-                  >
-                    {group.category}
-                  </div>
-                  <div className="space-y-2">
-                    {group.items.map((item) => (
-                      <div
-                        key={item}
-                        className="group flex items-center gap-2"
-                      >
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[#0C0F1A]/10 p-[5px] text-[#0C0F1A]/45 transition-colors duration-150 group-hover:border-[#4F6EF7]/40 group-hover:text-[#4F6EF7]">
-                          <SkillIcon name={item} />
-                        </span>
-                        <span
-                          style={{ fontFamily: "var(--font-body)" }}
-                          className="text-xs font-light text-[#0C0F1A]/60 transition-colors duration-150 group-hover:text-[#0C0F1A]/80"
-                        >
-                          {item}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+            {education && (
+              <div className="mb-8">
+                <div
+                  style={{ fontFamily: "var(--font-mono)" }}
+                  className="mb-4 text-[10px] uppercase tracking-[0.04em] text-[#0C0F1A]/25"
+                >
+                  Education
                 </div>
-              ))}
+                <div className="space-y-4">
+                  {education.items.map((item) => (
+                    <div key={item.name}>
+                      <div className="flex items-baseline justify-between gap-3">
+                        <div
+                          style={{
+                            fontFamily: "var(--font-nanum)",
+                            fontWeight: 700,
+                          }}
+                          className="text-[13px] leading-snug text-[#0C0F1A]"
+                        >
+                          {item.name}
+                        </div>
+                        <div
+                          style={{ fontFamily: "var(--font-mono)" }}
+                          className="shrink-0 whitespace-nowrap text-[10px] text-[#0C0F1A]/30"
+                        >
+                          {item.date}
+                        </div>
+                      </div>
+                      <div
+                        style={{ fontFamily: "var(--font-body)" }}
+                        className="text-[11px] font-light leading-relaxed text-[#0C0F1A]/40"
+                      >
+                        {item.sub}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div>
+              <div
+                style={{ fontFamily: "var(--font-mono)" }}
+                className="mb-4 text-[10px] uppercase tracking-[0.04em] text-[#0C0F1A]/25"
+              >
+                Skills
+              </div>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-5">
+                {SKILLS.map((group) => (
+                  <div key={group.category}>
+                    <div
+                      style={{ fontFamily: "var(--font-mono)" }}
+                      className="mb-2.5 text-[9px] uppercase tracking-[0.04em] text-[#4F6EF7]/60"
+                    >
+                      {group.category}
+                    </div>
+                    <div className="space-y-2">
+                      {group.items.map((item) => (
+                        <div
+                          key={item}
+                          className="group flex items-center gap-2"
+                        >
+                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[#0C0F1A]/10 p-[5px] text-[#0C0F1A]/45 transition-colors duration-150 group-hover:border-[#4F6EF7]/40 group-hover:text-[#4F6EF7]">
+                            <SkillIcon name={item} />
+                          </span>
+                          <span
+                            style={{ fontFamily: "var(--font-body)" }}
+                            className="text-xs font-light text-[#0C0F1A]/60 transition-colors duration-150 group-hover:text-[#0C0F1A]/80"
+                          >
+                            {item}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <div>
@@ -1250,7 +1294,7 @@ function PageResume() {
               Experience
             </div>
             <div className="space-y-6">
-              {EXP_COLS.map((col) => (
+              {experienceCols.map((col) => (
                 <div key={col.title}>
                   <div
                     style={{
