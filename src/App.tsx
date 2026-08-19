@@ -5,14 +5,7 @@ import { SkillIcon } from "@/lib/skillIcons"
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
-const SECTIONS = [
-  "Home",
-  "About",
-  "Projects",
-  "Skills",
-  "Experience",
-  "Contact",
-]
+const SECTIONS = ["Home", "About", "Resume", "Projects", "Contact"]
 
 // 프로젝트 카드 호버 시 반영할 브랜드 컬러 (로고/배너 기반). 로고를 받은 프로젝트만
 // 등록되어 있고, 없는 프로젝트는 호버해도 색이 바뀌지 않는다.
@@ -337,17 +330,6 @@ const SKILLS = [
 
 const EXP_COLS = [
   {
-    title: "활동",
-    items: [
-      {
-        name: "구름 DEEP DIVE 해커톤",
-        sub: "CoChat for Business 팀 리더",
-        date: "2026.04",
-      },
-      { name: "KIPS 종합학술대회", sub: "CoChat 논문 발표", date: "2025.05" },
-    ],
-  },
-  {
     title: "교육",
     items: [
       {
@@ -360,6 +342,17 @@ const EXP_COLS = [
         sub: "컴퓨터전공 졸업 · GPA 4.22 / 4.5",
         date: "2020 – 2026",
       },
+    ],
+  },
+  {
+    title: "활동",
+    items: [
+      {
+        name: "구름 DEEP DIVE 해커톤",
+        sub: "CoChat for Business 팀 리더",
+        date: "2026.04",
+      },
+      { name: "KIPS 종합학술대회", sub: "CoChat 논문 발표", date: "2025.05" },
     ],
   },
   {
@@ -1188,115 +1181,13 @@ function PageProjects({
   )
 }
 
-function PageSkills() {
-  return (
-    <Page>
-      <div>
-        <span
-          style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase"
-        >
-          Skills
-        </span>
-        <h2
-          style={{ fontFamily: "var(--font-nanum)", fontWeight: 700 }}
-          className="text-[clamp(1.4rem,3vw,2.2rem)] text-[#0C0F1A] mt-1 mb-10"
-        >
-          기술 스택
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-9">
-          {SKILLS.map((group) => (
-            <div key={group.category}>
-              <div
-                style={{ fontFamily: "var(--font-mono)" }}
-                className="text-[10px] text-[#4F6EF7]/60 uppercase tracking-[0.04em] mb-4"
-              >
-                {group.category}
-              </div>
-              <div className="space-y-3">
-                {group.items.map((item) => (
-                  <div key={item} className="group flex items-center gap-3">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#0C0F1A]/10 p-[7px] text-[#0C0F1A]/45 transition-colors duration-150 group-hover:border-[#4F6EF7]/40 group-hover:text-[#4F6EF7]">
-                      <SkillIcon name={item} />
-                    </span>
-                    <span
-                      style={{ fontFamily: "var(--font-body)" }}
-                      className="text-sm font-light text-[#0C0F1A]/60 transition-colors duration-150 group-hover:text-[#0C0F1A]/80"
-                    >
-                      {item}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </Page>
-  )
-}
-
 const CATEGORY_COLOR: Record<string, string> = {
   교육: "#4F6EF7",
   활동: "#7C5FD4",
   자격증: "#2BA68A",
 }
 
-// 6 items → 6 equally-spaced columns
-const EXP_ITEMS = [
-  {
-    name: "한양대학교 ERICA",
-    sub: "컴퓨터전공 졸업 · GPA 4.22 / 4.5",
-    date: "2020 – 2026",
-    category: "교육",
-    duration: true,
-    side: "above" as const,
-  },
-  {
-    name: "GTQ 1급",
-    sub: "한국생산성본부",
-    date: "2024.09",
-    category: "자격증",
-    duration: false,
-    side: "below" as const,
-  },
-  {
-    name: "KIPS 종합학술대회",
-    sub: "CoChat 논문 발표",
-    date: "2025.05",
-    category: "활동",
-    duration: false,
-    side: "above" as const,
-  },
-  {
-    name: "핀테크 인턴십 코스 4기",
-    sub: "풀스택 과정 수료",
-    date: "2025.12 – 2026.06",
-    category: "교육",
-    duration: true,
-    side: "below" as const,
-  },
-  {
-    name: "구름 DEEP DIVE 해커톤",
-    sub: "CoChat for Business 팀 리더",
-    date: "2026.04",
-    category: "활동",
-    duration: false,
-    side: "above" as const,
-  },
-  {
-    name: "정보처리기사",
-    sub: "한국산업인력공단",
-    date: "2026.09",
-    category: "자격증",
-    duration: false,
-    side: "below" as const,
-  },
-]
-
-function PageExperience() {
-  const c = (cat: string) => CATEGORY_COLOR[cat]
-
+function PageResume() {
   return (
     <Page>
       <div>
@@ -1304,137 +1195,108 @@ function PageExperience() {
           style={{ fontFamily: "var(--font-mono)" }}
           className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase"
         >
-          Experience
+          Resume
         </span>
         <h2
           style={{ fontFamily: "var(--font-nanum)", fontWeight: 700 }}
           className="text-[clamp(1.4rem,3vw,2.2rem)] text-[#0C0F1A] mt-1 mb-8"
         >
-          경력 및 학력
+          이력
         </h2>
-
-        {/* legend */}
-        <div className="flex gap-5 mb-10">
-          {Object.entries(CATEGORY_COLOR).map(([label, color]) => (
-            <div key={label} className="flex items-center gap-1.5">
-              <div
-                className="w-[10px] h-[3px] rounded-full shrink-0"
-                style={{ background: color, opacity: 0.5 }}
-              />
-              <span
-                style={{ fontFamily: "var(--font-mono)", color }}
-                className="text-[10px] uppercase tracking-[0.04em] opacity-55"
-              >
-                {label}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* timeline: 6 equal columns */}
-        <div
-          className="grid gap-0"
-          style={{ gridTemplateColumns: `repeat(${EXP_ITEMS.length}, 1fr)` }}
-        >
-          {/* ROW 1: labels above axis */}
-          {EXP_ITEMS.map((item) => (
+        <div className="grid grid-cols-1 gap-x-14 gap-y-10 md:grid-cols-2">
+          <div>
             <div
-              key={item.name + "-above"}
-              className="flex flex-col items-start pr-2 pb-3"
-              style={{
-                minHeight: "72px",
-                justifyContent: item.side === "above" ? "flex-end" : "flex-end",
-                visibility: item.side === "above" ? "visible" : "hidden",
-              }}
+              style={{ fontFamily: "var(--font-mono)" }}
+              className="mb-5 text-[10px] uppercase tracking-[0.04em] text-[#0C0F1A]/25"
             >
-              <div
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  color: c(item.category),
-                }}
-                className="text-[9px] opacity-50 mb-0.5"
-              >
-                {item.date}
-              </div>
-              <div
-                style={{ fontFamily: "var(--font-nanum)", fontWeight: 700 }}
-                className="text-[11px] text-[#0C0F1A] leading-snug"
-              >
-                {item.name}
-              </div>
-              <div
-                style={{ fontFamily: "var(--font-body)" }}
-                className="text-[10px] text-[#0C0F1A]/35 font-light leading-relaxed"
-              >
-                {item.sub}
-              </div>
+              Skills
             </div>
-          ))}
-
-          {/* ROW 2: axis line + markers */}
-          {EXP_ITEMS.map((item) => (
+            <div className="grid grid-cols-2 gap-x-6 gap-y-5">
+              {SKILLS.map((group) => (
+                <div key={group.category}>
+                  <div
+                    style={{ fontFamily: "var(--font-mono)" }}
+                    className="mb-2.5 text-[9px] uppercase tracking-[0.04em] text-[#4F6EF7]/60"
+                  >
+                    {group.category}
+                  </div>
+                  <div className="space-y-2">
+                    {group.items.map((item) => (
+                      <div
+                        key={item}
+                        className="group flex items-center gap-2"
+                      >
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[#0C0F1A]/10 p-[5px] text-[#0C0F1A]/45 transition-colors duration-150 group-hover:border-[#4F6EF7]/40 group-hover:text-[#4F6EF7]">
+                          <SkillIcon name={item} />
+                        </span>
+                        <span
+                          style={{ fontFamily: "var(--font-body)" }}
+                          className="text-xs font-light text-[#0C0F1A]/60 transition-colors duration-150 group-hover:text-[#0C0F1A]/80"
+                        >
+                          {item}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
             <div
-              key={item.name + "-axis"}
-              className="relative flex items-center"
-              style={{ height: "16px" }}
+              style={{ fontFamily: "var(--font-mono)" }}
+              className="mb-5 text-[10px] uppercase tracking-[0.04em] text-[#0C0F1A]/25"
             >
-              {/* axis segment (full width of cell) */}
-              <div
-                className="absolute inset-y-[7px] left-0 right-0 bg-[#0C0F1A]/10"
-                style={{ height: "1px", top: "50%" }}
-              />
-              {/* marker */}
-              {item.duration ? (
-                <div
-                  className="relative z-10 h-[5px] rounded-full ml-0 mr-3"
-                  style={{
-                    background: c(item.category),
-                    opacity: 0.5,
-                    width: "calc(100% - 12px)",
-                  }}
-                />
-              ) : (
-                <div
-                  className="relative z-10 w-[7px] h-[7px] rounded-full shrink-0"
-                  style={{ background: c(item.category), opacity: 0.5 }}
-                />
-              )}
+              Experience
             </div>
-          ))}
-
-          {/* ROW 3: labels below axis */}
-          {EXP_ITEMS.map((item) => (
-            <div
-              key={item.name + "-below"}
-              className="flex flex-col items-start pr-2 pt-3"
-              style={{
-                minHeight: "72px",
-                visibility: item.side === "below" ? "visible" : "hidden",
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  color: c(item.category),
-                }}
-                className="text-[9px] opacity-50 mb-0.5"
-              >
-                {item.date}
-              </div>
-              <div
-                style={{ fontFamily: "var(--font-nanum)", fontWeight: 700 }}
-                className="text-[11px] text-[#0C0F1A] leading-snug"
-              >
-                {item.name}
-              </div>
-              <div
-                style={{ fontFamily: "var(--font-body)" }}
-                className="text-[10px] text-[#0C0F1A]/35 font-light leading-relaxed"
-              >
-                {item.sub}
-              </div>
+            <div className="space-y-6">
+              {EXP_COLS.map((col) => (
+                <div key={col.title}>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      color: CATEGORY_COLOR[col.title],
+                    }}
+                    className="mb-2.5 text-[9px] uppercase tracking-[0.04em] opacity-60"
+                  >
+                    {col.title}
+                  </div>
+                  <div className="space-y-3">
+                    {col.items.map((item) => (
+                      <div
+                        key={item.name}
+                        className="flex items-baseline justify-between gap-3"
+                      >
+                        <div>
+                          <div
+                            style={{
+                              fontFamily: "var(--font-nanum)",
+                              fontWeight: 700,
+                            }}
+                            className="text-[13px] leading-snug text-[#0C0F1A]"
+                          >
+                            {item.name}
+                          </div>
+                          <div
+                            style={{ fontFamily: "var(--font-body)" }}
+                            className="text-[11px] font-light leading-relaxed text-[#0C0F1A]/40"
+                          >
+                            {item.sub}
+                          </div>
+                        </div>
+                        <div
+                          style={{ fontFamily: "var(--font-mono)" }}
+                          className="shrink-0 whitespace-nowrap text-[10px] text-[#0C0F1A]/30"
+                        >
+                          {item.date}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </Page>
@@ -2248,6 +2110,7 @@ export default function App() {
   const pages = [
     <PageHome />,
     <PageAbout />,
+    <PageResume />,
     <PageProjects
       // 상세 페이지로 들어갈 때는 웜프(회전·blob 강조) 없이 가로 슬라이드만
       // 재생한다. 호버 중이던 색은 renderedProject가 이어받아 끊기지 않는다.
@@ -2258,8 +2121,6 @@ export default function App() {
         if (!warping) setHoverId(id)
       }}
     />,
-    <PageSkills />,
-    <PageExperience />,
     <PageContact />,
   ]
 
