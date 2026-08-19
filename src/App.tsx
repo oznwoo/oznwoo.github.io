@@ -1555,11 +1555,15 @@ function DetailNav({
   slide,
   onClose,
   goSlide,
+  accent,
 }: {
   slide: number;
   onClose: () => void;
   goSlide: (i: number) => void;
+  // 등록된 프로젝트면 그 브랜드 그라디언트를, 아니면 기본 블루를 dot에 쓴다.
+  accent: ProjectAccent | null;
 }) {
+  const dotBackground = accent ? accentGradient(accent) : "#4F6EF7";
   const [hovered, setHovered] = useState(false);
   return (
     <nav
@@ -1621,7 +1625,7 @@ function DetailNav({
               style={{
                 width: i === slide ? "20px" : "6px",
                 height: "6px",
-                background: i === slide ? "#4F6EF7" : "rgba(12,15,26,0.22)",
+                background: i === slide ? dotBackground : "rgba(12,15,26,0.22)",
               }}
             />
           </span>
@@ -1649,9 +1653,13 @@ function DetailNav({
 function ProjectDetailView({
   projectId,
   onClose,
+  onTransition,
 }: {
   projectId: string;
   onClose: () => void;
+  // 상세 내부 슬라이드 전환마다 공유 배경의 웜프(회전·버스트)를 같이 재생해
+  // 메인 페이지 전환과 동일한 애니메이션 언어를 쓰게 한다.
+  onTransition: (direction: 1 | -1) => void;
 }) {
   const [slide, setSlide] = useState(0);
   const animating = useRef(false);
@@ -1669,12 +1677,13 @@ function ProjectDetailView({
       const next = Math.max(0, Math.min(TOTAL_D - 1, idx));
       if (next === slide || animating.current) return;
       animating.current = true;
+      onTransition(next > slide ? 1 : -1);
       setSlide(next);
       setTimeout(() => {
         animating.current = false;
       }, 800);
     },
-    [slide],
+    [slide, onTransition],
   );
 
   const prevSlide = useCallback(() => goSlide(slide - 1), [slide, goSlide]);
@@ -1922,13 +1931,15 @@ function ProjectDetailView({
     </div>,
   ];
 
+  const accent = PROJECT_ACCENT[projectId] ?? null;
+
   return (
-    <div
-      className="w-screen h-screen relative overflow-hidden"
-      style={{ background: "#EEF1F9" }}
-    >
+    <div className="w-screen h-screen relative overflow-hidden">
+      {/* 배경은 자체 색을 칠하지 않고 App의 공유 GradientBackground를 그대로
+          비쳐 보이게 둔다 — 리스트 호버와 같은 방식으로 이 프로젝트의 색이
+          깔린다 */}
       {/* 좌측 네비게이터 — 메인과 동일한 구조 */}
-      <DetailNav slide={slide} onClose={onClose} goSlide={goSlide} />
+      <DetailNav slide={slide} onClose={onClose} goSlide={goSlide} accent={accent} />
 
       {/* 세로 슬라이드 트랙 */}
       <div
@@ -1979,9 +1990,12 @@ export default function App() {
   // 배경 전체의 누적 회전각 — 전환마다 시계 방향으로 더해지기만 하고 되돌아오지 않는다.
   const [rotation, setRotation] = useState(0);
   // 프로젝트 카드 호버 시 blob에 반영할 브랜드 컬러. hoverId는 현재 호버 중인
-  // 카드(없으면 null), hoverAccent는 그 색상 데이터.
+  // 카드(없으면 null). 상세 페이지가 열려있으면 그 프로젝트 색이 우선한다 —
+  // 배경/DotNav/상세 네비게이터가 모두 이 값을 공유해 리스트 호버와 동일한
+  // 크로스페이드·펄스·플래시 효과로 상세 페이지 색을 표시한다.
   const [hoverId, setHoverId] = useState<string | null>(null);
-  const hoverAccent = hoverId ? (PROJECT_ACCENT[hoverId] ?? null) : null;
+  const displayAccentId = renderedProject ?? hoverId;
+  const hoverAccent = displayAccentId ? (PROJECT_ACCENT[displayAccentId] ?? null) : null;
   // 두 슬롯에 색을 번갈아 담아둔다. 호버 대상이 A→B로 바로 바뀔 때 A가 담긴
   // 슬롯은 페이드아웃, B가 담긴 슬롯은 페이드인 되며 실제로 색이 크로스페이드된다.
   const [slotColors, setSlotColors] = useState<[ProjectAccent, ProjectAccent]>(
@@ -1991,7 +2005,7 @@ export default function App() {
   // 호버 대상이 바뀔 때마다(호버→호버 직행 포함) 짧게 튕기는 펄스를 재생한다.
   const [pulseActive, setPulseActive] = useState(false);
   const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const prevHoverId = useRef<string | null>(null);
+  const prevDisplayId = useRef<string | null>(null);
   // 미호버 → 호버로 "처음" 진입하는 순간에만, 페이지 전환에 쓰이는 웜프 버스트를
   // 프로젝트 색으로 재생한다. 호버 중인 카드가 바로 다른 카드로 바뀌는 전환에는
   // 켜지지 않아, 크로스페이드와 역할이 겹치지 않고 "지금 막 반응을 시작했다"는
@@ -2011,7 +2025,7 @@ export default function App() {
       });
       setActiveSlot(nextSlot);
     }
-    if (hoverId && hoverId !== prevHoverId.current) {
+    if (displayAccentId && displayAccentId !== prevDisplayId.current) {
       setPulseActive(true);
       if (pulseTimer.current) clearTimeout(pulseTimer.current);
       pulseTimer.current = setTimeout(() => setPulseActive(false), 420);
@@ -2030,30 +2044,40 @@ export default function App() {
       setRotation((r) => r + spin);
     }
     prevAccentOn.current = accentOn;
-    prevHoverId.current = hoverId;
+    prevDisplayId.current = displayAccentId;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hoverId, hoverAccent]);
+  }, [displayAccentId, hoverAccent]);
 
   const pull = hoverId ? (PROJECT_PULL[hoverId] ?? { x: 0, y: 0 }) : { x: 0, y: 0 };
+
+  // 페이지 전환마다 배경을 회전·웜프시키는 공통 트리거. 세로 섹션 이동뿐 아니라
+  // 상세 페이지 열기/닫기, 상세 내부 슬라이드에도 동일하게 재사용해 어떤
+  // 전환이든 같은 애니메이션 언어를 쓰게 한다. resetHover가 true면 전환 시작과
+  // 동시에 리스트 호버를 해제한다 — 상세를 여는 순간에는 열리는 프로젝트의 색이
+  // 끊기지 않아야 하므로 false로 호출한다.
+  const triggerWarp = useCallback(
+    (direction: 1 | -1, resetHover: boolean = true) => {
+      setWarping(true);
+      if (resetHover) setHoverId(null);
+      setRotation((r) => r + direction * 34);
+      if (warpTimer.current) clearTimeout(warpTimer.current);
+      warpTimer.current = setTimeout(() => setWarping(false), 750);
+    },
+    [],
+  );
 
   const goTo = useCallback(
     (idx: number) => {
       const n = Math.max(0, Math.min(TOTAL - 1, idx));
       if (n === current || animating.current) return;
       animating.current = true;
-      setWarping(true);
-      // 세로 슬라이드 도중 마우스가 우연히 프로젝트 카드 위를 지나가며
-      // 호버가 걸리는 것을 막기 위해, 전환이 시작되는 즉시 호버를 해제한다.
-      setHoverId(null);
-      setRotation((r) => r + (n > current ? 34 : -34));
-      if (warpTimer.current) clearTimeout(warpTimer.current);
-      warpTimer.current = setTimeout(() => setWarping(false), 750);
+      triggerWarp(n > current ? 1 : -1);
       setCurrent(n);
       setTimeout(() => {
         animating.current = false;
       }, 800);
     },
-    [current],
+    [current, triggerWarp],
   );
 
   const prev = useCallback(() => goTo(current - 1), [current, goTo]);
@@ -2121,7 +2145,13 @@ export default function App() {
     <PageHome />,
     <PageAbout />,
     <PageProjects
-      onOpen={setActiveProject}
+      onOpen={(id) => {
+        // 상세 페이지를 여는 것도 다른 전환과 같은 웜프 애니메이션을 탄다.
+        // resetHover는 false — 지금 막 호버 중이던 프로젝트 색이 그대로
+        // 상세 페이지 색으로 이어져야 하므로 여기서 끊지 않는다.
+        triggerWarp(1, false);
+        setActiveProject(id);
+      }}
       // 세로 슬라이드 중에는 마우스가 카드를 스쳐도 호버로 잡지 않아, 전환
       // 도중에는 슬라이드 애니메이션만 보이고 색 반응은 끼어들지 않는다.
       onHover={(id) => {
@@ -2199,7 +2229,11 @@ export default function App() {
           {renderedProject && (
             <ProjectDetailView
               projectId={renderedProject}
-              onClose={() => setActiveProject(null)}
+              onClose={() => {
+                triggerWarp(-1);
+                setActiveProject(null);
+              }}
+              onTransition={(direction) => triggerWarp(direction, false)}
             />
           )}
         </div>
