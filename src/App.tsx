@@ -1111,10 +1111,13 @@ function PageProjects({
                   {p.tags.map((t) => {
                     const accent = PROJECT_ACCENT[p.id] ?? null
                     const active = hovered === p.id && accent !== null
+                    const isMultiColor =
+                      accent !== null && new Set(accent.blobs).size > 1
                     // 카드 자체와 같은 언어: 평소엔 배경/그림자 없이 그냥 텍스트로
                     // 앉아있다가, 카드를 호버하면 카드의 필드 톤(rgba(248,250,255,..))과
                     // 같은 표면이 pill 모양으로 떠오르며 그림자가 붙고, 텍스트는
-                    // 프로젝트 고유 색으로 물든다.
+                    // 프로젝트 고유 색으로 물든다. CoChat류처럼 blobs 3색이 서로 다른
+                    // 브랜드는 텍스트에도 그 그라디언트가 그대로 드러난다.
                     return (
                       <span
                         key={t}
@@ -1126,15 +1129,31 @@ function PageProjects({
                           boxShadow: active
                             ? `0 6px 16px ${hexToRgba(accent!.primary, 0.16)}, 0 1px 3px rgba(12,15,26,0.06)`
                             : "none",
-                          color: active
-                            ? hexToRgba(accent!.primary, 0.9)
-                            : "rgba(12,15,26,0.38)",
                           transition:
-                            "background 0.35s ease-out, box-shadow 0.35s ease-out, color 0.35s ease-out",
+                            "background 0.35s ease-out, box-shadow 0.35s ease-out",
                         }}
                         className="relative flex items-center text-[9px] px-2.5 py-1 rounded-full uppercase tracking-[0.08em]"
                       >
-                        {t}
+                        <span
+                          style={
+                            active && isMultiColor
+                              ? {
+                                  backgroundImage: accentGradient(accent!),
+                                  backgroundClip: "text",
+                                  WebkitBackgroundClip: "text",
+                                  color: "transparent",
+                                  WebkitTextFillColor: "transparent",
+                                }
+                              : {
+                                  color: active
+                                    ? hexToRgba(accent!.primary, 0.9)
+                                    : "rgba(12,15,26,0.38)",
+                                  transition: "color 0.35s ease-out",
+                                }
+                          }
+                        >
+                          {t}
+                        </span>
                       </span>
                     )
                   })}
