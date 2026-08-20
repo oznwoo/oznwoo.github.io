@@ -1288,52 +1288,37 @@ function PageResume() {
             >
               Experience
             </div>
-            <div className="space-y-6">
-              {experienceCols.map((col) => (
-                <div key={col.title}>
-                  <div
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      color: CATEGORY_COLOR[col.title],
-                    }}
-                    className="mb-2.5 text-[9px] uppercase tracking-[0.04em] opacity-60"
-                  >
-                    {col.title}
+            <div className="space-y-8">
+              {experienceCols.flatMap((col) =>
+                col.items.map((item) => (
+                  <div key={item.name}>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-nanum)",
+                        fontWeight: 700,
+                      }}
+                      className="text-[16px] leading-snug text-[#0C0F1A]"
+                    >
+                      {item.name}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        color: CATEGORY_COLOR[col.title],
+                      }}
+                      className="mt-1 text-[11px] italic opacity-70"
+                    >
+                      {col.title} · {item.date}
+                    </div>
+                    <div
+                      style={{ fontFamily: "var(--font-body)" }}
+                      className="mt-1.5 text-[12px] font-light leading-relaxed text-[#0C0F1A]/45"
+                    >
+                      {item.sub}
+                    </div>
                   </div>
-                  <div className="space-y-3">
-                    {col.items.map((item) => (
-                      <div
-                        key={item.name}
-                        className="flex items-baseline justify-between gap-3"
-                      >
-                        <div>
-                          <div
-                            style={{
-                              fontFamily: "var(--font-nanum)",
-                              fontWeight: 700,
-                            }}
-                            className="text-[13px] leading-snug text-[#0C0F1A]"
-                          >
-                            {item.name}
-                          </div>
-                          <div
-                            style={{ fontFamily: "var(--font-body)" }}
-                            className="text-[11px] font-light leading-relaxed text-[#0C0F1A]/40"
-                          >
-                            {item.sub}
-                          </div>
-                        </div>
-                        <div
-                          style={{ fontFamily: "var(--font-mono)" }}
-                          className="shrink-0 whitespace-nowrap text-[10px] text-[#0C0F1A]/30"
-                        >
-                          {item.date}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
+                )),
+              )}
             </div>
           </div>
         </div>
