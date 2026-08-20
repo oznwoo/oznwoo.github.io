@@ -39,19 +39,6 @@ const PROJECT_ACCENT: Record<string, ProjectAccent> = {
   },
 }
 
-// 프로젝트 카드 pill 오른쪽 끝에 호버 시에만 나타나는 로고. src/imports/project-logos/
-// 폴더에 {프로젝트 id}.png|jpg|jpeg|svg|webp 로 넣으면 자동으로 매칭된다.
-// Fintag(01)은 저작권 문제로 로고를 넣지 않으므로 있어도 무시한다.
-const PROJECT_LOGO_FILES = import.meta.glob<{ default: string }>(
-  "/src/imports/project-logos/*.{png,jpg,jpeg,svg,webp}",
-  { eager: true }
-)
-const PROJECT_LOGO: Record<string, string> = Object.fromEntries(
-  Object.entries(PROJECT_LOGO_FILES)
-    .map(([path, mod]) => [path.match(/([^/]+)\.[^.]+$/)?.[1] ?? "", mod.default])
-    .filter(([id]) => id && id !== "01")
-)
-
 // 카드 그리드(2열)에서 프로젝트가 위치한 사분면 방향으로 blob이 살짝 쏠리게 해
 // 호버할 때마다 그라디언트가 실제로 "반응"하는 느낌을 준다. x/y는 -1~1.
 const PROJECT_PULL: Record<string, { x: number; y: number }> = {
@@ -1103,7 +1090,6 @@ function PageProjects({
           {PROJECTS.map((p) => {
             const cardAccent = PROJECT_ACCENT[p.id] ?? null
             const cardActive = hovered === p.id
-            const cardLogo = PROJECT_LOGO[p.id] ?? null
             return (
             <button
               key={p.id}
@@ -1196,27 +1182,6 @@ function PageProjects({
                       </span>
                     )
                   })}
-                  {cardLogo && (
-                    // pill들과 같은 줄, 가장 오른쪽에 붙는 프로젝트 로고. 평소엔
-                    // 완전히 숨어있다가 카드를 호버할 때만 옅게 나타난다
-                    <span
-                      aria-hidden="true"
-                      className="flex items-center justify-center h-[22px] w-[22px] rounded-full overflow-hidden shrink-0"
-                      style={{
-                        opacity: cardActive ? 1 : 0,
-                        transform: cardActive ? "scale(1)" : "scale(0.8)",
-                        transition: cardActive
-                          ? "opacity 0.35s ease-out, transform 0.35s ease-out"
-                          : "opacity 0.5s ease-in, transform 0.5s ease-in",
-                      }}
-                    >
-                      <img
-                        src={cardLogo}
-                        alt=""
-                        className="h-full w-full object-contain"
-                      />
-                    </span>
-                  )}
                 </div>
                 <span
                   style={{
