@@ -1636,18 +1636,29 @@ function DetailNav({
   onClose,
   goSlide,
   accent,
+  isMobile,
   // 등록된 프로젝트면 그 브랜드 그라디언트를, 아니면 기본 블루를 dot에 쓴다.
 }: {
   slide: number
   onClose: () => void
   goSlide: (i: number) => void
   accent: ProjectAccent | null
+  isMobile: boolean
 }) {
   const dotBackground = accent ? accentGradient(accent) : "#4F6EF7"
   const [hovered, setHovered] = useState(false)
   return (
     <nav
-      className="fixed left-6 top-1/2 -translate-y-1/2 z-50 flex flex-col items-start"
+      // 데스크톱/태블릿에서는 이 nav가 메인↔상세 패널을 옆으로 밀어내는
+      // translateX 래퍼 "안"에 있다 — transform이 있는 조상은 fixed 자식의
+      // containing block이 되므로, 여기서 fixed를 쓰면 패널이 슬라이드될 때
+      // nav도 화면 밖으로 같이 끌려나가 사라진다. absolute라야 래퍼 박스
+      // 기준으로 정상적으로 같이 슬라이드-인 된다. 모바일은 그 transform
+      // 래퍼 자체가 없는(overlay) 구조라 fixed로 뷰포트에 고정해야 한다.
+      className={
+        (isMobile ? "fixed" : "absolute") +
+        " left-6 top-1/2 -translate-y-1/2 z-50 flex flex-col items-start"
+      }
       style={{ gap: "10px" }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -2053,6 +2064,7 @@ function ProjectDetailView({
         onClose={onClose}
         goSlide={handleDotClick}
         accent={accent}
+        isMobile={isMobile}
       />
 
       {/* 세로 슬라이드 트랙: 모바일은 자연스러운 문서 스크롤, 데스크톱/태블릿은
@@ -2081,10 +2093,14 @@ function ProjectDetailView({
         ))}
       </div>
 
-      {/* 하단 카운터 */}
+      {/* 하단 카운터 — DetailNav와 같은 이유로 데스크톱에서는 absolute를 써야
+          translateX 래퍼와 함께 슬라이드-인 된다 */}
       <div
         style={{ fontFamily: "var(--font-mono)" }}
-        className="fixed bottom-6 left-6 text-xs text-[#0C0F1A]/25 select-none"
+        className={
+          (isMobile ? "fixed" : "absolute") +
+          " bottom-6 left-6 text-xs text-[#0C0F1A]/25 select-none"
+        }
       >
         {String(displaySlide + 1).padStart(2, "0")} /{" "}
         {String(TOTAL_D).padStart(2, "0")}
