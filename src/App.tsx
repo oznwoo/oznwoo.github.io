@@ -88,9 +88,8 @@ const PROJECTS = [
     subtitle: "중소기업 자금 관리 에이전트",
     description:
       "유휴 자금 감지 및 수익화 제안 SaaS. 복합 모델 구조로 고도화해 예측 오차율 67% 감소.",
-    // pill 구조 통일: [플랫폼, 역할, 핵심 기술스택] — 백엔드도 겸했지만
-    // ML이 주 역할이라 두 번째 pill은 ML로 표기
-    tags: ["Web", "ML", "Python · FastAPI"],
+    // ML과 Backend 역할을 둘 다 겸했어서 이 프로젝트만 예외적으로 4개
+    tags: ["Web", "ML", "Backend", "FastAPI"],
     year: "2026",
     link: "https://github.com/oznwoo",
   },
@@ -110,7 +109,7 @@ const PROJECTS = [
     subtitle: "미용실 매출·고객 관리 앱",
     description:
       "기획·디자인·개발 전 과정 단독 진행. 2025년 8월부터 실사용자가 실제로 사용 중.",
-    tags: ["Mobile", "Fullstack", "Flutter"],
+    tags: ["Mobile", "Fullstack", "React Native"],
     year: "2025",
     link: "https://github.com/oznwoo",
   },
