@@ -1107,11 +1107,11 @@ function PageProjects({
                 background: cardActive
                   ? cardAccent
                     ? [
-                        `radial-gradient(circle at 18% 22%, ${hexToRgba(cardAccent.blobs[0], 0.3)} 0%, transparent 52%)`,
-                        `radial-gradient(circle at 78% 15%, ${hexToRgba(cardAccent.blobs[1], 0.24)} 0%, transparent 46%)`,
-                        `radial-gradient(circle at 60% 85%, ${hexToRgba(cardAccent.blobs[2], 0.26)} 0%, transparent 50%)`,
-                        `radial-gradient(circle at 12% 88%, ${hexToRgba(cardAccent.blobs[0], 0.16)} 0%, transparent 40%)`,
-                        `radial-gradient(circle at 92% 65%, ${hexToRgba(cardAccent.blobs[2], 0.16)} 0%, transparent 42%)`,
+                        `radial-gradient(circle at 18% 22%, ${hexToRgba(cardAccent.blobs[0], 0.13)} 0%, transparent 52%)`,
+                        `radial-gradient(circle at 78% 15%, ${hexToRgba(cardAccent.blobs[1], 0.1)} 0%, transparent 46%)`,
+                        `radial-gradient(circle at 60% 85%, ${hexToRgba(cardAccent.blobs[2], 0.11)} 0%, transparent 50%)`,
+                        `radial-gradient(circle at 12% 88%, ${hexToRgba(cardAccent.blobs[0], 0.07)} 0%, transparent 40%)`,
+                        `radial-gradient(circle at 92% 65%, ${hexToRgba(cardAccent.blobs[2], 0.07)} 0%, transparent 42%)`,
                         "rgba(248,250,255,0.9)",
                       ].join(", ")
                     : "rgba(248,250,255,0.88)"
