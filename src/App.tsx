@@ -1202,10 +1202,14 @@ function PageProjects({
                       color: cardActive
                         ? "rgba(12,15,26,0.55)"
                         : "rgba(12,15,26,0.35)",
-                      fontWeight: cardActive ? 500 : 300,
+                      // font-weight를 바꾸면 글자 폭이 변해 옆 요소가 밀리므로
+                      // (pill과 동일한 이유), 폭에 영향 없는 text-stroke로 굵기감만 더한다
+                      WebkitTextStroke: cardActive
+                        ? "0.3px currentColor"
+                        : "0px transparent",
                       transition: "color 0.35s ease-out",
                     }}
-                    className="text-xs"
+                    className="text-xs font-light"
                   >
                     {p.subtitle}
                   </span>
@@ -1216,10 +1220,12 @@ function PageProjects({
                     color: cardActive
                       ? "rgba(12,15,26,0.65)"
                       : "rgba(12,15,26,0.45)",
-                    fontWeight: cardActive ? 400 : 300,
+                    WebkitTextStroke: cardActive
+                      ? "0.25px currentColor"
+                      : "0px transparent",
                     transition: "color 0.35s ease-out",
                   }}
-                  className="text-xs leading-relaxed"
+                  className="text-xs leading-relaxed font-light"
                 >
                   {p.description}
                 </p>
