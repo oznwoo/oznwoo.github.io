@@ -1083,7 +1083,10 @@ function PageProjects({
           </a>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {PROJECTS.map((p) => (
+          {PROJECTS.map((p) => {
+            const cardAccent = PROJECT_ACCENT[p.id] ?? null
+            const cardActive = hovered === p.id
+            return (
             <button
               key={p.id}
               onClick={() => onOpen(p.id)}
@@ -1097,12 +1100,18 @@ function PageProjects({
               }}
               className="group text-left rounded-2xl p-6 flex flex-col gap-4 transition-all duration-200"
               style={{
-                background:
-                  hovered === p.id ? "rgba(248,250,255,0.88)" : "transparent",
-                boxShadow:
-                  hovered === p.id
-                    ? "0 12px 40px rgba(79,110,247,0.10), 0 2px 10px rgba(12,15,26,0.07)"
-                    : "none",
+                // 흰 표면(rgba(248,250,255,..))에 프로젝트 고유 색을 아주 옅게
+                // 얹는다. 세 정지점의 흰색 혼합 비율을 다르게 줘서(0.78→0.88→0.95)
+                // Fintag/Gopssl처럼 blobs가 단색이어도 방향성 있는 그라디언트로
+                // 보이게 한다 — 다색 브랜드는 여기에 색상 변화까지 더해진다
+                background: cardActive
+                  ? cardAccent
+                    ? `linear-gradient(135deg, ${hexToRgba(mixWithWhite(cardAccent.blobs[0], 0.78), 0.92)} 0%, ${hexToRgba(mixWithWhite(cardAccent.blobs[1], 0.88), 0.9)} 55%, ${hexToRgba(mixWithWhite(cardAccent.blobs[2], 0.95), 0.85)} 100%)`
+                    : "rgba(248,250,255,0.88)"
+                  : "transparent",
+                boxShadow: cardActive
+                  ? "0 12px 40px rgba(79,110,247,0.10), 0 2px 10px rgba(12,15,26,0.07)"
+                  : "none",
                 backdropFilter: "blur(8px)",
               }}
             >
@@ -1160,8 +1169,14 @@ function PageProjects({
                   })}
                 </div>
                 <span
-                  style={{ fontFamily: "var(--font-mono)" }}
-                  className="text-xs text-[#0C0F1A]/20 shrink-0"
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    color: cardActive
+                      ? "rgba(12,15,26,0.4)"
+                      : "rgba(12,15,26,0.2)",
+                    transition: "color 0.35s ease-out",
+                  }}
+                  className="text-xs shrink-0"
                 >
                   {p.year}
                 </span>
@@ -1175,21 +1190,36 @@ function PageProjects({
                     {p.title}
                   </h3>
                   <span
-                    style={{ fontFamily: "var(--font-body)" }}
-                    className="text-xs text-[#0C0F1A]/35 font-light"
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      color: cardActive
+                        ? "rgba(12,15,26,0.55)"
+                        : "rgba(12,15,26,0.35)",
+                      fontWeight: cardActive ? 500 : 300,
+                      transition: "color 0.35s ease-out",
+                    }}
+                    className="text-xs"
                   >
                     {p.subtitle}
                   </span>
                 </div>
                 <p
-                  style={{ fontFamily: "var(--font-body)" }}
-                  className="text-xs text-[#0C0F1A]/45 font-light leading-relaxed"
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    color: cardActive
+                      ? "rgba(12,15,26,0.65)"
+                      : "rgba(12,15,26,0.45)",
+                    fontWeight: cardActive ? 400 : 300,
+                    transition: "color 0.35s ease-out",
+                  }}
+                  className="text-xs leading-relaxed"
                 >
                   {p.description}
                 </p>
               </div>
             </button>
-          ))}
+            )
+          })}
         </div>
       </div>
     </Page>
