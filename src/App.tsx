@@ -1122,6 +1122,7 @@ function PageProjects({
                         key={t}
                         style={{
                           fontFamily: "var(--font-mono)",
+                          fontWeight: active ? 700 : 400,
                           color: active
                             ? "rgba(255,255,255,0.95)"
                             : "rgba(12,15,26,0.38)",
