@@ -1182,11 +1182,6 @@ const CATEGORY_COLOR: Record<string, string> = {
   자격증: "#2BA68A",
 }
 
-const RESUME_CARD_STYLE = {
-  background: "rgba(255,255,255,0.35)",
-  border: "1px solid rgba(12,15,26,0.06)",
-}
-
 function ResumeCardHeader({ label, color }: { label: string; color: string }) {
   return (
     <div
@@ -1249,8 +1244,8 @@ function PageResume() {
         >
           이력
         </h2>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div className="rounded-2xl p-6" style={RESUME_CARD_STYLE}>
+        <div className="grid grid-cols-1 gap-x-14 gap-y-10 md:grid-cols-2">
+          <div>
             <ResumeCardHeader label="Education" color={CATEGORY_COLOR.교육} />
             <div className="space-y-4">
               {education?.items.map((item) => (
@@ -1258,7 +1253,7 @@ function PageResume() {
               ))}
             </div>
           </div>
-          <div className="rounded-2xl p-6" style={RESUME_CARD_STYLE}>
+          <div>
             <ResumeCardHeader label="활동" color={CATEGORY_COLOR.활동} />
             <div className="space-y-4">
               {activity?.items.map((item) => (
@@ -1266,7 +1261,7 @@ function PageResume() {
               ))}
             </div>
           </div>
-          <div className="rounded-2xl p-6" style={RESUME_CARD_STYLE}>
+          <div>
             <ResumeCardHeader label="Skills" color="rgba(12,15,26,0.35)" />
             <div className="grid grid-cols-2 gap-x-6 gap-y-5">
               {SKILLS.map((group) => (
@@ -1296,7 +1291,7 @@ function PageResume() {
               ))}
             </div>
           </div>
-          <div className="rounded-2xl p-6" style={RESUME_CARD_STYLE}>
+          <div>
             <ResumeCardHeader label="자격증" color={CATEGORY_COLOR.자격증} />
             <div className="space-y-4">
               {certificate?.items.map((item) => (
