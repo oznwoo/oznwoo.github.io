@@ -1100,13 +1100,20 @@ function PageProjects({
               }}
               className="group text-left rounded-2xl p-6 flex flex-col gap-4 transition-all duration-200"
               style={{
-                // 흰 표면(rgba(248,250,255,..))에 프로젝트 고유 색을 아주 옅게
-                // 얹는다. 세 정지점의 흰색 혼합 비율을 다르게 줘서(0.78→0.88→0.95)
-                // Fintag/Gopssl처럼 blobs가 단색이어도 방향성 있는 그라디언트로
-                // 보이게 한다 — 다색 브랜드는 여기에 색상 변화까지 더해진다
+                // 한쪽에서 옅어지는 선형 그라디언트 대신, 카드 곳곳에 부드러운
+                // blob 여러 개를 겹쳐 얼룩덜룩하게 번진 느낌을 낸다. 단색
+                // 브랜드(Fintag/Gopssl)도 alpha·위치·크기가 제각각이라 균일하지
+                // 않게 보이고, 다색 브랜드는 여기에 색상 차이까지 더해진다
                 background: cardActive
                   ? cardAccent
-                    ? `linear-gradient(135deg, ${hexToRgba(mixWithWhite(cardAccent.blobs[0], 0.78), 0.92)} 0%, ${hexToRgba(mixWithWhite(cardAccent.blobs[1], 0.88), 0.9)} 55%, ${hexToRgba(mixWithWhite(cardAccent.blobs[2], 0.95), 0.85)} 100%)`
+                    ? [
+                        `radial-gradient(circle at 18% 22%, ${hexToRgba(cardAccent.blobs[0], 0.3)} 0%, transparent 52%)`,
+                        `radial-gradient(circle at 78% 15%, ${hexToRgba(cardAccent.blobs[1], 0.24)} 0%, transparent 46%)`,
+                        `radial-gradient(circle at 60% 85%, ${hexToRgba(cardAccent.blobs[2], 0.26)} 0%, transparent 50%)`,
+                        `radial-gradient(circle at 12% 88%, ${hexToRgba(cardAccent.blobs[0], 0.16)} 0%, transparent 40%)`,
+                        `radial-gradient(circle at 92% 65%, ${hexToRgba(cardAccent.blobs[2], 0.16)} 0%, transparent 42%)`,
+                        "rgba(248,250,255,0.9)",
+                      ].join(", ")
                     : "rgba(248,250,255,0.88)"
                   : "transparent",
                 boxShadow: cardActive
