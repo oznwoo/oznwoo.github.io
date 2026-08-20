@@ -1143,7 +1143,10 @@ function PageProjects({
                             aria-hidden="true"
                             className="absolute inset-0 rounded-full"
                             style={{
-                              background: `linear-gradient(135deg, ${mixWithWhite(accent.blobs[0], 0.3)}, ${mixWithWhite(accent.blobs[1], 0.3)}, ${mixWithWhite(accent.blobs[2], 0.3)})`,
+                              // 중심에 은은한 accent 글로우를 얹고, 그 아래 더 옅은
+                              // 다색 베이스를 깔아 가장자리로 갈수록 자연스럽게
+                              // 퍼지듯 옅어지게 한다
+                              background: `radial-gradient(ellipse at center, ${hexToRgba(accent.primary, 0.3)} 0%, transparent 72%), linear-gradient(135deg, ${mixWithWhite(accent.blobs[0], 0.5)}, ${mixWithWhite(accent.blobs[1], 0.5)}, ${mixWithWhite(accent.blobs[2], 0.5)})`,
                               opacity: active ? 1 : 0,
                               transition: active
                                 ? "opacity 0.35s ease-out"
