@@ -1111,49 +1111,41 @@ function PageProjects({
                   {p.tags.map((t) => {
                     const accent = PROJECT_ACCENT[p.id] ?? null
                     const active = hovered === p.id && accent !== null
-                    const isMultiColor =
-                      accent !== null && new Set(accent.blobs).size > 1
-                    // 카드 자체와 같은 언어: 평소엔 배경/그림자 없이 그냥 텍스트로
-                    // 앉아있다가, 카드를 호버하면 카드의 필드 톤(rgba(248,250,255,..))과
-                    // 같은 표면이 pill 모양으로 떠오르며 그림자가 붙고, 텍스트는
-                    // 프로젝트 고유 색으로 물든다. CoChat류처럼 blobs 3색이 서로 다른
-                    // 브랜드는 텍스트에도 그 그라디언트가 그대로 드러난다.
+                    // 카드를 호버하면 pill 배경 자체가 프로젝트 고유 색(그라디언트)으로
+                    // 채워지고 글자는 밝은 흰색으로 바뀐다. 배경은 그라디언트라 색 값
+                    // 자체는 애니메이션할 수 없으므로, 항상 채워둔 오버레이 레이어를
+                    // opacity로만 은은하게 페이드시킨다 — CoChat류 다색 브랜드도 그
+                    // 여러 색이 배경에 그대로 드러난다.
                     return (
                       <span
                         key={t}
                         style={{
                           fontFamily: "var(--font-mono)",
-                          background: active
-                            ? "rgba(248,250,255,0.92)"
-                            : "transparent",
+                          color: active
+                            ? "rgba(255,255,255,0.95)"
+                            : "rgba(12,15,26,0.38)",
                           boxShadow: active
-                            ? `0 6px 16px ${hexToRgba(accent!.primary, 0.16)}, 0 1px 3px rgba(12,15,26,0.06)`
+                            ? `0 6px 16px ${hexToRgba(accent!.primary, 0.28)}, 0 1px 3px rgba(12,15,26,0.1)`
                             : "none",
                           transition:
-                            "background 0.35s ease-out, box-shadow 0.35s ease-out",
+                            "color 0.35s ease-out, box-shadow 0.35s ease-out",
                         }}
                         className="relative flex items-center text-[9px] px-2.5 py-1 rounded-full uppercase tracking-[0.08em]"
                       >
-                        <span
-                          style={
-                            active && isMultiColor
-                              ? {
-                                  backgroundImage: accentGradient(accent!),
-                                  backgroundClip: "text",
-                                  WebkitBackgroundClip: "text",
-                                  color: "transparent",
-                                  WebkitTextFillColor: "transparent",
-                                }
-                              : {
-                                  color: active
-                                    ? hexToRgba(accent!.primary, 0.9)
-                                    : "rgba(12,15,26,0.38)",
-                                  transition: "color 0.35s ease-out",
-                                }
-                          }
-                        >
-                          {t}
-                        </span>
+                        {accent && (
+                          <span
+                            aria-hidden="true"
+                            className="absolute inset-0 rounded-full"
+                            style={{
+                              background: accentGradient(accent),
+                              opacity: active ? 1 : 0,
+                              transition: active
+                                ? "opacity 0.35s ease-out"
+                                : "opacity 0.5s ease-in",
+                            }}
+                          />
+                        )}
+                        <span className="relative">{t}</span>
                       </span>
                     )
                   })}
