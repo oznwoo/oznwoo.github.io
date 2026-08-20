@@ -39,6 +39,19 @@ const PROJECT_ACCENT: Record<string, ProjectAccent> = {
   },
 }
 
+// 프로젝트 카드 pill 오른쪽 끝에 호버 시에만 나타나는 로고. src/imports/project-logos/
+// 폴더에 {프로젝트 id}.png|jpg|jpeg|svg|webp 로 넣으면 자동으로 매칭된다.
+// Fintag(01)은 저작권 문제로 로고를 넣지 않으므로 있어도 무시한다.
+const PROJECT_LOGO_FILES = import.meta.glob<{ default: string }>(
+  "/src/imports/project-logos/*.{png,jpg,jpeg,svg,webp}",
+  { eager: true }
+)
+const PROJECT_LOGO: Record<string, string> = Object.fromEntries(
+  Object.entries(PROJECT_LOGO_FILES)
+    .map(([path, mod]) => [path.match(/([^/]+)\.[^.]+$/)?.[1] ?? "", mod.default])
+    .filter(([id]) => id && id !== "01")
+)
+
 // 카드 그리드(2열)에서 프로젝트가 위치한 사분면 방향으로 blob이 살짝 쏠리게 해
 // 호버할 때마다 그라디언트가 실제로 "반응"하는 느낌을 준다. x/y는 -1~1.
 const PROJECT_PULL: Record<string, { x: number; y: number }> = {
@@ -88,7 +101,7 @@ const PROJECTS = [
     subtitle: "중소기업 자금 관리 에이전트",
     description:
       "유휴 자금 감지 및 수익화 제안 SaaS. 복합 모델 구조로 고도화해 예측 오차율 67% 감소.",
-    // ML과 Backend 역할을 둘 다 겸했어서 이 프로젝트만 예외적으로 4개
+    // ML과 Backend 역할을 둘 다 겸했어서 예외적으로 4개
     tags: ["Web", "ML", "Backend", "FastAPI"],
     year: "2026",
     link: "https://github.com/oznwoo",
@@ -99,7 +112,8 @@ const PROJECTS = [
     subtitle: "B2B 메신저 통합 플랫폼",
     description:
       "업무 알림을 AI가 긴급도 분류하는 SaaS. 6인 팀 리더, Slack·Discord 연동 구현.",
-    tags: ["Web", "Fullstack", "Next.js"],
+    // 프론트(Next.js)와 백엔드(FastAPI)를 둘 다 겸했어서 예외적으로 4개
+    tags: ["Web", "Fullstack", "Next.js", "FastAPI"],
     year: "2026",
     link: "https://github.com/oznwoo",
   },
@@ -109,7 +123,8 @@ const PROJECTS = [
     subtitle: "미용실 매출·고객 관리 앱",
     description:
       "기획·디자인·개발 전 과정 단독 진행. 2025년 8월부터 실사용자가 실제로 사용 중.",
-    tags: ["Mobile", "Fullstack", "React Native"],
+    // 기술스택(React Native·FastAPI)과 배포 인프라(OCI)를 모두 겸했어서 예외적으로 5개
+    tags: ["Mobile", "Fullstack", "React Native", "FastAPI", "OCI"],
     year: "2025",
     link: "https://github.com/oznwoo",
   },
@@ -119,7 +134,8 @@ const PROJECTS = [
     subtitle: "메신저 통합 플랫폼",
     description:
       "다양한 메신저 알림 필터링·요약 앱. KIPS 정보처리학회 학술대회 논문 발표.",
-    tags: ["Mobile", "Fullstack", "React Native"],
+    // AI 요약·분류에 RAG 파이프라인을 활용해서 예외적으로 5개
+    tags: ["Mobile", "Fullstack", "React Native", "FastAPI", "RAG"],
     year: "2024",
     link: "https://github.com/oznwoo",
   },
@@ -217,7 +233,7 @@ const PROJECT_DETAILS: Record<string, {
     ],
     tech: [
       { category: "Frontend", items: ["React", "TypeScript", "Tailwind CSS"] },
-      { category: "Backend", items: ["Node.js", "Express", "PostgreSQL"] },
+      { category: "Backend", items: ["FastAPI", "Python", "PostgreSQL"] },
       { category: "AI", items: ["OpenAI GPT API", "Prompt Engineering"] },
       {
         category: "Integration",
@@ -229,7 +245,7 @@ const PROJECT_DETAILS: Record<string, {
     period: "2025.06 – 진행 중",
     role: "기획 · 디자인 · 풀스택 개발 (개인 프로젝트)",
     overview:
-      "예약제 없이 운영되는 소규모 미용실을 위한 고객·매출 관리 앱. 어머니의 미용실이 수기로 장부를 관리하는 것을 보고 직접 기획했습니다. UI/UX 설계부터 Flutter 앱 개발, 백엔드 서버 배포까지 전 과정을 혼자 진행했습니다.",
+      "예약제 없이 운영되는 소규모 미용실을 위한 고객·매출 관리 앱. 어머니의 미용실이 수기로 장부를 관리하는 것을 보고 직접 기획했습니다. UI/UX 설계부터 React Native 앱 개발, 백엔드 서버 배포까지 전 과정을 혼자 진행했습니다.",
     problem: [
       {
         title: "소규모 미용실을 위한 서비스 부재",
@@ -260,9 +276,9 @@ const PROJECT_DETAILS: Record<string, {
       { stat: "0원", label: "인프라 비용 (무료 티어)" },
     ],
     tech: [
-      { category: "App", items: ["Flutter", "Dart", "Provider"] },
+      { category: "App", items: ["React Native", "TypeScript"] },
       { category: "Backend", items: ["FastAPI", "Python", "SQLite"] },
-      { category: "Infra", items: ["Raspberry Pi", "Ngrok"] },
+      { category: "Infra", items: ["OCI"] },
     ],
   },
   "04": {
@@ -300,10 +316,10 @@ const PROJECT_DETAILS: Record<string, {
       { stat: "→ B2B", label: "CoChat for Business로 발전" },
     ],
     tech: [
-      { category: "App", items: ["Flutter", "Dart"] },
+      { category: "App", items: ["React Native", "TypeScript"] },
       {
         category: "AI",
-        items: ["OpenAI API", "LangChain", "Prompt Engineering"],
+        items: ["OpenAI API", "LangChain", "RAG", "Prompt Engineering"],
       },
       { category: "Backend", items: ["FastAPI", "Firebase", "PostgreSQL"] },
     ],
@@ -1087,6 +1103,7 @@ function PageProjects({
           {PROJECTS.map((p) => {
             const cardAccent = PROJECT_ACCENT[p.id] ?? null
             const cardActive = hovered === p.id
+            const cardLogo = PROJECT_LOGO[p.id] ?? null
             return (
             <button
               key={p.id}
@@ -1128,6 +1145,10 @@ function PageProjects({
                   {p.tags.map((t) => {
                     const accent = PROJECT_ACCENT[p.id] ?? null
                     const active = hovered === p.id && accent !== null
+                    // CoChat for Business는 blobs[0](골드)가 흰색과 반씩 섞이면
+                    // 너무 밝은 파스텔이 되어 흰 글자 대비가 떨어져서, 이 프로젝트만
+                    // 살짝 덜 섞어 배경을 조금 더 진하게 유지한다
+                    const pillWhiteMix = p.id === "02" ? 0.2 : 0.5
                     // 카드를 호버하면 pill 배경이 프로젝트 고유 색으로 옅게 채워지고
                     // 글자는 밝은 흰색이 된다. 흰색과 65% 섞어 톤을 낮춘 파스텔에
                     // 가까운 색이라 진하게 채웠던 이전 버전보다 은은하다. 배경은
@@ -1163,7 +1184,7 @@ function PageProjects({
                               // 중심에 은은한 accent 글로우를 얹고, 그 아래 더 옅은
                               // 다색 베이스를 깔아 가장자리로 갈수록 자연스럽게
                               // 퍼지듯 옅어지게 한다
-                              background: `radial-gradient(ellipse at center, ${hexToRgba(accent.primary, 0.3)} 0%, transparent 72%), linear-gradient(135deg, ${mixWithWhite(accent.blobs[0], 0.5)}, ${mixWithWhite(accent.blobs[1], 0.5)}, ${mixWithWhite(accent.blobs[2], 0.5)})`,
+                              background: `radial-gradient(ellipse at center, ${hexToRgba(accent.primary, 0.3)} 0%, transparent 72%), linear-gradient(135deg, ${mixWithWhite(accent.blobs[0], pillWhiteMix)}, ${mixWithWhite(accent.blobs[1], pillWhiteMix)}, ${mixWithWhite(accent.blobs[2], pillWhiteMix)})`,
                               opacity: active ? 1 : 0,
                               transition: active
                                 ? "opacity 0.35s ease-out"
@@ -1175,6 +1196,27 @@ function PageProjects({
                       </span>
                     )
                   })}
+                  {cardLogo && (
+                    // pill들과 같은 줄, 가장 오른쪽에 붙는 프로젝트 로고. 평소엔
+                    // 완전히 숨어있다가 카드를 호버할 때만 옅게 나타난다
+                    <span
+                      aria-hidden="true"
+                      className="flex items-center justify-center h-[22px] w-[22px] rounded-full overflow-hidden shrink-0"
+                      style={{
+                        opacity: cardActive ? 1 : 0,
+                        transform: cardActive ? "scale(1)" : "scale(0.8)",
+                        transition: cardActive
+                          ? "opacity 0.35s ease-out, transform 0.35s ease-out"
+                          : "opacity 0.5s ease-in, transform 0.5s ease-in",
+                      }}
+                    >
+                      <img
+                        src={cardLogo}
+                        alt=""
+                        className="h-full w-full object-contain"
+                      />
+                    </span>
+                  )}
                 </div>
                 <span
                   style={{
