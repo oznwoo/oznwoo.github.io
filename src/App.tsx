@@ -309,23 +309,14 @@ const PROJECT_DETAILS: Record<string, {
   },
 }
 
-const SKILLS = [
-  {
-    category: "Languages",
-    items: ["Python", "JavaScript", "TypeScript"],
-  },
-  {
-    category: "Frontend",
-    items: ["React", "Next.js", "Tailwind CSS", "React Native"],
-  },
-  {
-    category: "Backend",
-    items: ["FastAPI", "Node.js", "PostgreSQL", "MySQL"],
-  },
-  {
-    category: "AI",
-    items: ["Claude Code", "Gemini", "GPT"],
-  },
+const CORE_SKILLS = [
+  "Python",
+  "TypeScript",
+  "React",
+  "Next.js",
+  "FastAPI",
+  "PostgreSQL",
+  "Claude Code",
 ]
 
 const EXP_COLS = [
@@ -1263,30 +1254,18 @@ function PageResume() {
           </div>
           <div>
             <ResumeCardHeader label="Skills" color="rgba(12,15,26,0.35)" />
-            <div className="grid grid-cols-2 gap-x-6 gap-y-5">
-              {SKILLS.map((group) => (
-                <div key={group.category}>
-                  <div
-                    style={{ fontFamily: "var(--font-mono)" }}
-                    className="mb-2.5 text-[9px] uppercase tracking-[0.04em] text-[#4F6EF7]/60"
+            <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+              {CORE_SKILLS.map((item) => (
+                <div key={item} className="group flex items-center gap-2">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[#0C0F1A]/10 p-[5px] text-[#0C0F1A]/45 transition-colors duration-150 group-hover:border-[#4F6EF7]/40 group-hover:text-[#4F6EF7]">
+                    <SkillIcon name={item} />
+                  </span>
+                  <span
+                    style={{ fontFamily: "var(--font-body)" }}
+                    className="text-xs font-light text-[#0C0F1A]/60 transition-colors duration-150 group-hover:text-[#0C0F1A]/80"
                   >
-                    {group.category}
-                  </div>
-                  <div className="space-y-2">
-                    {group.items.map((item) => (
-                      <div key={item} className="group flex items-center gap-2">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[#0C0F1A]/10 p-[5px] text-[#0C0F1A]/45 transition-colors duration-150 group-hover:border-[#4F6EF7]/40 group-hover:text-[#4F6EF7]">
-                          <SkillIcon name={item} />
-                        </span>
-                        <span
-                          style={{ fontFamily: "var(--font-body)" }}
-                          className="text-xs font-light text-[#0C0F1A]/60 transition-colors duration-150 group-hover:text-[#0C0F1A]/80"
-                        >
-                          {item}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+                    {item}
+                  </span>
                 </div>
               ))}
             </div>
