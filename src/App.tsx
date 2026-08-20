@@ -1186,7 +1186,7 @@ function ResumeCardHeader({ label, color }: { label: string; color: string }) {
   return (
     <div
       style={{ fontFamily: "var(--font-mono)", color }}
-      className="mb-4 text-sm uppercase tracking-[0.04em] opacity-70"
+      className="mb-4 text-base font-semibold uppercase tracking-[0.04em] opacity-70"
     >
       {label}
     </div>
