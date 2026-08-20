@@ -88,7 +88,9 @@ const PROJECTS = [
     subtitle: "중소기업 자금 관리 에이전트",
     description:
       "유휴 자금 감지 및 수익화 제안 SaaS. 복합 모델 구조로 고도화해 예측 오차율 67% 감소.",
-    tags: ["Python", "FastAPI", "ML"],
+    // pill 구조 통일: [플랫폼, 역할, 핵심 기술스택] — 백엔드도 겸했지만
+    // ML이 주 역할이라 두 번째 pill은 ML로 표기
+    tags: ["Web", "ML", "Python · FastAPI"],
     year: "2026",
     link: "https://github.com/oznwoo",
   },
@@ -98,7 +100,7 @@ const PROJECTS = [
     subtitle: "B2B 메신저 통합 플랫폼",
     description:
       "업무 알림을 AI가 긴급도 분류하는 SaaS. 6인 팀 리더, Slack·Discord 연동 구현.",
-    tags: ["Fullstack", "AI", "SaaS"],
+    tags: ["Web", "Fullstack", "Next.js"],
     year: "2026",
     link: "https://github.com/oznwoo",
   },
@@ -108,7 +110,7 @@ const PROJECTS = [
     subtitle: "미용실 매출·고객 관리 앱",
     description:
       "기획·디자인·개발 전 과정 단독 진행. 2025년 8월부터 실사용자가 실제로 사용 중.",
-    tags: ["Flutter", "Mobile"],
+    tags: ["Mobile", "Fullstack", "Flutter"],
     year: "2025",
     link: "https://github.com/oznwoo",
   },
@@ -118,7 +120,7 @@ const PROJECTS = [
     subtitle: "메신저 통합 플랫폼",
     description:
       "다양한 메신저 알림 필터링·요약 앱. KIPS 정보처리학회 학술대회 논문 발표.",
-    tags: ["Mobile", "AI", "NLP"],
+    tags: ["Mobile", "Fullstack", "React Native"],
     year: "2024",
     link: "https://github.com/oznwoo",
   },
