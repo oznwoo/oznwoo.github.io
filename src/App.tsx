@@ -1122,10 +1122,14 @@ function PageProjects({
                         key={t}
                         style={{
                           fontFamily: "var(--font-mono)",
-                          fontWeight: active ? 700 : 400,
                           color: active
                             ? "rgba(255,255,255,0.95)"
                             : "rgba(12,15,26,0.38)",
+                          // font-weight를 바꾸면 글자 폭이 변해 pill이 넓어지며 옆
+                          // pill들이 밀리므로, 폭에 영향 없는 text-stroke로 굵기감만 더한다
+                          WebkitTextStroke: active
+                            ? "0.35px currentColor"
+                            : "0px transparent",
                           boxShadow: active
                             ? `0 6px 16px ${hexToRgba(accent!.primary, 0.18)}, 0 1px 3px rgba(12,15,26,0.08)`
                             : "none",
