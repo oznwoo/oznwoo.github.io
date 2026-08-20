@@ -1186,7 +1186,7 @@ function ResumeCardHeader({ label, color }: { label: string; color: string }) {
   return (
     <div
       style={{ fontFamily: "var(--font-mono)", color }}
-      className="mb-4 text-[10px] uppercase tracking-[0.04em] opacity-70"
+      className="mb-4 text-sm uppercase tracking-[0.04em] opacity-70"
     >
       {label}
     </div>
@@ -1254,7 +1254,7 @@ function PageResume() {
             </div>
           </div>
           <div>
-            <ResumeCardHeader label="활동" color={CATEGORY_COLOR.활동} />
+            <ResumeCardHeader label="Activities" color={CATEGORY_COLOR.활동} />
             <div className="space-y-4">
               {activity?.items.map((item) => (
                 <TimelineItem key={item.name} item={item} />
@@ -1292,7 +1292,7 @@ function PageResume() {
             </div>
           </div>
           <div>
-            <ResumeCardHeader label="자격증" color={CATEGORY_COLOR.자격증} />
+            <ResumeCardHeader label="Certifications" color={CATEGORY_COLOR.자격증} />
             <div className="space-y-4">
               {certificate?.items.map((item) => (
                 <TimelineItem key={item.name} item={item} />
