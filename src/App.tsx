@@ -1182,9 +1182,57 @@ const CATEGORY_COLOR: Record<string, string> = {
   자격증: "#2BA68A",
 }
 
+const RESUME_CARD_STYLE = {
+  background: "rgba(255,255,255,0.35)",
+  border: "1px solid rgba(12,15,26,0.06)",
+}
+
+function ResumeCardHeader({ label, color }: { label: string; color: string }) {
+  return (
+    <div
+      style={{ fontFamily: "var(--font-mono)", color }}
+      className="mb-4 text-[10px] uppercase tracking-[0.04em] opacity-70"
+    >
+      {label}
+    </div>
+  )
+}
+
+function TimelineItem({
+  item,
+}: {
+  item: { name: string; sub: string; date: string }
+}) {
+  return (
+    <div>
+      <div className="flex items-baseline justify-between gap-3">
+        <div
+          style={{ fontFamily: "var(--font-nanum)", fontWeight: 700 }}
+          className="text-[13px] leading-snug text-[#0C0F1A]"
+        >
+          {item.name}
+        </div>
+        <div
+          style={{ fontFamily: "var(--font-mono)" }}
+          className="shrink-0 whitespace-nowrap text-[10px] text-[#0C0F1A]/30"
+        >
+          {item.date}
+        </div>
+      </div>
+      <div
+        style={{ fontFamily: "var(--font-body)" }}
+        className="text-[11px] font-light leading-relaxed text-[#0C0F1A]/40"
+      >
+        {item.sub}
+      </div>
+    </div>
+  )
+}
+
 function PageResume() {
   const education = EXP_COLS.find((col) => col.title === "교육")
-  const experienceCols = EXP_COLS.filter((col) => col.title !== "교육")
+  const activity = EXP_COLS.find((col) => col.title === "활동")
+  const certificate = EXP_COLS.find((col) => col.title === "자격증")
 
   return (
     <Page>
@@ -1201,124 +1249,59 @@ function PageResume() {
         >
           이력
         </h2>
-        <div className="grid grid-cols-1 gap-x-14 gap-y-10 md:grid-cols-2">
-          <div>
-            {education && (
-              <div className="mb-8">
-                <div
-                  style={{ fontFamily: "var(--font-mono)" }}
-                  className="mb-4 text-[10px] uppercase tracking-[0.04em] text-[#0C0F1A]/25"
-                >
-                  Education
-                </div>
-                <div className="space-y-4">
-                  {education.items.map((item) => (
-                    <div key={item.name}>
-                      <div className="flex items-baseline justify-between gap-3">
-                        <div
-                          style={{
-                            fontFamily: "var(--font-nanum)",
-                            fontWeight: 700,
-                          }}
-                          className="text-[13px] leading-snug text-[#0C0F1A]"
-                        >
-                          {item.name}
-                        </div>
-                        <div
-                          style={{ fontFamily: "var(--font-mono)" }}
-                          className="shrink-0 whitespace-nowrap text-[10px] text-[#0C0F1A]/30"
-                        >
-                          {item.date}
-                        </div>
-                      </div>
-                      <div
-                        style={{ fontFamily: "var(--font-body)" }}
-                        className="text-[11px] font-light leading-relaxed text-[#0C0F1A]/40"
-                      >
-                        {item.sub}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            <div>
-              <div
-                style={{ fontFamily: "var(--font-mono)" }}
-                className="mb-4 text-[10px] uppercase tracking-[0.04em] text-[#0C0F1A]/25"
-              >
-                Skills
-              </div>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-5">
-                {SKILLS.map((group) => (
-                  <div key={group.category}>
-                    <div
-                      style={{ fontFamily: "var(--font-mono)" }}
-                      className="mb-2.5 text-[9px] uppercase tracking-[0.04em] text-[#4F6EF7]/60"
-                    >
-                      {group.category}
-                    </div>
-                    <div className="space-y-2">
-                      {group.items.map((item) => (
-                        <div
-                          key={item}
-                          className="group flex items-center gap-2"
-                        >
-                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[#0C0F1A]/10 p-[5px] text-[#0C0F1A]/45 transition-colors duration-150 group-hover:border-[#4F6EF7]/40 group-hover:text-[#4F6EF7]">
-                            <SkillIcon name={item} />
-                          </span>
-                          <span
-                            style={{ fontFamily: "var(--font-body)" }}
-                            className="text-xs font-light text-[#0C0F1A]/60 transition-colors duration-150 group-hover:text-[#0C0F1A]/80"
-                          >
-                            {item}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="rounded-2xl p-6" style={RESUME_CARD_STYLE}>
+            <ResumeCardHeader label="Education" color={CATEGORY_COLOR.교육} />
+            <div className="space-y-4">
+              {education?.items.map((item) => (
+                <TimelineItem key={item.name} item={item} />
+              ))}
             </div>
           </div>
-          <div>
-            <div
-              style={{ fontFamily: "var(--font-mono)" }}
-              className="mb-5 text-[10px] uppercase tracking-[0.04em] text-[#0C0F1A]/25"
-            >
-              Experience
+          <div className="rounded-2xl p-6" style={RESUME_CARD_STYLE}>
+            <ResumeCardHeader label="활동" color={CATEGORY_COLOR.활동} />
+            <div className="space-y-4">
+              {activity?.items.map((item) => (
+                <TimelineItem key={item.name} item={item} />
+              ))}
             </div>
-            <div className="space-y-8">
-              {experienceCols.flatMap((col) =>
-                col.items.map((item) => (
-                  <div key={item.name}>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-nanum)",
-                        fontWeight: 700,
-                      }}
-                      className="text-[16px] leading-snug text-[#0C0F1A]"
-                    >
-                      {item.name}
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        color: CATEGORY_COLOR[col.title],
-                      }}
-                      className="mt-1 text-[11px] italic opacity-70"
-                    >
-                      {col.title} · {item.date}
-                    </div>
-                    <div
-                      style={{ fontFamily: "var(--font-body)" }}
-                      className="mt-1.5 text-[12px] font-light leading-relaxed text-[#0C0F1A]/45"
-                    >
-                      {item.sub}
-                    </div>
+          </div>
+          <div className="rounded-2xl p-6" style={RESUME_CARD_STYLE}>
+            <ResumeCardHeader label="Skills" color="rgba(12,15,26,0.35)" />
+            <div className="grid grid-cols-2 gap-x-6 gap-y-5">
+              {SKILLS.map((group) => (
+                <div key={group.category}>
+                  <div
+                    style={{ fontFamily: "var(--font-mono)" }}
+                    className="mb-2.5 text-[9px] uppercase tracking-[0.04em] text-[#4F6EF7]/60"
+                  >
+                    {group.category}
                   </div>
-                )),
-              )}
+                  <div className="space-y-2">
+                    {group.items.map((item) => (
+                      <div key={item} className="group flex items-center gap-2">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[#0C0F1A]/10 p-[5px] text-[#0C0F1A]/45 transition-colors duration-150 group-hover:border-[#4F6EF7]/40 group-hover:text-[#4F6EF7]">
+                          <SkillIcon name={item} />
+                        </span>
+                        <span
+                          style={{ fontFamily: "var(--font-body)" }}
+                          className="text-xs font-light text-[#0C0F1A]/60 transition-colors duration-150 group-hover:text-[#0C0F1A]/80"
+                        >
+                          {item}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-2xl p-6" style={RESUME_CARD_STYLE}>
+            <ResumeCardHeader label="자격증" color={CATEGORY_COLOR.자격증} />
+            <div className="space-y-4">
+              {certificate?.items.map((item) => (
+                <TimelineItem key={item.name} item={item} />
+              ))}
             </div>
           </div>
         </div>
