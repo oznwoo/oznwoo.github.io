@@ -1083,10 +1083,7 @@ function PageProjects({
           </a>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {PROJECTS.map((p) => {
-            const cardAccent = PROJECT_ACCENT[p.id] ?? null
-            const cardActive = hovered === p.id
-            return (
+          {PROJECTS.map((p) => (
             <button
               key={p.id}
               onClick={() => onOpen(p.id)}
@@ -1098,31 +1095,18 @@ function PageProjects({
                 setHovered(null)
                 onHover(null)
               }}
-              className="group relative text-left rounded-2xl p-6 flex flex-col gap-4 transition-all duration-200"
+              className="group text-left rounded-2xl p-6 flex flex-col gap-4 transition-all duration-200"
               style={{
-                boxShadow: cardActive
-                  ? "0 12px 40px rgba(79,110,247,0.10), 0 2px 10px rgba(12,15,26,0.07)"
-                  : "none",
+                background:
+                  hovered === p.id ? "rgba(248,250,255,0.88)" : "transparent",
+                boxShadow:
+                  hovered === p.id
+                    ? "0 12px 40px rgba(79,110,247,0.10), 0 2px 10px rgba(12,15,26,0.07)"
+                    : "none",
                 backdropFilter: "blur(8px)",
               }}
             >
-              {/* 카드 표면도 흰색 대신 프로젝트 고유 색을 옅게 섞은 파스텔 그라디언트로
-                  채운다 — 그라디언트는 opacity 애니메이션이 안 되니 항상 채워둔 채
-                  opacity만 페이드시킨다. accent 없는 프로젝트는 기존 흰 표면 유지 */}
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 rounded-2xl"
-                style={{
-                  background: cardAccent
-                    ? `linear-gradient(135deg, ${mixWithWhite(cardAccent.blobs[0], 0.82)}, ${mixWithWhite(cardAccent.blobs[1], 0.82)}, ${mixWithWhite(cardAccent.blobs[2], 0.82)})`
-                    : "rgba(248,250,255,0.88)",
-                  opacity: cardActive ? 1 : 0,
-                  transition: cardActive
-                    ? "opacity 0.35s ease-out"
-                    : "opacity 0.5s ease-in",
-                }}
-              />
-              <div className="relative flex items-start justify-between gap-2">
+              <div className="flex items-start justify-between gap-2">
                 <div className="flex flex-wrap gap-1.5">
                   {p.tags.map((t) => {
                     const accent = PROJECT_ACCENT[p.id] ?? null
@@ -1181,7 +1165,7 @@ function PageProjects({
                   {p.year}
                 </span>
               </div>
-              <div className="relative flex-1">
+              <div className="flex-1">
                 <div className="flex items-baseline gap-2 flex-wrap mb-2">
                   <h3
                     style={{ fontFamily: "var(--font-nanum)", fontWeight: 800 }}
@@ -1204,8 +1188,7 @@ function PageProjects({
                 </p>
               </div>
             </button>
-            )
-          })}
+          ))}
         </div>
       </div>
     </Page>
