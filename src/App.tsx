@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback, useContext, createContext } from "react"
 import profilePhoto from "@/imports/____________________.jpeg"
 import logoImg from "@/imports/______________.png"
 import { SkillIcon } from "@/lib/skillIcons"
@@ -751,6 +751,7 @@ function DotNav({
           />
         </span>
         <span
+          className="hidden md:inline-block"
           style={{
             fontFamily: "var(--font-mono)",
             opacity: current === 0 ? 0.65 : hovered ? 0.3 : 0,
@@ -821,6 +822,7 @@ function DotNav({
               </span>
             </span>
             <span
+              className="hidden md:inline-block"
               style={{
                 fontFamily: "var(--font-mono)",
                 opacity: i === current ? 0.65 : hovered ? 0.3 : 0,
@@ -846,12 +848,79 @@ function DotNav({
 
 // ─── Section wrapper ──────────────────────────────────────────────────────────
 
+// 데스크톱/태블릿(md 이상)은 기존처럼 페이지 하나가 정확히 한 화면(100vh)을
+// 채우는 세로 슬라이드 방식을 쓰지만, 모바일은 콘텐츠 밀도가 높은 페이지(Resume 등)가
+// 한 화면에 안 들어가 잘리는 문제가 있어 "stack" 모드에서는 자연스러운 문서
+// 스크롤로 전환한다. Page 컴포넌트를 호출하는 모든 페이지가 이 값을 몰라도
+// 되도록 컨텍스트로 전달한다.
+const LayoutModeContext = createContext<"slide" | "stack">("slide")
+
+function useIsMobile(breakpointPx: number = 767): boolean {
+  const [isMobile, setIsMobile] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia(`(max-width: ${breakpointPx}px)`).matches,
+  )
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpointPx}px)`)
+    const update = () => setIsMobile(mq.matches)
+    update()
+    mq.addEventListener("change", update)
+    return () => mq.removeEventListener("change", update)
+  }, [breakpointPx])
+  return isMobile
+}
+
+// stack 모드에서 각 섹션의 가시성을 관찰해 "현재 보고 있는 섹션" 인덱스를
+// 돌려준다 — 스크롤 이벤트 핸들러 대신 IntersectionObserver를 써서 스크롤
+// 성능에 영향을 주지 않는다.
+function useSectionObserver(ids: string[], enabled: boolean): number {
+  const [active, setActive] = useState(0)
+
+  useEffect(() => {
+    if (!enabled) return
+    const ratios = new Map<string, number>()
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          ratios.set(entry.target.id, entry.intersectionRatio)
+        }
+        let bestId = ids[0]
+        let bestRatio = -1
+        for (const id of ids) {
+          const r = ratios.get(id) ?? 0
+          if (r > bestRatio) {
+            bestRatio = r
+            bestId = id
+          }
+        }
+        const idx = ids.indexOf(bestId)
+        if (idx !== -1) setActive(idx)
+      },
+      { threshold: [0, 0.25, 0.5, 0.75, 1] },
+    )
+    const elements = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null)
+    elements.forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled, ids.join(",")])
+
+  return active
+}
+
 function Page({ children }: { children: React.ReactNode }) {
+  const mode = useContext(LayoutModeContext)
+  if (mode === "stack") {
+    return (
+      <div className="w-full flex items-center justify-center pl-16 pr-6 py-24 sm:pl-20 sm:pr-10">
+        <div className="w-full max-w-5xl">{children}</div>
+      </div>
+    )
+  }
   return (
-    <div
-      className="h-screen w-full flex items-center justify-center pr-6 md:pr-12 shrink-0"
-      style={{ paddingLeft: "calc(1.5rem + 140px)" }}
-    >
+    <div className="h-screen w-full flex items-center justify-center overflow-y-auto pl-16 pr-6 sm:pl-20 md:pl-[164px] md:pr-12 shrink-0 py-16 md:py-0">
       <div className="w-full max-w-5xl">{children}</div>
     </div>
   )
@@ -921,7 +990,7 @@ function PageHome() {
         </span>
         <h1
           style={{ fontFamily: "var(--font-display)", lineHeight: 1.15 }}
-          className="text-[clamp(3rem,8vw,6.5rem)] font-light tracking-tight text-[#0C0F1A]"
+          className="text-[clamp(2.1rem,9vw,6.5rem)] font-light tracking-tight text-[#0C0F1A]"
         >
           <span>아이디어를</span>
           <br />
@@ -934,7 +1003,7 @@ function PageHome() {
           >
             오진우
           </p>
-          <div className="flex items-center gap-8 shrink-0">
+          <div className="flex items-center gap-4 sm:gap-8 shrink-0 flex-wrap">
             {[
               { label: "GitHub", href: "https://github.com/oznwoo" },
               { label: "RESUME", href: "https://oznwoo.github.io" },
@@ -1272,7 +1341,7 @@ function TimelineItem({
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${item.name} 증명서 PDF 열기`}
-              className="shrink-0 self-center text-[#0C0F1A]/30 transition-colors duration-150 hover:text-[#4F6EF7]"
+              className="shrink-0 self-center -m-2 p-2 text-[#0C0F1A]/30 transition-colors duration-150 hover:text-[#4F6EF7]"
             >
               <svg
                 width="12"
@@ -1578,7 +1647,7 @@ function DetailNav({
   const [hovered, setHovered] = useState(false)
   return (
     <nav
-      className="absolute left-6 top-1/2 -translate-y-1/2 z-50 flex flex-col items-start"
+      className="fixed left-6 top-1/2 -translate-y-1/2 z-50 flex flex-col items-start"
       style={{ gap: "10px" }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -1604,6 +1673,7 @@ function DetailNav({
           </span>
         </span>
         <span
+          className="hidden md:inline-block"
           style={{
             fontFamily: "var(--font-mono)",
             fontSize: "0.65rem",
@@ -1641,6 +1711,7 @@ function DetailNav({
             />
           </span>
           <span
+            className="hidden md:inline-block"
             style={{
               fontFamily: "var(--font-mono)",
               opacity: i === slide ? 0.65 : hovered ? 0.3 : 0,
@@ -1678,6 +1749,12 @@ function ProjectDetailView({
   const detail = PROJECT_DETAILS[projectId]
   const project = PROJECTS.find((p) => p.id === projectId)!
   const TOTAL_D = DETAIL_PAGE_LABELS.length
+  const isMobile = useIsMobile()
+  const detailSlideIds = DETAIL_PAGE_LABELS.map((_, i) => `detail-slide-${i}`)
+  // 모바일(stack 모드)에서는 세로 슬라이드 트랙 대신 자연스러운 문서 스크롤을
+  // 쓰므로, 활성 dot은 goSlide가 아니라 실제로 보이는 섹션을 관찰해 정한다.
+  const observedSlide = useSectionObserver(detailSlideIds, isMobile)
+  const displaySlide = isMobile ? observedSlide : slide
 
   useEffect(() => {
     setSlide(0)
@@ -1702,13 +1779,16 @@ function ProjectDetailView({
 
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
+      // 모바일(stack 모드)에서는 세로 트랙을 강제 전환하지 않고 일반 문서
+      // 스크롤을 그대로 둔다.
+      if (isMobile) return
       e.preventDefault()
       if (Math.abs(e.deltaY) < 20) return
       e.deltaY > 0 ? nextSlide() : prevSlide()
     }
     window.addEventListener("wheel", onWheel, { passive: false })
     return () => window.removeEventListener("wheel", onWheel)
-  }, [nextSlide, prevSlide])
+  }, [nextSlide, prevSlide, isMobile])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -1716,19 +1796,20 @@ function ProjectDetailView({
         onClose()
         return
       }
+      if (isMobile) return
       if (e.key === "ArrowDown") nextSlide()
       if (e.key === "ArrowUp") prevSlide()
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [nextSlide, prevSlide, onClose])
+  }, [nextSlide, prevSlide, onClose, isMobile])
 
   useEffect(() => {
     const onStart = (e: TouchEvent) => {
       touchStart.current = e.touches[0].clientY
     }
     const onEnd = (e: TouchEvent) => {
-      if (touchStart.current === null) return
+      if (isMobile || touchStart.current === null) return
       const delta = touchStart.current - e.changedTouches[0].clientY
       if (Math.abs(delta) > 50) delta > 0 ? nextSlide() : prevSlide()
       touchStart.current = null
@@ -1739,11 +1820,22 @@ function ProjectDetailView({
       window.removeEventListener("touchstart", onStart)
       window.removeEventListener("touchend", onEnd)
     }
-  }, [nextSlide, prevSlide])
+  }, [nextSlide, prevSlide, isMobile])
+
+  const slideWrapClass = isMobile
+    ? "min-h-screen w-full flex items-center justify-center px-6 pl-16 py-20"
+    : "h-screen flex items-center justify-center px-8 md:px-20 shrink-0"
+
+  const handleDotClick = isMobile
+    ? (i: number) =>
+        document
+          .getElementById(`detail-slide-${i}`)
+          ?.scrollIntoView({ behavior: "smooth", block: "start" })
+    : goSlide
 
   const slides = [
     // 개요
-    <div className="h-screen flex items-center justify-center px-8 md:px-20 shrink-0">
+    <div className={slideWrapClass}>
       <div className="max-w-2xl w-full">
         <span
           style={{ fontFamily: "var(--font-mono)" }}
@@ -1787,7 +1879,7 @@ function ProjectDetailView({
       </div>
     </div>,
     // 문제
-    <div className="h-screen flex items-center justify-center px-8 md:px-20 shrink-0">
+    <div className={slideWrapClass}>
       <div className="max-w-2xl w-full">
         <span
           style={{ fontFamily: "var(--font-mono)" }}
@@ -1824,7 +1916,7 @@ function ProjectDetailView({
       </div>
     </div>,
     // 해결
-    <div className="h-screen flex items-center justify-center px-8 md:px-20 shrink-0">
+    <div className={slideWrapClass}>
       <div className="max-w-2xl w-full">
         <span
           style={{ fontFamily: "var(--font-mono)" }}
@@ -1861,7 +1953,7 @@ function ProjectDetailView({
       </div>
     </div>,
     // 성과
-    <div className="h-screen flex items-center justify-center px-8 md:px-20 shrink-0">
+    <div className={slideWrapClass}>
       <div className="max-w-2xl w-full">
         <span
           style={{ fontFamily: "var(--font-mono)" }}
@@ -1898,7 +1990,7 @@ function ProjectDetailView({
       </div>
     </div>,
     // 기술
-    <div className="h-screen flex items-center justify-center px-8 md:px-20 shrink-0">
+    <div className={slideWrapClass}>
       <div className="max-w-2xl w-full">
         <span
           style={{ fontFamily: "var(--font-mono)" }}
@@ -1945,30 +2037,45 @@ function ProjectDetailView({
   const accent = PROJECT_ACCENT[projectId] ?? null
 
   return (
-    <div className="w-screen h-screen relative overflow-hidden">
+    <div
+      className={
+        isMobile
+          ? "fixed inset-0 z-40 overflow-y-auto bg-[#EEF1F9]"
+          : "w-screen h-screen relative overflow-hidden"
+      }
+    >
       {/* 배경은 자체 색을 칠하지 않고 App의 공유 GradientBackground를 그대로
           비쳐 보이게 둔다 — 리스트 호버와 같은 방식으로 이 프로젝트의 색이
           깔린다 */}
       {/* 좌측 네비게이터 — 메인과 동일한 구조 */}
       <DetailNav
-        slide={slide}
+        slide={displaySlide}
         onClose={onClose}
-        goSlide={goSlide}
+        goSlide={handleDotClick}
         accent={accent}
       />
 
-      {/* 세로 슬라이드 트랙 */}
+      {/* 세로 슬라이드 트랙: 모바일은 자연스러운 문서 스크롤, 데스크톱/태블릿은
+          transform 기반 세로 슬라이드 */}
       <div
         className="flex flex-col"
-        style={{
-          transform: `translateY(-${slide * 100}vh)`,
-          transition: "transform 0.75s cubic-bezier(0.77,0,0.18,1)",
-          height: `${TOTAL_D * 100}vh`,
-          willChange: "transform",
-        }}
+        style={
+          isMobile
+            ? undefined
+            : {
+                transform: `translateY(-${slide * 100}vh)`,
+                transition: "transform 0.75s cubic-bezier(0.77,0,0.18,1)",
+                height: `${TOTAL_D * 100}vh`,
+                willChange: "transform",
+              }
+        }
       >
         {slides.map((s, i) => (
-          <div key={i} className="h-screen w-full shrink-0">
+          <div
+            key={i}
+            id={isMobile ? detailSlideIds[i] : undefined}
+            className={isMobile ? "w-full" : "h-screen w-full shrink-0"}
+          >
             {s}
           </div>
         ))}
@@ -1977,9 +2084,9 @@ function ProjectDetailView({
       {/* 하단 카운터 */}
       <div
         style={{ fontFamily: "var(--font-mono)" }}
-        className="absolute bottom-6 left-6 text-xs text-[#0C0F1A]/25 select-none"
+        className="fixed bottom-6 left-6 text-xs text-[#0C0F1A]/25 select-none"
       >
-        {String(slide + 1).padStart(2, "0")} /{" "}
+        {String(displaySlide + 1).padStart(2, "0")} /{" "}
         {String(TOTAL_D).padStart(2, "0")}
       </div>
     </div>
@@ -2128,6 +2235,12 @@ export default function App() {
   const isDetailRef = useRef(isDetail)
   isDetailRef.current = isDetail
 
+  // 모바일(stack 모드)에서는 세로 슬라이드 트랙 자체를 렌더링하지 않고 일반
+  // 문서 스크롤을 쓰므로, 전역 wheel/touch/keydown 페이지 전환 핸들러는 꺼둔다.
+  const isMobile = useIsMobile()
+  const isMobileRef = useRef(isMobile)
+  isMobileRef.current = isMobile
+
   useEffect(() => {
     if (closeDetailTimer.current) clearTimeout(closeDetailTimer.current)
     if (activeProject !== null) {
@@ -2146,7 +2259,7 @@ export default function App() {
 
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
-      if (isDetailRef.current) return
+      if (isDetailRef.current || isMobileRef.current) return
       e.preventDefault()
       if (Math.abs(e.deltaY) < 20) return
       e.deltaY > 0 ? next() : prev()
@@ -2157,7 +2270,7 @@ export default function App() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (isDetailRef.current) return
+      if (isDetailRef.current || isMobileRef.current) return
       if (e.key === "ArrowDown") next()
       if (e.key === "ArrowUp") prev()
     }
@@ -2170,7 +2283,8 @@ export default function App() {
       touchStart.current = e.touches[0].clientY
     }
     const onEnd = (e: TouchEvent) => {
-      if (isDetailRef.current || touchStart.current === null) return
+      if (isDetailRef.current || isMobileRef.current || touchStart.current === null)
+        return
       const delta = touchStart.current - e.changedTouches[0].clientY
       if (Math.abs(delta) > 50) delta > 0 ? next() : prev()
       touchStart.current = null
@@ -2184,6 +2298,18 @@ export default function App() {
   }, [next, prev])
 
   const progress = TOTAL > 1 ? current / (TOTAL - 1) : 0
+
+  // 모바일에서는 translateY 트랙 대신 일반 문서 스크롤을 쓰므로, "현재 페이지"를
+  // IntersectionObserver로 관찰해 dot nav·카운터에 반영한다. 상세 페이지가
+  // 열려있는 동안은(오버레이가 전체를 덮으므로) 관찰을 꺼둔다.
+  const sectionIds = SECTIONS.map((_, i) => `section-${i}`)
+  const observedSection = useSectionObserver(sectionIds, isMobile && !isDetail)
+  const mobileCurrent = isMobile ? observedSection : current
+  const scrollToSection = useCallback((i: number) => {
+    document
+      .getElementById(`section-${i}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }, [])
 
   const pages = [
     <PageHome />,
@@ -2202,25 +2328,84 @@ export default function App() {
     <PageContact />,
   ]
 
+  const background = (
+    <GradientBackground
+      progress={progress}
+      page={current}
+      warping={warping}
+      rotation={rotation}
+      accentSlots={slotColors}
+      activeSlot={activeSlot}
+      accentOn={hoverAccent !== null}
+      flashNonce={flashNonce}
+      flashColor={flashColor}
+      burstOffset={burstOffset}
+      pull={pull}
+      pulseActive={pulseActive}
+      detailMode={detailBgActive}
+      detailSectionWarp={detailSectionWarp}
+      enteringDetail={activeProject !== null && !detailBgActive}
+    />
+  )
+
+  const detailOverlay = renderedProject && (
+    <ProjectDetailView
+      projectId={renderedProject}
+      onClose={() => {
+        triggerWarp(-1)
+        setActiveProject(null)
+      }}
+      onTransition={(direction) => triggerWarp(direction, false, true)}
+    />
+  )
+
+  // 모바일은 페이지 하나가 화면 한 칸을 강제로 채우는 translateY 트랙 대신,
+  // Resume처럼 콘텐츠가 많은 페이지도 잘리지 않도록 일반 문서 스크롤로
+  // 전환한다 — dot nav는 탭하면 해당 섹션으로 스크롤 이동한다.
+  if (isMobile) {
+    return (
+      <div className="relative min-h-screen w-full">
+        {background}
+        {/* 상세 오버레이가 열려있는 동안은 자체 DetailNav/카운터가 같은
+            fixed left-6 자리를 쓰므로, 메인 dot nav·카운터는 겹치지 않게 숨긴다
+            (데스크톱은 transform으로 밀려나며 자연히 해결되지만, 모바일은 그
+            transform 트랙 자체가 없어 명시적으로 감춰야 한다). */}
+        {!isDetail && (
+          <>
+            <DotNav
+              current={mobileCurrent}
+              total={TOTAL}
+              onChange={scrollToSection}
+              accentSlots={slotColors}
+              activeSlot={activeSlot}
+              accentOn={hoverAccent !== null}
+            />
+            <div
+              style={{ fontFamily: "var(--font-mono)" }}
+              className="fixed bottom-6 left-6 text-xs text-[#0C0F1A]/25 select-none"
+            >
+              {String(mobileCurrent + 1).padStart(2, "0")} /{" "}
+              {String(TOTAL).padStart(2, "0")}
+            </div>
+          </>
+        )}
+        <LayoutModeContext.Provider value="stack">
+          <main>
+            {pages.map((page, i) => (
+              <section key={i} id={sectionIds[i]}>
+                {page}
+              </section>
+            ))}
+          </main>
+        </LayoutModeContext.Provider>
+        {detailOverlay}
+      </div>
+    )
+  }
+
   return (
     <div className="fixed inset-0 overflow-hidden">
-      <GradientBackground
-        progress={progress}
-        page={current}
-        warping={warping}
-        rotation={rotation}
-        accentSlots={slotColors}
-        activeSlot={activeSlot}
-        accentOn={hoverAccent !== null}
-        flashNonce={flashNonce}
-        flashColor={flashColor}
-        burstOffset={burstOffset}
-        pull={pull}
-        pulseActive={pulseActive}
-        detailMode={detailBgActive}
-        detailSectionWarp={detailSectionWarp}
-        enteringDetail={activeProject !== null && !detailBgActive}
-      />
+      {background}
 
       {/* 가로 슬라이드: 메인(0) ↔ 상세(1) */}
       <div
@@ -2267,18 +2452,7 @@ export default function App() {
         </div>
 
         {/* 상세 세로 슬라이더 */}
-        <div className="w-screen h-screen shrink-0">
-          {renderedProject && (
-            <ProjectDetailView
-              projectId={renderedProject}
-              onClose={() => {
-                triggerWarp(-1)
-                setActiveProject(null)
-              }}
-              onTransition={(direction) => triggerWarp(direction, false, true)}
-            />
-          )}
-        </div>
+        <div className="w-screen h-screen shrink-0">{detailOverlay}</div>
       </div>
     </div>
   )
