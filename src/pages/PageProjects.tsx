@@ -82,7 +82,9 @@ export function PageProjects({
                       ].join(", ")
                     : "rgba(248,250,255,0.88)"
                   : "transparent",
-                boxShadow: bgActive
+                // 배경 blob은 hover 전용(bgActive)으로 남겨두되, 그림자는
+                // cardActive로 걸어 모바일에서도 카드 영역 구분선 역할을 하게 한다.
+                boxShadow: cardActive
                   ? "0 12px 40px rgba(79,110,247,0.10), 0 2px 10px rgba(12,15,26,0.07)"
                   : "none",
                 backdropFilter: "blur(8px)",
