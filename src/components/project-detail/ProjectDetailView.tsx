@@ -135,7 +135,7 @@ export function ProjectDetailView({
           <img
             src={detail.logoSrc}
             alt={project.title}
-            className="h-12 sm:h-14 w-auto"
+            className="h-16 sm:h-20 w-auto"
           />
         ) : (
           <span
@@ -146,8 +146,8 @@ export function ProjectDetailView({
           </span>
         )}
         <h2
-          style={{ fontFamily: "var(--font-display)", lineHeight: 1.1 }}
-          className="text-[clamp(1.8rem,5vw,3.25rem)] font-medium text-[#0C0F1A] max-w-3xl"
+          style={{ fontFamily: "var(--font-nanum-square)", lineHeight: 1.1 }}
+          className="text-[clamp(1.8rem,5vw,3.25rem)] font-bold text-[#0C0F1A] max-w-3xl"
         >
           {project.subtitle}
         </h2>
