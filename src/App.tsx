@@ -17,6 +17,7 @@ import { MobileProjectPage } from "@/pages/MobileProjectPage"
 const TOTAL = SECTIONS.length
 
 export default function App() {
+  // ─── State: 메인 세로 슬라이드 + 상세 패널 열림/닫힘 ─────────────────────
   const [current, setCurrent] = useState(0)
   const [activeProject, setActiveProject] = useState<string | null>(null)
   // 상세 패널에 실제로 마운트되는 프로젝트. 닫힐 때는 가로 슬라이드(0.75s)가
@@ -33,6 +34,7 @@ export default function App() {
   const animating = useRef(false)
   const touchStart = useRef<number | null>(null)
   // 페이지가 실제로 전환될 때만 잠깐 켜지는 "웜프" 상태 — 색 강조/스케일/블러 펄스에 쓰인다.
+  // ─── State: 배경 웜프(전환 애니메이션) ────────────────────────────────
   const [warping, setWarping] = useState(false)
   // 지금의 웜프가 상세 페이지 "내부" 섹션 전환에서 온 것인지 표시 — true일 때만
   // 상세 모드에서도 색 버스트를 (프로젝트 색으로) 재생한다.
@@ -44,6 +46,7 @@ export default function App() {
   // 카드(없으면 null). 상세 페이지가 열려있으면 그 프로젝트 색이 우선한다 —
   // 배경/DotNav/상세 네비게이터가 모두 이 값을 공유해 리스트 호버와 동일한
   // 크로스페이드·펄스·플래시 효과로 상세 페이지 색을 표시한다.
+  // ─── State: 프로젝트 브랜드 컬러 (호버/상세페이지 크로스페이드) ────────
   const [hoverId, setHoverId] = useState<string | null>(null)
   const displayAccentId = renderedProject ?? hoverId
   const hoverAccent = displayAccentId
@@ -69,6 +72,7 @@ export default function App() {
   const [burstOffset, setBurstOffset] = useState({ x: 0, y: 0 })
   const prevAccentOn = useRef(false)
 
+  // ─── Effect: 브랜드 컬러 크로스페이드·펄스·플래시 계산 ─────────────────
   useEffect(() => {
     if (hoverAccent && slotColors[activeSlot].primary !== hoverAccent.primary) {
       const nextSlot: 0 | 1 = activeSlot === 0 ? 1 : 0
@@ -113,6 +117,7 @@ export default function App() {
   // 끊기지 않아야 하므로 false로 호출한다. isDetailSection이 true면 상세
   // 페이지 "내부" 섹션 전환임을 표시해, 진입/퇴장 슬라이드는 조용히 넘어가되
   // 내부 섹션 전환만 메인 페이지와 같은 색 버스트를 (프로젝트 색으로) 재생한다.
+  // ─── Callbacks: 페이지 전환 트리거 (데스크톱 세로 슬라이드) ────────────
   const triggerWarp = useCallback(
     (
       direction: 1 | -1,
@@ -156,6 +161,7 @@ export default function App() {
 
   // 모바일(stack 모드)에서는 세로 슬라이드 트랙 자체를 렌더링하지 않고 일반
   // 문서 스크롤을 쓰므로, 전역 wheel/touch/keydown 페이지 전환 핸들러는 꺼둔다.
+  // ─── State: 모바일 여부 감지 (아래 데스크톱/모바일 렌더 분기의 기준) ───
   const isMobile = useIsMobile()
   const isMobileRef = useRef(isMobile)
   isMobileRef.current = isMobile
@@ -176,6 +182,7 @@ export default function App() {
     }, 750)
   }, [activeProject])
 
+  // ─── Effects: 전역 wheel/keydown/touch 리스너 (데스크톱 세로 슬라이드) ─
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
       if (isDetailRef.current || isMobileRef.current) return
@@ -221,6 +228,7 @@ export default function App() {
   // 모바일은 세로 대신 가로로 페이지를 넘긴다 — 세로 스크롤/스와이프는
   // 브라우저 자체의 pull-to-refresh와 겹치기 때문. Projects는 카드 4개를
   // 한 화면에 욱여넣지 않고 프로젝트마다 화면 하나를 쓰도록 쪼갠다.
+  // ─── State + Effects: 모바일 전용 가로 페이지 전환 ─────────────────────
   const MOBILE_TOTAL = 3 + PROJECTS.length + 1
   const [mobilePage, setMobilePage] = useState(0)
   const mobileProgress = MOBILE_TOTAL > 1 ? mobilePage / (MOBILE_TOTAL - 1) : 0
@@ -267,6 +275,8 @@ export default function App() {
     }
   }, [isMobile, mobilePage, goMobile])
 
+  // ─── 페이지 목록: 실제 pages/*.tsx 컴포넌트를 순서대로 배치 ────────────
+  // mobilePages: 모바일 가로 전환용 (Projects가 프로젝트별로 쪼개짐)
   const mobilePages = [
     <PageHome key="home" />,
     <PageAbout key="about" />,
@@ -283,6 +293,7 @@ export default function App() {
     <PageContact key="contact" />,
   ]
 
+  // pages: 데스크톱 세로 전환용 (Projects는 그리드 한 페이지)
   const pages = [
     <PageHome />,
     <PageAbout />,
@@ -300,6 +311,7 @@ export default function App() {
     <PageContact />,
   ]
 
+  // ─── 공유 배경 + 상세 패널 (데스크톱/모바일 렌더 양쪽에서 재사용) ──────
   const background = (
     <GradientBackground
       progress={isMobile ? mobileProgress : progress}
@@ -331,6 +343,7 @@ export default function App() {
     />
   )
 
+  // ═══ 렌더 분기 A: 모바일 (가로 슬라이드) ═══════════════════════════════
   // 모바일은 데스크톱과 같은 "페이지 하나 = 화면 하나" 원칙을 유지하되 축만
   // 세로 → 가로로 바꾼다. 세로 스크롤이 브라우저 pull-to-refresh와 겹치는
   // 문제를 원천적으로 피하면서, Projects는 화면 하나에 4개를 욱여넣는 대신
@@ -368,6 +381,7 @@ export default function App() {
     )
   }
 
+  // ═══ 렌더 분기 B: 데스크톱/태블릿 (세로 슬라이드) ══════════════════════
   return (
     <div className="fixed inset-0 overflow-hidden">
       {background}
