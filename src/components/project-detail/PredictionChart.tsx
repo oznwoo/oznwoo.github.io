@@ -37,7 +37,6 @@ export function PredictionChart({ color }: { color: string }) {
   const actualPath = toPath(actual)
   const predictedPath = toPath(predicted)
   const last = predicted[predicted.length - 1]
-  const areaPath = `${predictedPath} L${last.x.toFixed(1)},${HEIGHT - PAD_Y} L${PAD_X},${HEIGHT - PAD_Y} Z`
 
   return (
     <svg
@@ -46,12 +45,6 @@ export function PredictionChart({ color }: { color: string }) {
       role="img"
       aria-label="시간에 따라 우상향하며 실제값을 촘촘히 따라가는 현금흐름 예측 그래프"
     >
-      <defs>
-        <linearGradient id="prediction-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.16" />
-          <stop offset="100%" stopColor={color} stopOpacity="0" />
-        </linearGradient>
-      </defs>
       {/* 은은한 기준선 4개 — 그리드 느낌만 살짝 */}
       {[0.22, 0.44, 0.66, 0.88].map((r) => (
         <line
@@ -65,7 +58,6 @@ export function PredictionChart({ color }: { color: string }) {
           strokeWidth="1"
         />
       ))}
-      <path d={areaPath} fill="url(#prediction-fill)" />
       <path
         d={actualPath}
         pathLength={1}
