@@ -311,8 +311,13 @@ export default function App() {
         ? (PROJECT_ACCENT[activeProject]?.primary ?? DEFAULT_ACCENT.primary)
         : DEFAULT_ACCENT.primary
       setMobilePulse((prev) => ({ nonce: (prev?.nonce ?? 0) + 1, color }))
+      // 열 때와 대칭: 패널을 바로 숨기지 않고 펄스가 절정에 이를 때까지는
+      // 그대로 보여준 뒤, 그때부터 사그라들며 목록이 드러나게 한다.
       if (panelRevealTimer.current) clearTimeout(panelRevealTimer.current)
-      setMobilePanelVisible(false)
+      panelRevealTimer.current = setTimeout(
+        () => setMobilePanelVisible(false),
+        PULSE_REVEAL_DELAY,
+      )
     } else {
       triggerWarp(-1)
     }

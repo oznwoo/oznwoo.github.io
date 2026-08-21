@@ -504,12 +504,15 @@ export function ProjectDetailView({
       style={
         isMobile
           ? {
-              // 화면이 바뀌는 신호는 App의 전체화면 색 펄스(0.55s)가 맡고,
-              // 패널은 그 펄스가 절정을 지나 사그라들기 시작할 때 짧게
-              // 페이드인만 하면 된다 — open 자체가 이미 지연되어 들어온다.
+              // App의 펄스(0.7s, 38%=약 260ms에 절정)가 절정을 지나는 시점에
+              // open이 true로 넘어오고, 여기서부터 펄스가 완전히 사그라드는
+              // 시점(700ms)까지 정확히 맞춰 페이드인한다 — 그래야 펄스가 다
+              // 꺼지기 전에 이 패널의 각진 배경이 먼저 다 드러나 "띡" 하고
+              // 튀어 보이는 일 없이, 펄스 색이 옅어지는 것과 다음 화면이
+              // 짙어지는 것이 겹쳐 보이며 하나의 크로스페이드처럼 읽힌다.
               opacity: mobileShown ? 1 : 0,
               pointerEvents: mobileShown ? "auto" : "none",
-              transition: "opacity 0.3s ease-out",
+              transition: "opacity 0.44s ease-in-out",
               willChange: "opacity",
             }
           : undefined
