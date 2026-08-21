@@ -48,24 +48,11 @@ html {
   pointer-events: none;
 }
 
-/* Overview 히어로의 손그림 예측 차트 — 선이 그려지듯 나타나고,
-   종착점 점은 은은하게 맥동해 "살아있는" 느낌을 준다 */
-@keyframes chart-line-draw {
-  from { stroke-dashoffset: 1; }
-  to { stroke-dashoffset: 0; }
-}
-.chart-line-draw {
-  animation: chart-line-draw 1.4s cubic-bezier(0.16,1,0.3,1) both;
-}
-
-@keyframes chart-dot-pulse {
-  0%, 100% { transform: scale(1); opacity: 0.6; }
-  50% { transform: scale(2.2); opacity: 0; }
-}
-.chart-dot-pulse {
-  transform-origin: center;
-  transform-box: fill-box;
-  animation: chart-dot-pulse 2s ease-out 1.4s infinite;
+/* Overview 히어로 하단의 장식 막대 차트 — 막대가 순차적으로 솟아오르며
+   등장한다. 이후 마우스 hover 반응은 각 막대의 Tailwind hover:scale-y로 처리 */
+@keyframes bar-rise {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
 }
 
 body {

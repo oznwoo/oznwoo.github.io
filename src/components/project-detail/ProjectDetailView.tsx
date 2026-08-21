@@ -6,7 +6,7 @@ import { PROJECTS, PROJECT_DETAILS, PROJECT_ACCENT } from "@/data/projects"
 import { hexToRgba } from "@/lib/color"
 import { DetailIcon } from "./DetailIcon"
 import { DetailNav } from "./DetailNav"
-import { PredictionChart } from "./PredictionChart"
+import { HeroBarChart } from "./HeroBarChart"
 
 export function ProjectDetailView({
   projectId,
@@ -32,10 +32,6 @@ export function ProjectDetailView({
   // 쓰므로, 활성 dot은 goSlide가 아니라 실제로 보이는 섹션을 관찰해 정한다.
   const observedSlide = useSectionObserver(detailSlideIds, isMobile)
   const displaySlide = isMobile ? observedSlide : slide
-  // Overview 히어로 배경의 대형 장식 차트가 마우스를 따라 은은하게 흔들리는
-  // 시차(parallax) 효과. -1~1로 정규화한 커서 위치를 그대로 들고 있다가
-  // transform에 곱해 쓴다.
-  const [heroTilt, setHeroTilt] = useState({ x: 0, y: 0 })
 
   useEffect(() => {
     setSlide(0)
@@ -116,10 +112,11 @@ export function ProjectDetailView({
 
   const slides = [
     // 개요 — 로고 → 큰 타이틀 → 개요 → 기간/역할이 중앙 정렬로 쌓이고,
-    // 그 뒤로 대형 예측 차트 애니메이션이 은은하게 깔린다(레퍼런스 레이아웃
-    // 참고). 차트는 정보 그래픽이 아니라 마우스를 따라 살짝 움직이는 히어로
-    // 장식이라 카드/배경 없이 텍스트 바로 뒤 레이어에 얹는다. 기존 공유
-    // GradientBackground는 그대로 유지하고 그 위에 얹기만 한다.
+    // 화면 맨 아래에는 장식 막대 차트가 깔린다(레퍼런스 레이아웃 참고).
+    // 정보 그래픽이 아니라 마우스가 지나가는 막대만 즉시 솟아올랐다가
+    // 커서가 빠지면 가라앉는 히어로 장식이라, 순수 CSS :hover로만
+    // 반응하게 하고 텍스트와 겹치지 않도록 하단 전용 밴드에 둔다.
+    // 기존 공유 GradientBackground는 그대로 유지하고 그 위에 얹기만 한다.
     <div
       className={
         (isMobile
@@ -127,27 +124,10 @@ export function ProjectDetailView({
           : "h-screen flex items-center justify-center px-8 md:px-16 shrink-0 text-center") +
         " relative overflow-hidden"
       }
-      onMouseMove={(e) => {
-        const rect = e.currentTarget.getBoundingClientRect()
-        setHeroTilt({
-          x: ((e.clientX - rect.left) / rect.width - 0.5) * 2,
-          y: ((e.clientY - rect.top) / rect.height - 0.5) * 2,
-        })
-      }}
-      onMouseLeave={() => setHeroTilt({ x: 0, y: 0 })}
     >
       {detail.outcomeImage && (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 flex items-center justify-center"
-          style={{
-            transform: `translate(${heroTilt.x * 22}px, ${heroTilt.y * 14}px)`,
-            transition: "transform 0.5s cubic-bezier(0.22,1,0.36,1)",
-          }}
-        >
-          <div className="w-[92vw] max-w-4xl">
-            <PredictionChart color={accentColor} />
-          </div>
+        <div className="absolute inset-x-0 bottom-0 h-[30vh] sm:h-[36vh]">
+          <HeroBarChart color={accentColor} />
         </div>
       )}
       <div className="relative z-10 flex flex-col items-center gap-5">
