@@ -44,9 +44,11 @@ export function PageProjects({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {PROJECTS.map((p) => {
             const cardAccent = PROJECT_ACCENT[p.id] ?? null
-            // 모바일은 호버 자체가 없으니 PC의 "호버되기 전" 기본 카드
-            // 디자인(배경 없이 여백만) 그대로 쓴다.
-            const cardActive = !isMobile && hovered === p.id
+            // 모바일은 호버가 없으니 텍스트·태그는 PC의 "호버된" 스타일을
+            // 항상 쓰되(진한 글자, 색 있는 태그), 카드 배경 blob·그림자는
+            // 넣지 않는다 — 배경까지 항상 켜두면 카드가 너무 무거워진다.
+            const cardActive = isMobile || hovered === p.id
+            const bgActive = !isMobile && hovered === p.id
             return (
             <button
               key={p.id}
@@ -68,7 +70,7 @@ export function PageProjects({
                 // blob 여러 개를 겹쳐 얼룩덜룩하게 번진 느낌을 낸다. 단색
                 // 브랜드(Fintag/Gopssl)도 alpha·위치·크기가 제각각이라 균일하지
                 // 않게 보이고, 다색 브랜드는 여기에 색상 차이까지 더해진다
-                background: cardActive
+                background: bgActive
                   ? cardAccent
                     ? [
                         `radial-gradient(circle at 18% 22%, ${hexToRgba(cardAccent.blobs[0], 0.13)} 0%, transparent 52%)`,
@@ -80,14 +82,18 @@ export function PageProjects({
                       ].join(", ")
                     : "rgba(248,250,255,0.88)"
                   : "transparent",
-                boxShadow: cardActive
+                boxShadow: bgActive
                   ? "0 12px 40px rgba(79,110,247,0.10), 0 2px 10px rgba(12,15,26,0.07)"
                   : "none",
                 backdropFilter: "blur(8px)",
               }}
             >
               <div className="flex items-start justify-between gap-2">
-                <div className="flex flex-wrap gap-1.5">
+                <div
+                  className={
+                    "flex flex-wrap " + (isMobile ? "gap-1" : "gap-1.5")
+                  }
+                >
                   {p.tags.map((t) => {
                     const accent = PROJECT_ACCENT[p.id] ?? null
                     const active = cardActive && accent !== null
@@ -120,7 +126,12 @@ export function PageProjects({
                           transition:
                             "color 0.35s ease-out, box-shadow 0.35s ease-out",
                         }}
-                        className="relative flex items-center text-[9px] px-2.5 py-1 rounded-full uppercase tracking-[0.08em]"
+                        className={
+                          "relative flex items-center rounded-full uppercase " +
+                          (isMobile
+                            ? "text-[8px] px-1.5 py-0.5 tracking-[0.02em]"
+                            : "text-[9px] px-2.5 py-1 tracking-[0.08em]")
+                        }
                       >
                         {accent && (
                           <span
