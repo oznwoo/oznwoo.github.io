@@ -51,31 +51,31 @@ export function PageProjects({
                 <button
                   key={p.id}
                   onClick={() => onOpen(p.id)}
-                  className="text-left py-5 border-t border-[#0C0F1A]/8 first:border-t-0 first:pt-0 flex flex-col gap-2"
+                  className="text-left py-4 border-t border-[#0C0F1A]/8 first:border-t-0 first:pt-0 flex flex-col gap-1.5"
                 >
                   <div className="flex items-baseline justify-between gap-3">
                     <h3
                       style={{ fontFamily: "var(--font-nanum)", fontWeight: 800 }}
-                      className="text-lg text-[#0C0F1A] leading-snug"
+                      className="text-sm text-[#0C0F1A] leading-snug"
                     >
                       {p.title}
                     </h3>
                     <span
                       style={{ fontFamily: "var(--font-mono)" }}
-                      className="shrink-0 text-xs text-[#0C0F1A]/30"
+                      className="shrink-0 text-[10px] text-[#0C0F1A]/30"
                     >
                       {p.year}
                     </span>
                   </div>
                   <p
                     style={{ fontFamily: "var(--font-body)" }}
-                    className="text-xs text-[#0C0F1A]/45 font-light"
+                    className="text-[11px] text-[#0C0F1A]/45 font-light"
                   >
                     {p.subtitle}
                   </p>
                   <p
                     style={{ fontFamily: "var(--font-body)" }}
-                    className="text-xs text-[#0C0F1A]/55 leading-relaxed font-light"
+                    className="text-[11px] text-[#0C0F1A]/55 leading-relaxed font-light"
                   >
                     {p.description}
                   </p>
@@ -92,7 +92,7 @@ export function PageProjects({
                             ? hexToRgba(accent.primary, 0.85)
                             : "rgba(12,15,26,0.4)",
                         }}
-                        className="text-[9px] px-2.5 py-1 rounded-full uppercase tracking-[0.08em]"
+                        className="text-[9px] px-2 py-0.5 rounded-full uppercase tracking-[0.06em]"
                       >
                         {t}
                       </span>
