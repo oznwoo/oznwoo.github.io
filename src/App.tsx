@@ -1027,9 +1027,17 @@ function PageHome() {
 function PageAbout() {
   return (
     <Page>
-      <div className="flex flex-col items-start gap-5 md:grid md:grid-cols-[180px_1fr] md:items-center md:gap-12">
+      <div className="flex flex-col items-start gap-3 md:flex-row md:items-center md:gap-12">
+        {/* "About" 라벨은 모바일에서만 사진보다 먼저 보이는 독립 요소 —
+            데스크톱은 텍스트 블록 맨 위에 있는 라벨을 그대로 쓴다 */}
+        <span
+          style={{ fontFamily: "var(--font-mono)" }}
+          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase md:hidden"
+        >
+          About
+        </span>
         <div
-          className="overflow-hidden shrink-0 w-36 sm:w-40 md:w-auto"
+          className="overflow-hidden shrink-0 w-36 sm:w-40 md:w-[180px]"
           style={{
             aspectRatio: "3/4",
             borderRadius: "16px",
@@ -1048,7 +1056,7 @@ function PageAbout() {
         <div>
           <span
             style={{ fontFamily: "var(--font-mono)" }}
-            className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase"
+            className="hidden text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase md:inline-block"
           >
             About
           </span>
