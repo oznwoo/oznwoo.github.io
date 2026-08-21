@@ -30,17 +30,10 @@ export function ProjectDetailView({
   const TOTAL_D = DETAIL_PAGE_LABELS.length
   const isMobile = useIsMobile()
   // 모바일은 가로 슬라이드 축을 메인 페이지 전환에 이미 쓰고 있어서, 상세
-  // 진입은 카드가 화면 안으로 "빨려들어가듯" 확대·페이드되는 연출로 구분한다.
-  // 마운트 직후 한 프레임은 닫힌(축소) 상태로 그려야 이후 open=true로 바뀌는
-  // 순간 실제로 트랜지션이 재생된다 — 첫 프레임부터 열린 채로 그리면 전환 없이
-  // 바로 나타나 버린다.
-  const [entered, setEntered] = useState(false)
-  useEffect(() => {
-    if (!isMobile) return
-    const raf = requestAnimationFrame(() => setEntered(true))
-    return () => cancelAnimationFrame(raf)
-  }, [isMobile])
-  const mobileShown = open && entered
+  // 진입·퇴장은 App의 화면 전체 색 펄스로 연출한다. open은 부모가 펄스
+  // 타이밍에 맞춰 지연시켜 넘겨주므로(펄스가 절정을 지난 뒤 true), 여기서는
+  // 그 값을 그대로 opacity에 반영해 패널이 펄스 아래에서 드러나게만 하면 된다.
+  const mobileShown = open
   const detailSlideIds = DETAIL_PAGE_LABELS.map((_, i) => `detail-slide-${i}`)
   // 모바일(stack 모드)에서는 세로 슬라이드 트랙 대신 자연스러운 문서 스크롤을
   // 쓰므로, 활성 dot은 goSlide가 아니라 실제로 보이는 섹션을 관찰해 정한다.
@@ -511,13 +504,12 @@ export function ProjectDetailView({
       style={
         isMobile
           ? {
-              // 확대/축소 없이 페이드만 — 화면이 바뀌는 신호는 공유 배경에서
-              // 프로젝트 색으로 재생되는 웜프 버스트(0.7s, App의 flashNonce)가
-              // 맡고, 패널은 그 위로 자연스럽게 떠오르듯 나타난다. 버스트가
-              // 절반 이상 보이도록 페이드도 비슷한 속도로 맞춘다.
+              // 화면이 바뀌는 신호는 App의 전체화면 색 펄스(0.55s)가 맡고,
+              // 패널은 그 펄스가 절정을 지나 사그라들기 시작할 때 짧게
+              // 페이드인만 하면 된다 — open 자체가 이미 지연되어 들어온다.
               opacity: mobileShown ? 1 : 0,
               pointerEvents: mobileShown ? "auto" : "none",
-              transition: "opacity 0.6s ease-out",
+              transition: "opacity 0.3s ease-out",
               willChange: "opacity",
             }
           : undefined

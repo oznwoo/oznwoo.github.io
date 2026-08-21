@@ -6,6 +6,7 @@ import { ProjectDetailView } from "@/components/project-detail/ProjectDetailView
 import { useIsMobile } from "@/hooks/useIsMobile"
 import { SECTIONS } from "@/data/navigation"
 import { PROJECT_ACCENT, PROJECT_PULL, DEFAULT_ACCENT } from "@/data/projects"
+import { hexToRgba } from "@/lib/color"
 import type { ProjectAccent } from "@/lib/color"
 import { PageHome } from "@/pages/PageHome"
 import { PageAbout } from "@/pages/PageAbout"
@@ -274,6 +275,50 @@ export default function App() {
     }
   }, [isMobile, mobilePage, goMobile])
 
+  // ─── State + Handlers: 모바일 상세 진입·퇴장 색 펄스 ────────────────────
+  // PC는 좌우 슬라이드가 전환의 "무게감"을 담당하지만, 모바일은 그 축을 메인
+  // 페이지 전환에 이미 쓰고 있어 슬라이드를 재사용할 수 없다. 대신 화면
+  // 전체가 프로젝트 색으로 잠깐 펄스했다가 사그라들면서 그 뒤에 있던 페이지가
+  // 드러나는 방식으로 같은 수준의 전환감을 낸다 — 펄스가 절정에 이르기 전까지는
+  // 상세 패널을 숨겨두고, 펄스가 사그라들기 시작할 때 드러낸다(반대 방향도 동일).
+  const [mobilePulse, setMobilePulse] = useState<{ nonce: number; color: string } | null>(
+    null,
+  )
+  const [mobilePanelVisible, setMobilePanelVisible] = useState(false)
+  const panelRevealTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const PULSE_REVEAL_DELAY = 260
+
+  const handleOpenProject = useCallback(
+    (id: string) => {
+      if (isMobile) {
+        const color = PROJECT_ACCENT[id]?.primary ?? DEFAULT_ACCENT.primary
+        setMobilePulse((prev) => ({ nonce: (prev?.nonce ?? 0) + 1, color }))
+        setMobilePanelVisible(false)
+        if (panelRevealTimer.current) clearTimeout(panelRevealTimer.current)
+        panelRevealTimer.current = setTimeout(
+          () => setMobilePanelVisible(true),
+          PULSE_REVEAL_DELAY,
+        )
+      }
+      setActiveProject(id)
+    },
+    [isMobile],
+  )
+
+  const handleCloseProject = useCallback(() => {
+    if (isMobile) {
+      const color = activeProject
+        ? (PROJECT_ACCENT[activeProject]?.primary ?? DEFAULT_ACCENT.primary)
+        : DEFAULT_ACCENT.primary
+      setMobilePulse((prev) => ({ nonce: (prev?.nonce ?? 0) + 1, color }))
+      if (panelRevealTimer.current) clearTimeout(panelRevealTimer.current)
+      setMobilePanelVisible(false)
+    } else {
+      triggerWarp(-1)
+    }
+    setActiveProject(null)
+  }, [isMobile, activeProject, triggerWarp])
+
   // ─── 페이지 목록: 실제 pages/*.tsx 컴포넌트를 순서대로 배치 ────────────
   // 데스크톱 세로 슬라이드·모바일 가로 슬라이드 양쪽에서 동일한 5페이지
   // 구성을 그대로 재사용한다 (Projects 내부에서 isMobile로 카드/리스트 분기).
@@ -284,7 +329,7 @@ export default function App() {
     <PageProjects
       // 상세 페이지로 들어갈 때는 웜프(회전·blob 강조) 없이 가로 슬라이드만
       // 재생한다. 호버 중이던 색은 renderedProject가 이어받아 끊기지 않는다.
-      onOpen={setActiveProject}
+      onOpen={handleOpenProject}
       // 세로 슬라이드 중에는 마우스가 카드를 스쳐도 호버로 잡지 않아, 전환
       // 도중에는 슬라이드 애니메이션만 보이고 색 반응은 끼어들지 않는다.
       onHover={(id) => {
@@ -318,11 +363,8 @@ export default function App() {
   const detailOverlay = renderedProject && (
     <ProjectDetailView
       projectId={renderedProject}
-      open={isDetail}
-      onClose={() => {
-        triggerWarp(-1)
-        setActiveProject(null)
-      }}
+      open={isMobile ? mobilePanelVisible : isDetail}
+      onClose={handleCloseProject}
       onTransition={(direction) => triggerWarp(direction, false, true)}
     />
   )
@@ -360,6 +402,30 @@ export default function App() {
           ))}
         </div>
         {detailOverlay}
+        {/* 상세 진입·퇴장 색 펄스 — 페이지 전환·호버에 쓰는 것과 같은
+            gradient-warp-burst(0.7s)를 화면 전체를 덮을 만큼 키워서 재사용한다.
+            납작한 단색 대신 부드럽게 번지는 그라디언트라 전환 언어가 일관된다.
+            nonce가 바뀔 때마다 remount돼 애니메이션이 처음부터 재생된다. */}
+        {mobilePulse && (
+          <div
+            key={mobilePulse.nonce}
+            aria-hidden="true"
+            className="fixed inset-0 z-50 overflow-hidden pointer-events-none"
+          >
+            <div
+              className="gradient-warp-burst absolute rounded-full"
+              style={{
+                width: "260vw",
+                height: "260vw",
+                top: "50%",
+                left: "50%",
+                marginTop: "-130vw",
+                marginLeft: "-130vw",
+                background: `radial-gradient(circle, ${hexToRgba(mobilePulse.color, 0.85)} 0%, ${hexToRgba(mobilePulse.color, 0)} 68%)`,
+              }}
+            />
+          </div>
+        )}
       </div>
     )
   }
