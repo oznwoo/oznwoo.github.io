@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useContext, createContext } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import profilePhoto from "@/imports/____________________.jpeg"
 import logoImg from "@/imports/______________.png"
 import { SkillIcon } from "@/lib/skillIcons"
@@ -853,8 +853,6 @@ function DotNav({
 // 한 화면에 안 들어가 잘리는 문제가 있어 "stack" 모드에서는 자연스러운 문서
 // 스크롤로 전환한다. Page 컴포넌트를 호출하는 모든 페이지가 이 값을 몰라도
 // 되도록 컨텍스트로 전달한다.
-const LayoutModeContext = createContext<"slide" | "stack">("slide")
-
 function useIsMobile(breakpointPx: number = 767): boolean {
   const [isMobile, setIsMobile] = useState(
     () =>
@@ -910,17 +908,12 @@ function useSectionObserver(ids: string[], enabled: boolean): number {
   return active
 }
 
+// 모바일도 데스크톱과 동일하게 "페이지 하나 = 화면 하나"를 유지한다 — 대신
+// 콘텐츠 쪽(PageResume 등)에서 타이포·간격을 모바일 우선으로 압축해 실제로
+// 한 화면에 들어오게 한다. 왼쪽 네비게이터 여백만 화면 크기별로 다르다.
 function Page({ children }: { children: React.ReactNode }) {
-  const mode = useContext(LayoutModeContext)
-  if (mode === "stack") {
-    return (
-      <div className="w-full flex items-center justify-center pl-16 pr-6 py-24 sm:pl-20 sm:pr-10">
-        <div className="w-full max-w-5xl">{children}</div>
-      </div>
-    )
-  }
   return (
-    <div className="h-screen w-full flex items-center justify-center overflow-y-auto pl-16 pr-6 sm:pl-20 md:pl-[164px] md:pr-12 shrink-0 py-16 md:py-0">
+    <div className="h-screen w-full flex items-center justify-center overflow-y-auto pl-6 pr-6 sm:pl-20 md:pl-[164px] md:pr-12 shrink-0">
       <div className="w-full max-w-5xl">{children}</div>
     </div>
   )
@@ -1034,12 +1027,12 @@ function PageHome() {
 function PageAbout() {
   return (
     <Page>
-      <div className="grid md:grid-cols-[180px_1fr] gap-12 items-center">
+      <div className="grid grid-cols-[76px_1fr] gap-5 items-center sm:grid-cols-[100px_1fr] sm:gap-8 md:grid-cols-[180px_1fr] md:gap-12">
         <div
-          className="overflow-hidden"
+          className="overflow-hidden shrink-0"
           style={{
             aspectRatio: "3/4",
-            borderRadius: "24px",
+            borderRadius: "16px",
             boxShadow:
               "0 20px 48px rgba(12,15,26,0.18), 0 4px 12px rgba(12,15,26,0.10)",
             border: "none",
@@ -1049,7 +1042,7 @@ function PageAbout() {
             src={profilePhoto}
             alt="오진우"
             className="w-full h-full object-cover object-top"
-            style={{ borderRadius: "24px" }}
+            style={{ borderRadius: "16px" }}
           />
         </div>
         <div>
@@ -1061,7 +1054,7 @@ function PageAbout() {
           </span>
           <h2
             style={{ fontFamily: "var(--font-display)", lineHeight: 1.3 }}
-            className="text-[clamp(1.6rem,3.5vw,2.8rem)] font-light text-[#0C0F1A] mt-3 mb-6"
+            className="text-[clamp(1.3rem,6vw,2.8rem)] font-light text-[#0C0F1A] mt-2 mb-4 md:mt-3 md:mb-6"
           >
             결국,
             <br />
@@ -1069,22 +1062,22 @@ function PageAbout() {
           </h2>
           <div
             style={{ fontFamily: "var(--font-body)" }}
-            className="space-y-3 text-[#0C0F1A]/50 font-light text-sm leading-loose max-w-lg"
+            className="space-y-2 text-[#0C0F1A]/50 font-light text-xs leading-relaxed max-w-lg md:space-y-3 md:text-sm md:leading-loose"
           >
-            <p>안녕하세요. 세상의 다양한 문제를 해결하고 싶은 오진우입니다.</p>
-            <p>
-              AI 발전으로 인해 누구나 원하고자 하는 결과를 보다 적은 전문
-              지식으로 쉽게 구현할 수 있는 시대가 되었다고 생각합니다. 이제는
-              무언가를 구현하는 기술보다는 왜, 어떻게, 잘 구현하는 것이
-              중요하다고 느끼고 해결책으로 가는 경로도 다양해져야 한다고
-              생각합니다.
+            <p className="hidden sm:block">
+              안녕하세요. 세상의 다양한 문제를 해결하고 싶은 오진우입니다.
             </p>
             <p>
+              AI 발전으로 누구나 적은 전문 지식으로도 원하는 결과를 구현할 수
+              있는 시대가 되었다고 생각합니다. 이제는 왜, 어떻게 잘 구현하는
+              것이 중요하다고 느낍니다.
+            </p>
+            <p className="hidden md:block">
               일의 본질은 인간 세상의 문제를 해결하는 것이고 공감이 이에 대한
               마스터키라고 생각합니다.
             </p>
           </div>
-          <div className="mt-8 grid grid-cols-3 gap-6 border-t border-[#0C0F1A]/8 pt-7">
+          <div className="mt-4 grid grid-cols-3 gap-3 border-t border-[#0C0F1A]/8 pt-4 sm:gap-6 sm:pt-5 md:mt-8 md:pt-7">
             {[
               ["4.22", "GPA / 4.5"],
               ["4건", "주요 프로젝트"],
@@ -1093,13 +1086,13 @@ function PageAbout() {
               <div key={l}>
                 <div
                   style={{ fontFamily: "var(--font-display)" }}
-                  className="text-2xl font-semibold text-[#0C0F1A]"
+                  className="text-base font-semibold text-[#0C0F1A] sm:text-xl md:text-2xl"
                 >
                   {n}
                 </div>
                 <div
                   style={{ fontFamily: "var(--font-mono)" }}
-                  className="text-xs text-[#0C0F1A]/30 uppercase tracking-[0.02em] mt-1"
+                  className="text-[9px] text-[#0C0F1A]/30 uppercase tracking-[0.02em] mt-1 sm:text-xs"
                 >
                   {l}
                 </div>
@@ -1309,6 +1302,153 @@ function PageProjects({
   )
 }
 
+// 모바일에서는 4개 카드를 한 화면에 욱여넣는 대신, 프로젝트마다 화면 하나를
+// 통째로 준다 — 가로 스와이프/화살표로 넘기는 페이지 하나하나가 프로젝트 한 개.
+function MobileProjectPage({
+  project,
+  index,
+  total,
+  onOpen,
+}: {
+  project: (typeof PROJECTS)[number]
+  index: number
+  total: number
+  onOpen: (id: string) => void
+}) {
+  const accent = PROJECT_ACCENT[project.id] ?? null
+  return (
+    <Page>
+      <button
+        onClick={() => onOpen(project.id)}
+        className="w-full text-left flex flex-col gap-5"
+      >
+        <div className="flex items-center justify-between">
+          <span
+            style={{ fontFamily: "var(--font-mono)" }}
+            className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase"
+          >
+            Projects · {String(index + 1).padStart(2, "0")}/
+            {String(total).padStart(2, "0")}
+          </span>
+          <span
+            style={{ fontFamily: "var(--font-mono)" }}
+            className="text-xs text-[#0C0F1A]/30"
+          >
+            {project.year}
+          </span>
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {project.tags.map((t) => (
+            <span
+              key={t}
+              style={{
+                fontFamily: "var(--font-mono)",
+                background: accent
+                  ? hexToRgba(accent.primary, 0.08)
+                  : "rgba(12,15,26,0.05)",
+                color: accent
+                  ? hexToRgba(accent.primary, 0.85)
+                  : "rgba(12,15,26,0.4)",
+              }}
+              className="text-[9px] px-2.5 py-1 rounded-full uppercase tracking-[0.08em]"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+        <div>
+          <h2
+            style={{ fontFamily: "var(--font-nanum)", fontWeight: 800 }}
+            className="text-2xl text-[#0C0F1A] leading-snug"
+          >
+            {project.title}
+          </h2>
+          <p
+            style={{ fontFamily: "var(--font-body)" }}
+            className="text-sm text-[#0C0F1A]/40 font-light mt-1"
+          >
+            {project.subtitle}
+          </p>
+        </div>
+        <p
+          style={{ fontFamily: "var(--font-body)" }}
+          className="text-sm text-[#0C0F1A]/55 leading-relaxed font-light"
+        >
+          {project.description}
+        </p>
+        <span
+          style={{
+            fontFamily: "var(--font-mono)",
+            color: accent?.primary ?? "#4F6EF7",
+          }}
+          className="text-xs uppercase tracking-[0.04em]"
+        >
+          자세히 보기 →
+        </span>
+      </button>
+    </Page>
+  )
+}
+
+// 모바일 전용 네비게이션 — 왼쪽 세로 dot rail 대신, 홈으로 가는 로고(좌상단)와
+// 이전/다음 화살표(우하단)로 가로 페이지를 넘긴다.
+function MobileNav({
+  current,
+  total,
+  onPrev,
+  onNext,
+  onHome,
+}: {
+  current: number
+  total: number
+  onPrev: () => void
+  onNext: () => void
+  onHome: () => void
+}) {
+  return (
+    <>
+      <button
+        onClick={onHome}
+        aria-label="Home"
+        className="fixed left-5 top-5 z-50 flex h-9 w-9 items-center justify-center"
+      >
+        <img
+          src={logoImg}
+          alt=""
+          style={{ width: 20, height: 20, objectFit: "contain", opacity: 0.55 }}
+        />
+      </button>
+      <div
+        style={{ fontFamily: "var(--font-mono)" }}
+        className="fixed bottom-6 left-6 z-50 text-xs text-[#0C0F1A]/25 select-none"
+      >
+        {String(current + 1).padStart(2, "0")} /{" "}
+        {String(total).padStart(2, "0")}
+      </div>
+      <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2">
+        <button
+          onClick={onPrev}
+          disabled={current === 0}
+          aria-label="이전 페이지"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-[#0C0F1A]/10 text-[#0C0F1A]/50 backdrop-blur-md transition active:scale-95 disabled:opacity-25"
+          style={{ background: "rgba(255,255,255,0.55)" }}
+        >
+          ←
+        </button>
+        <button
+          onClick={onNext}
+          disabled={current === total - 1}
+          aria-label="다음 페이지"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-[#0C0F1A]/10 text-[#0C0F1A]/50 backdrop-blur-md transition active:scale-95 disabled:opacity-25"
+          style={{ background: "rgba(255,255,255,0.55)" }}
+        >
+          →
+        </button>
+      </div>
+    </>
+  )
+}
+
 const CATEGORY_COLOR: Record<string, string> = {
   교육: "#4F6EF7",
   활동: "#7C5FD4",
@@ -1319,7 +1459,7 @@ function ResumeCardHeader({ label, color }: { label: string; color: string }) {
   return (
     <div
       style={{ fontFamily: "var(--font-mono)", color }}
-      className="mb-4 text-base font-semibold uppercase tracking-[0.04em] opacity-70"
+      className="mb-2 text-[11px] font-semibold uppercase tracking-[0.04em] opacity-70 sm:mb-3 sm:text-sm md:mb-4 md:text-base"
     >
       {label}
     </div>
@@ -1344,14 +1484,15 @@ function TimelineItem({
               className="shrink-0 self-center -m-2 p-2 text-[#0C0F1A]/30 transition-colors duration-150 hover:text-[#4F6EF7]"
             >
               <svg
-                width="12"
-                height="12"
+                width="11"
+                height="11"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2.2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                className="sm:w-3 sm:h-3"
               >
                 <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
               </svg>
@@ -1359,21 +1500,21 @@ function TimelineItem({
           )}
           <div
             style={{ fontFamily: "var(--font-nanum)", fontWeight: 700 }}
-            className="text-[13px] leading-snug text-[#0C0F1A]"
+            className="text-[11px] leading-snug text-[#0C0F1A] sm:text-[12px] md:text-[13px]"
           >
             {item.name}
           </div>
         </div>
         <div
           style={{ fontFamily: "var(--font-mono)" }}
-          className="shrink-0 whitespace-nowrap text-[10px] text-[#0C0F1A]/30"
+          className="shrink-0 whitespace-nowrap text-[9px] text-[#0C0F1A]/30 sm:text-[10px]"
         >
           {item.date}
         </div>
       </div>
       <div
         style={{ fontFamily: "var(--font-body)" }}
-        className="text-[11px] font-light leading-relaxed text-[#0C0F1A]/40"
+        className="text-[10px] font-light leading-snug text-[#0C0F1A]/40 sm:text-[11px] sm:leading-relaxed"
       >
         {item.sub}
       </div>
@@ -1397,14 +1538,14 @@ function PageResume() {
         </span>
         <h2
           style={{ fontFamily: "var(--font-nanum)", fontWeight: 700 }}
-          className="text-[clamp(1.4rem,3vw,2.2rem)] text-[#0C0F1A] mt-1 mb-8"
+          className="text-[clamp(1.1rem,5vw,2.2rem)] text-[#0C0F1A] mt-1 mb-4 sm:mb-6 md:mb-8"
         >
           이력
         </h2>
-        <div className="grid grid-cols-1 gap-x-14 gap-y-10 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:gap-x-8 sm:gap-y-6 md:grid-cols-2 md:gap-x-14 md:gap-y-10">
           <div>
             <ResumeCardHeader label="Education" color={CATEGORY_COLOR.교육} />
-            <div className="space-y-4">
+            <div className="space-y-2 sm:space-y-3 md:space-y-4">
               {education?.items.map((item) => (
                 <TimelineItem key={item.name} item={item} />
               ))}
@@ -1412,7 +1553,7 @@ function PageResume() {
           </div>
           <div>
             <ResumeCardHeader label="Activities" color={CATEGORY_COLOR.활동} />
-            <div className="space-y-4">
+            <div className="space-y-2 sm:space-y-3 md:space-y-4">
               {activity?.items.map((item) => (
                 <TimelineItem key={item.name} item={item} />
               ))}
@@ -1420,15 +1561,15 @@ function PageResume() {
           </div>
           <div>
             <ResumeCardHeader label="Skills" color="rgba(12,15,26,0.35)" />
-            <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+            <div className="grid grid-cols-3 gap-x-2 gap-y-1.5 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-3">
               {CORE_SKILLS.map((item) => (
-                <div key={item} className="group flex items-center gap-2">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[#0C0F1A]/10 p-[5px] text-[#0C0F1A]/45 transition-colors duration-150 group-hover:border-[#4F6EF7]/40 group-hover:text-[#4F6EF7]">
+                <div key={item} className="group flex items-center gap-1.5 sm:gap-2">
+                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-md border border-[#0C0F1A]/10 p-[3px] text-[#0C0F1A]/45 transition-colors duration-150 group-hover:border-[#4F6EF7]/40 group-hover:text-[#4F6EF7] sm:h-6 sm:w-6 sm:p-[5px]">
                     <SkillIcon name={item} />
                   </span>
                   <span
                     style={{ fontFamily: "var(--font-body)" }}
-                    className="text-xs font-light text-[#0C0F1A]/60 transition-colors duration-150 group-hover:text-[#0C0F1A]/80"
+                    className="text-[9px] font-light text-[#0C0F1A]/60 transition-colors duration-150 group-hover:text-[#0C0F1A]/80 sm:text-xs"
                   >
                     {item}
                   </span>
@@ -1438,7 +1579,7 @@ function PageResume() {
           </div>
           <div>
             <ResumeCardHeader label="Certifications" color={CATEGORY_COLOR.자격증} />
-            <div className="space-y-4">
+            <div className="space-y-2 sm:space-y-3 md:space-y-4">
               {certificate?.items.map((item) => (
                 <TimelineItem key={item.name} item={item} />
               ))}
@@ -1451,6 +1592,7 @@ function PageResume() {
 }
 
 function PageContact() {
+  const isMobile = useIsMobile()
   const [status, setStatus] = useState<"idle" | "sent">("idle")
   const [form, setForm] = useState({ name: "", email: "", message: "" })
 
@@ -1460,7 +1602,7 @@ function PageContact() {
   }
 
   const inputCls =
-    "w-full rounded-xl px-4 py-3 text-sm text-[#0C0F1A] placeholder-[#0C0F1A]/20 focus:outline-none transition-all duration-200"
+    "w-full rounded-xl px-3 py-2 text-xs sm:px-4 sm:py-3 sm:text-sm text-[#0C0F1A] placeholder-[#0C0F1A]/20 focus:outline-none transition-all duration-200"
   const inputStyle = {
     fontFamily: "var(--font-body)",
     background: "rgba(255,255,255,0.45)",
@@ -1470,7 +1612,7 @@ function PageContact() {
 
   return (
     <Page>
-      <div className="grid md:grid-cols-2 gap-14 items-start">
+      <div className="grid md:grid-cols-2 gap-6 items-start md:gap-14">
         <div>
           <span
             style={{ fontFamily: "var(--font-mono)" }}
@@ -1480,7 +1622,7 @@ function PageContact() {
           </span>
           <h2
             style={{ fontFamily: "var(--font-display)", lineHeight: 1.3 }}
-            className="text-[clamp(1.8rem,4vw,3rem)] font-light text-[#0C0F1A] mt-2"
+            className="text-[clamp(1.5rem,6vw,3rem)] font-light text-[#0C0F1A] mt-2"
           >
             <span>함께</span>
             <br />
@@ -1488,12 +1630,12 @@ function PageContact() {
           </h2>
           <p
             style={{ fontFamily: "var(--font-body)" }}
-            className="mt-5 text-[#0C0F1A]/40 font-light text-sm leading-loose max-w-xs"
+            className="hidden mt-5 text-[#0C0F1A]/40 font-light text-sm leading-loose max-w-xs sm:block"
           >
             풀타임 포지션, 프리랜스, 사이드 프로젝트 등 다양한 기회에 열려
             있습니다.
           </p>
-          <div className="mt-8 space-y-3">
+          <div className="mt-3 space-y-1.5 sm:mt-8 sm:space-y-3">
             {[
               { label: "Email", value: "luvmoire@gmail.com" },
               { label: "GitHub", value: "github.com/oznwoo" },
@@ -1508,7 +1650,7 @@ function PageContact() {
                 </span>
                 <span
                   style={{ fontFamily: "var(--font-body)" }}
-                  className="text-sm text-[#0C0F1A]/55 font-light"
+                  className="text-xs text-[#0C0F1A]/55 font-light sm:text-sm"
                 >
                   {value}
                 </span>
@@ -1520,7 +1662,7 @@ function PageContact() {
         <div>
           {status === "sent" ? (
             <div
-              className="rounded-2xl p-10 text-center"
+              className="rounded-2xl p-6 text-center sm:p-10"
               style={{
                 background: "rgba(255,255,255,0.55)",
                 border: "1px solid rgba(79,110,247,0.15)",
@@ -1540,7 +1682,7 @@ function PageContact() {
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-3">
+            <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-3">
               {[
                 {
                   id: "name",
@@ -1586,7 +1728,7 @@ function PageContact() {
                 <textarea
                   id="message"
                   required
-                  rows={4}
+                  rows={isMobile ? 2 : 4}
                   placeholder="어떤 프로젝트인가요?"
                   value={form.message}
                   onChange={(e) =>
@@ -1603,7 +1745,7 @@ function PageContact() {
                   fontWeight: 700,
                   background: "#0C0F1A",
                 }}
-                className="w-full rounded-xl py-3.5 text-sm text-white transition-all duration-300 active:scale-[0.98]"
+                className="w-full rounded-xl py-2.5 text-xs sm:py-3.5 sm:text-sm text-white transition-all duration-300 active:scale-[0.98]"
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.background = "#4F6EF7")
                 }
@@ -2315,17 +2457,64 @@ export default function App() {
 
   const progress = TOTAL > 1 ? current / (TOTAL - 1) : 0
 
-  // 모바일에서는 translateY 트랙 대신 일반 문서 스크롤을 쓰므로, "현재 페이지"를
-  // IntersectionObserver로 관찰해 dot nav·카운터에 반영한다. 상세 페이지가
-  // 열려있는 동안은(오버레이가 전체를 덮으므로) 관찰을 꺼둔다.
-  const sectionIds = SECTIONS.map((_, i) => `section-${i}`)
-  const observedSection = useSectionObserver(sectionIds, isMobile && !isDetail)
-  const mobileCurrent = isMobile ? observedSection : current
-  const scrollToSection = useCallback((i: number) => {
-    document
-      .getElementById(`section-${i}`)
-      ?.scrollIntoView({ behavior: "smooth", block: "start" })
-  }, [])
+  // 모바일은 세로 대신 가로로 페이지를 넘긴다 — 세로 스크롤/스와이프는
+  // 브라우저 자체의 pull-to-refresh와 겹치기 때문. Projects는 카드 4개를
+  // 한 화면에 욱여넣지 않고 프로젝트마다 화면 하나를 쓰도록 쪼갠다.
+  const MOBILE_TOTAL = 3 + PROJECTS.length + 1
+  const [mobilePage, setMobilePage] = useState(0)
+  const goMobile = useCallback(
+    (idx: number) =>
+      setMobilePage(Math.max(0, Math.min(MOBILE_TOTAL - 1, idx))),
+    [MOBILE_TOTAL],
+  )
+  const mobileTouchStart = useRef<{ x: number; y: number } | null>(null)
+
+  useEffect(() => {
+    if (!isMobile) return
+    const EDGE_GUARD = 24 // 화면 가장자리에서 시작한 스와이프는 OS 뒤로가기 제스처로 넘긴다
+    const onStart = (e: TouchEvent) => {
+      if (isDetailRef.current) return
+      const t = e.touches[0]
+      if (t.clientX < EDGE_GUARD || t.clientX > window.innerWidth - EDGE_GUARD) {
+        mobileTouchStart.current = null
+        return
+      }
+      mobileTouchStart.current = { x: t.clientX, y: t.clientY }
+    }
+    const onEnd = (e: TouchEvent) => {
+      if (isDetailRef.current || !mobileTouchStart.current) return
+      const t = e.changedTouches[0]
+      const dx = t.clientX - mobileTouchStart.current.x
+      const dy = t.clientY - mobileTouchStart.current.y
+      mobileTouchStart.current = null
+      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return
+      setMobilePage((p) =>
+        Math.max(0, Math.min(MOBILE_TOTAL - 1, p + (dx < 0 ? 1 : -1))),
+      )
+    }
+    window.addEventListener("touchstart", onStart, { passive: true })
+    window.addEventListener("touchend", onEnd, { passive: true })
+    return () => {
+      window.removeEventListener("touchstart", onStart)
+      window.removeEventListener("touchend", onEnd)
+    }
+  }, [isMobile, MOBILE_TOTAL])
+
+  const mobilePages = [
+    <PageHome key="home" />,
+    <PageAbout key="about" />,
+    <PageResume key="resume" />,
+    ...PROJECTS.map((p, i) => (
+      <MobileProjectPage
+        key={p.id}
+        project={p}
+        index={i}
+        total={PROJECTS.length}
+        onOpen={setActiveProject}
+      />
+    )),
+    <PageContact key="contact" />,
+  ]
 
   const pages = [
     <PageHome />,
@@ -2375,45 +2564,38 @@ export default function App() {
     />
   )
 
-  // 모바일은 페이지 하나가 화면 한 칸을 강제로 채우는 translateY 트랙 대신,
-  // Resume처럼 콘텐츠가 많은 페이지도 잘리지 않도록 일반 문서 스크롤로
-  // 전환한다 — dot nav는 탭하면 해당 섹션으로 스크롤 이동한다.
+  // 모바일은 데스크톱과 같은 "페이지 하나 = 화면 하나" 원칙을 유지하되 축만
+  // 세로 → 가로로 바꾼다. 세로 스크롤이 브라우저 pull-to-refresh와 겹치는
+  // 문제를 원천적으로 피하면서, Projects는 화면 하나에 4개를 욱여넣는 대신
+  // 프로젝트마다 한 페이지씩 준다.
   if (isMobile) {
     return (
-      <div className="relative min-h-screen w-full">
+      <div className="fixed inset-0 overflow-hidden">
         {background}
-        {/* 상세 오버레이가 열려있는 동안은 자체 DetailNav/카운터가 같은
-            fixed left-6 자리를 쓰므로, 메인 dot nav·카운터는 겹치지 않게 숨긴다
-            (데스크톱은 transform으로 밀려나며 자연히 해결되지만, 모바일은 그
-            transform 트랙 자체가 없어 명시적으로 감춰야 한다). */}
         {!isDetail && (
-          <>
-            <DotNav
-              current={mobileCurrent}
-              total={TOTAL}
-              onChange={scrollToSection}
-              accentSlots={slotColors}
-              activeSlot={activeSlot}
-              accentOn={hoverAccent !== null}
-            />
-            <div
-              style={{ fontFamily: "var(--font-mono)" }}
-              className="fixed bottom-6 left-6 text-xs text-[#0C0F1A]/25 select-none"
-            >
-              {String(mobileCurrent + 1).padStart(2, "0")} /{" "}
-              {String(TOTAL).padStart(2, "0")}
-            </div>
-          </>
+          <MobileNav
+            current={mobilePage}
+            total={MOBILE_TOTAL}
+            onPrev={() => goMobile(mobilePage - 1)}
+            onNext={() => goMobile(mobilePage + 1)}
+            onHome={() => goMobile(0)}
+          />
         )}
-        <LayoutModeContext.Provider value="stack">
-          <main>
-            {pages.map((page, i) => (
-              <section key={i} id={sectionIds[i]}>
-                {page}
-              </section>
-            ))}
-          </main>
-        </LayoutModeContext.Provider>
+        <div
+          className="flex h-full"
+          style={{
+            transform: `translateX(-${mobilePage * 100}vw)`,
+            transition: "transform 0.6s cubic-bezier(0.77,0,0.18,1)",
+            width: `${MOBILE_TOTAL * 100}vw`,
+            willChange: "transform",
+          }}
+        >
+          {mobilePages.map((page, i) => (
+            <div key={i} className="h-screen w-screen shrink-0">
+              {page}
+            </div>
+          ))}
+        </div>
         {detailOverlay}
       </div>
     )
