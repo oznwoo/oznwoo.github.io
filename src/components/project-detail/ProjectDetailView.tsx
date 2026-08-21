@@ -504,12 +504,12 @@ export function ProjectDetailView({
       style={
         isMobile
           ? {
-              // App의 펄스(mobile-detail-burst, 0.95s)는 25~55% 구간에서
-              // 화면을 거의 완전히 덮는다. open은 그 구간 안(300ms)에서
-              // 넘어오므로, 여기서는 그 안에 짧게 스냅시키기만 하면 된다 —
-              // 내용이 바뀌는 순간 자체를 펄스가 가려주므로 패널 쪽에서
-              // 굳이 느리게 크로스페이드할 필요가 없다. 펄스가 걷히는 나머지
-              // 구간에는 이미 바뀐 이 화면만 조용히 드러난다.
+              // App의 펄스(mobile-detail-burst, 0.7s)는 30~50% 구간(약
+              // 210~350ms)이 절정이다. open은 그 구간 안(220ms)에서 넘어오므로
+              // 여기서는 짧게 스냅시키기만 하면 된다 — 내용이 바뀌는 순간
+              // 자체를 펄스가 가려주므로 패널 쪽에서 느리게 크로스페이드할
+              // 필요가 없다. 펄스가 걷히는 나머지 구간에는 이미 바뀐 이
+              // 화면만 조용히 드러난다.
               opacity: mobileShown ? 1 : 0,
               pointerEvents: mobileShown ? "auto" : "none",
               transition: "opacity 0.18s ease-out",

@@ -48,17 +48,19 @@ html {
   pointer-events: none;
 }
 
-/* 모바일 상세 진입/퇴장 전용 — warp-burst보다 느리게, 절정에서 한 번 머무는
-   구간(25%~55%)을 둬서 그 사이에 화면 내용이 완전히 가려진 채로 바뀌고,
-   그 뒤로는 펄스가 걷히기만 하며 이미 바뀐 화면이 드러나게 한다. */
+/* 모바일 상세 진입/퇴장 전용 — warp-burst와 같은 속도(0.7s)를 쓰되, 절정에서
+   잠깐 머무는 구간(30%~50%)을 둬서 그 사이에 화면 내용이 가려진 채로 바뀌고,
+   그 뒤로는 펄스가 걷히기만 하며 이미 바뀐 화면이 드러나게 한다. 색은
+   연하게 — 최고 opacity를 0.5대로 낮춰 화면을 완전히 덮기보다 은은하게
+   물들이는 정도로 유지한다. */
 @keyframes mobile-detail-burst {
   0% { scale: 0.4; opacity: 0; }
-  25% { scale: 1.5; opacity: 0.95; }
-  55% { scale: 2; opacity: 0.92; }
-  100% { scale: 2.6; opacity: 0; }
+  30% { scale: 1.4; opacity: 0.55; }
+  50% { scale: 1.9; opacity: 0.5; }
+  100% { scale: 2.5; opacity: 0; }
 }
 .mobile-detail-burst {
-  animation: mobile-detail-burst 0.95s cubic-bezier(0.4,0,0.2,1) both;
+  animation: mobile-detail-burst 0.7s cubic-bezier(0.4,0,0.2,1) both;
   pointer-events: none;
 }
 
