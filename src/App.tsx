@@ -290,6 +290,12 @@ export default function App() {
   const panelRevealTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const PULSE_REVEAL_DELAY = 220
 
+  // 데스크톱: 상세를 닫아 배경이 프로젝트 색 → 원래 색으로 돌아가는 순간에만
+  // 그 색 트랜지션을 짧게 눌러 "즉시 원래 색"처럼 보이게 한다. 리스트 카드
+  // 호버 시의 느린 크로스페이드는 이 플래그와 무관하게 그대로 유지된다.
+  const [accentSnapOff, setAccentSnapOff] = useState(false)
+  const accentSnapTimers = useRef<ReturnType<typeof setTimeout>[]>([])
+
   const handleOpenProject = useCallback(
     (id: string) => {
       if (isMobile) {
@@ -322,6 +328,16 @@ export default function App() {
       )
     } else {
       triggerWarp(-1)
+      // 데스크톱: 슬라이드(0.75s)가 끝나 배경이 프로젝트 색에서 원래 색으로
+      // 돌아가는 그 순간(750ms) 근방에서만 색 트랜지션을 잠깐 꺼서, 서서히
+      // 옅어지며 돌아오지 않고 곧장 원래 메인 컬러가 되게 한다. 리스트
+      // 호버 시 색이 부드럽게 크로스페이드되는 건 그대로 유지된다 — 이
+      // 창을 벗어나면 다시 정상 속도로 되돌아간다.
+      accentSnapTimers.current.forEach(clearTimeout)
+      accentSnapTimers.current = [
+        setTimeout(() => setAccentSnapOff(true), 700),
+        setTimeout(() => setAccentSnapOff(false), 950),
+      ]
     }
     setActiveProject(null)
   }, [isMobile, activeProject, triggerWarp])
@@ -364,6 +380,7 @@ export default function App() {
       detailMode={detailBgActive}
       detailSectionWarp={detailSectionWarp}
       enteringDetail={activeProject !== null && !detailBgActive}
+      accentSnapOff={accentSnapOff}
     />
   )
 

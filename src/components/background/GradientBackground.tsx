@@ -17,6 +17,7 @@ export function GradientBackground({
   detailMode,
   detailSectionWarp,
   enteringDetail,
+  accentSnapOff,
   // 두 슬롯에 색을 번갈아 담아, 호버 대상이 바로 다른 프로젝트로 바뀌어도
   // (A 색 슬롯이 빠지는 동안 B 색 슬롯이 들어오며) 실제로 색이 섞여 보이는
   // 크로스페이드가 일어나게 한다 — 하나의 배경에 색만 스냅되는 것을 방지.
@@ -36,6 +37,11 @@ export function GradientBackground({
   // 그대로 떠 있으면 어색하므로 blob 자체를 꺼서 자연스럽게 페이드아웃시키고,
   // 슬라이드가 끝나 detailMode가 켜지면 그 자리에서 프로젝트 색으로 다시
   // 페이드인한다.
+  // 데스크톱에서 상세를 닫아 프로젝트 색이 원래 색으로 돌아가는 그 순간에만
+  // App이 잠깐 true로 켜준다 — 이 프레임 동안은 색이 꺼지는(fade-out)
+  // 트랜지션을 거의 순식간으로 눌러, 서서히 옅어지며 돌아오는 대신 곧장
+  // 원래 메인 컬러가 되게 한다. 리스트 카드를 호버 해제할 때의 느린
+  // 크로스페이드는 이 값과 무관하게 항상 그대로 유지된다.
 }: {
   progress: number
   page: number
@@ -52,6 +58,7 @@ export function GradientBackground({
   detailMode: boolean
   detailSectionWarp: boolean
   enteringDetail: boolean
+  accentSnapOff: boolean
 }) {
   const p = progress
 
@@ -95,10 +102,10 @@ export function GradientBackground({
             opacity: isVisible ? targetOpacity : 0,
             // background(색 자체)도 함께 트랜지션시켜, 상세 페이지 진입 슬라이드가
             // 끝난 뒤 detailMode가 늦게 켜질 때 색이 툭 바뀌지 않고 서서히 옅어지듯
-            // 바뀌게 한다.
+            // 바뀌게 한다. 단, accentSnapOff일 때는 fade-out만 거의 순식간으로.
             transition: isVisible
               ? `opacity ${inMs}ms ease-out, background 0.6s ease`
-              : `opacity ${outMs}ms ease-in, background 0.6s ease`,
+              : `opacity ${accentSnapOff ? 40 : outMs}ms ease-in, background 0.6s ease`,
           }}
         />
       )
@@ -132,7 +139,9 @@ export function GradientBackground({
               opacity: isVisible ? (detailMode ? 0.13 : 0.09) : 0,
               transition: isVisible
                 ? "opacity 0.3s ease-out"
-                : "opacity 0.7s ease-in",
+                : accentSnapOff
+                  ? "opacity 0.04s ease-in"
+                  : "opacity 0.7s ease-in",
             }}
           />
         )
