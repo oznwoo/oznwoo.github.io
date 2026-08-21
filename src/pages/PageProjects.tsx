@@ -41,66 +41,12 @@ export function PageProjects({
             GitHub →
           </a>
         </div>
-        {isMobile ? (
-          // 모바일은 카드 그리드 대신 Resume 페이지와 동일한 위→아래 리스트 +
-          // divider로 프로젝트 4개를 한 화면(스크롤)에 담는다.
-          <div className="flex flex-col">
-            {PROJECTS.map((p) => {
-              const accent = PROJECT_ACCENT[p.id] ?? null
-              return (
-                <button
-                  key={p.id}
-                  onClick={() => onOpen(p.id)}
-                  className="text-left py-4 border-t border-[#0C0F1A]/8 first:border-t-0 first:pt-0 flex flex-col gap-1.5"
-                >
-                  <div className="flex items-baseline justify-between gap-3">
-                    <h3
-                      style={{ fontFamily: "var(--font-nanum)", fontWeight: 800 }}
-                      className="text-sm text-[#0C0F1A] leading-snug"
-                    >
-                      {p.title}
-                    </h3>
-                    <span
-                      style={{ fontFamily: "var(--font-mono)" }}
-                      className="shrink-0 text-[10px] text-[#0C0F1A]/30"
-                    >
-                      {p.year}
-                    </span>
-                  </div>
-                  <p
-                    style={{ fontFamily: "var(--font-body)" }}
-                    className="text-[11px] text-[#0C0F1A]/45 font-light"
-                  >
-                    {p.subtitle}
-                  </p>
-                  <div className="flex flex-wrap gap-1.5 mt-1">
-                    {p.tags.map((t) => (
-                      <span
-                        key={t}
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          background: accent
-                            ? hexToRgba(accent.primary, 0.08)
-                            : "rgba(12,15,26,0.05)",
-                          color: accent
-                            ? hexToRgba(accent.primary, 0.85)
-                            : "rgba(12,15,26,0.4)",
-                        }}
-                        className="text-[9px] px-2 py-0.5 rounded-full uppercase tracking-[0.06em]"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {PROJECTS.map((p) => {
             const cardAccent = PROJECT_ACCENT[p.id] ?? null
-            const cardActive = hovered === p.id
+            // 모바일은 호버 자체가 없으니 PC의 "호버되기 전" 기본 카드
+            // 디자인(배경 없이 여백만) 그대로 쓴다.
+            const cardActive = !isMobile && hovered === p.id
             return (
             <button
               key={p.id}
@@ -113,7 +59,10 @@ export function PageProjects({
                 setHovered(null)
                 onHover(null)
               }}
-              className="group text-left rounded-2xl p-6 flex flex-col gap-4 transition-all duration-200"
+              className={
+                "group text-left rounded-2xl flex flex-col transition-all duration-200 " +
+                (isMobile ? "p-5 gap-3" : "p-6 gap-4")
+              }
               style={{
                 // 한쪽에서 옅어지는 선형 그라디언트 대신, 카드 곳곳에 부드러운
                 // blob 여러 개를 겹쳐 얼룩덜룩하게 번진 느낌을 낸다. 단색
@@ -141,7 +90,7 @@ export function PageProjects({
                 <div className="flex flex-wrap gap-1.5">
                   {p.tags.map((t) => {
                     const accent = PROJECT_ACCENT[p.id] ?? null
-                    const active = hovered === p.id && accent !== null
+                    const active = cardActive && accent !== null
                     // CoChat for Business는 blobs[0](골드)가 흰색과 반씩 섞이면
                     // 너무 밝은 파스텔이 되어 흰 글자 대비가 떨어져서, 이 프로젝트만
                     // 살짝 덜 섞어 배경을 조금 더 진하게 유지한다
@@ -211,7 +160,10 @@ export function PageProjects({
                 <div className="flex items-baseline gap-2 flex-wrap mb-2">
                   <h3
                     style={{ fontFamily: "var(--font-nanum)", fontWeight: 800 }}
-                    className="text-xl text-[#0C0F1A] leading-snug"
+                    className={
+                      "text-[#0C0F1A] leading-snug " +
+                      (isMobile ? "text-base" : "text-xl")
+                    }
                   >
                     {p.title}
                   </h3>
@@ -233,27 +185,31 @@ export function PageProjects({
                     {p.subtitle}
                   </span>
                 </div>
-                <p
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    color: cardActive
-                      ? "rgba(12,15,26,0.65)"
-                      : "rgba(12,15,26,0.45)",
-                    WebkitTextStroke: cardActive
-                      ? "0.25px currentColor"
-                      : "0px transparent",
-                    transition: "color 0.35s ease-out",
-                  }}
-                  className="text-xs leading-relaxed font-light"
-                >
-                  {p.description}
-                </p>
+                {/* description은 모바일에서는 뺀다 — 카드가 항상 활성 상태라
+                    태그·subtitle만으로도 충분하고, 한 화면에 4개를 담기엔
+                    설명 줄까지 넣으면 너무 길어진다 */}
+                {!isMobile && (
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      color: cardActive
+                        ? "rgba(12,15,26,0.65)"
+                        : "rgba(12,15,26,0.45)",
+                      WebkitTextStroke: cardActive
+                        ? "0.25px currentColor"
+                        : "0px transparent",
+                      transition: "color 0.35s ease-out",
+                    }}
+                    className="text-xs leading-relaxed font-light"
+                  >
+                    {p.description}
+                  </p>
+                )}
               </div>
             </button>
             )
           })}
         </div>
-        )}
       </div>
     </Page>
   )
