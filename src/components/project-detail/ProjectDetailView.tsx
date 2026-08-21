@@ -121,7 +121,12 @@ export function ProjectDetailView({
       className={
         (isMobile
           ? "min-h-screen w-full flex items-center justify-center text-center pl-16 pr-6 py-20"
-          : "h-screen flex items-center justify-center px-8 md:px-16 shrink-0 text-center") +
+          : "h-screen flex items-center justify-center px-8 md:px-16 shrink-0 text-center" +
+            // 하단 막대 차트가 차지하는 만큼 아래쪽에 패딩을 둬서, 중앙 정렬
+            // 기준을 전체 화면이 아니라 "차트를 뺀 나머지 공간"으로 옮긴다 —
+            // 안 그러면 차트 높이만큼 텍스트가 시각적으로 아래로 치우쳐
+            // 보인다. 모바일은 문서 스크롤 구조라 굳이 안 맞춰도 된다.
+            (detail.outcomeImage ? " pb-[36vh]" : "")) +
         " relative overflow-hidden"
       }
     >
