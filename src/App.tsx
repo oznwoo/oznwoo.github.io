@@ -1,6 +1,14 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import profilePhoto from "@/imports/____________________.jpeg"
 import logoImg from "@/imports/______________.png"
+import fintagLogo from "@/imports/fintag-logo.png"
+import fintagProblemPreprocessing from "@/imports/fintag/fintag-problem-preprocessing.webp"
+import fintagProblemAccuracy from "@/imports/fintag/fintag-problem-accuracy.webp"
+import fintagProblemExplain from "@/imports/fintag/fintag-problem-explain.webp"
+import fintagSolutionPipeline from "@/imports/fintag/fintag-solution-pipeline.webp"
+import fintagSolutionSteps from "@/imports/fintag/fintag-solution-steps.webp"
+import fintagSolutionExplainUi from "@/imports/fintag/fintag-solution-explain-ui.webp"
+import fintagOutcomeChart from "@/imports/fintag/fintag-outcome-chart.webp"
 import { SkillIcon } from "@/lib/skillIcons"
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -87,7 +95,7 @@ const PROJECTS = [
     title: "Fintag",
     subtitle: "중소기업 자금 관리 에이전트",
     description:
-      "유휴 자금 감지 및 수익화 제안 SaaS. 복합 모델 구조로 고도화해 예측 오차율 67% 감소.",
+      "유휴 자금 감지 및 수익화 제안 SaaS. Prophet·LightGBM 파이프라인으로 고도화해 예측 오차율 평균 76% 감소.",
     // ML과 Backend 역할을 둘 다 겸했어서 예외적으로 4개
     tags: ["Web", "ML", "Backend", "FastAPI"],
     year: "2026",
@@ -128,13 +136,32 @@ const PROJECTS = [
   },
 ]
 
+type DetailIconKey =
+  | "duplicate"
+  | "target"
+  | "alert"
+  | "filter"
+  | "layers"
+  | "sparkle"
+  | "trend-down"
+
+// Overview 슬라이드 배경에 까는 대형 장식 비주얼. 실제 사진/렌더링이 없는
+// 코드 포트폴리오라 프로젝트 성격을 대변하는 추상 그래픽을 직접 그려 넣는다.
+type HeroVisualKey = "chart"
+
 const PROJECT_DETAILS: Record<string, {
   period: string
   role: string
   overview: string
-  problem: { title: string; body: string }[]
-  solution: { title: string; body: string }[]
-  outcome: { stat: string; label: string }[]
+  heroVisual?: HeroVisualKey
+  // Overview 히어로에서 타이틀 텍스트 대신 보여줄 실제 로고. 있으면 텍스트
+  // 타이틀을 대체한다 (Fintag처럼 워드마크 자체가 브랜드를 대변하는 경우)
+  logoSrc?: string
+  problem: { title: string; body: string; icon?: DetailIconKey; tags?: string[]; image?: string }[]
+  solution: { title: string; body: string; icon?: DetailIconKey; tags?: string[]; image?: string }[]
+  outcome: { stat: string; label: string; icon?: DetailIconKey }[]
+  // Outcome 슬라이드 하단 인용구 위에 곁들이는 성과 증빙 차트(선택)
+  outcomeImage?: string
   tech: { category: string; items: string[] }[]
 }> = {
   "01": {
@@ -142,46 +169,68 @@ const PROJECT_DETAILS: Record<string, {
     role: "백엔드 개발 · ML 엔지니어링 (인턴십)",
     overview:
       "중소기업이 통장에 묶어두는 유휴 자금을 실시간으로 감지하고, 적합한 금융 상품을 제안하는 자금 관리 SaaS. 실제 거래 내역 데이터를 기반으로 미래 현금흐름을 예측하는 모델과 이를 서빙하는 백엔드 시스템을 담당했습니다.",
+    heroVisual: "chart",
+    logoSrc: fintagLogo,
     problem: [
       {
-        title: "낮은 예측 정확도",
-        body: "초기 단일 ARIMA 모델은 불규칙한 소규모 기업 거래 패턴을 제대로 학습하지 못해 예측 오차율이 높았습니다. 계절성, 이벤트성 지출이 혼재된 데이터에 단일 모델은 한계가 명확했습니다.",
+        title: "데이터 전처리 부재",
+        body: "은행·카드·보험 등에서 각각 집계한 거래가 동일 지출을 중복 반영해 학습 데이터를 왜곡시켰고, 내부 계좌 간 이동이 실제 지출로 잘못 분류되어 현금흐름이 과대 집계됐습니다.",
+        icon: "duplicate",
+        tags: ["#내부이체", "#중복집계"],
+        image: fintagProblemPreprocessing,
       },
       {
-        title: "예측 결과의 불투명성",
-        body: "왜 이 금액을 예측했는지 설명할 수 없어 실무 담당자가 결과를 신뢰하기 어려웠습니다. 금융 도메인에서 설명 가능성은 신뢰의 기본 조건입니다.",
+        title: "예측 정확도 부족",
+        body: "Prophet 단독 모델은 추세·계절성 같은 큰 흐름은 잘 포착했지만 급여일·카드결제일 같은 단기 반복 패턴은 노이즈로 처리해 놓쳤습니다. 기업 유형에 따라 MAPE가 최대 수백 %에 달할 만큼 오차율이 크고 미세 조정도 불가능했습니다.",
+        icon: "target",
+        tags: ["#단기패턴누락", "#높은오차율"],
+        image: fintagProblemAccuracy,
       },
       {
-        title: "이상 거래 탐지 부재",
-        body: "비정상적인 대규모 출금이나 반복 이체 패턴을 감지하는 기능이 없어 실사용자의 리스크 관리가 불가능했습니다.",
+        title: "예측 설명 부재",
+        body: "예측값만 제공되고 왜 그런 결과가 나왔는지 근거가 없어 담당자가 신뢰하기 어려웠고, 이상거래가 필터링 없이 예측에 그대로 반영되어 결과 신뢰도를 떨어뜨렸습니다.",
+        icon: "alert",
+        tags: ["#근거없음", "#이상거래반영"],
+        image: fintagProblemExplain,
       },
     ],
     solution: [
       {
-        title: "복합 모델 앙상블 구조",
-        body: "ARIMA + LightGBM + Prophet을 앙상블하는 구조로 재설계했습니다. 각 모델이 잘 포착하는 패턴(추세, 계절성, 잔차)을 분리해 학습시키고 가중 평균으로 최종 예측값을 산출했습니다.",
+        title: "은행 거래 기반 전처리 파이프라인",
+        body: "카드·보험 등 별도 집계 대신 은행 계좌 입출금 단일 기준으로 데이터를 수집하고 Tag로 지출 성격을 분류했습니다. 내부 계좌 간 이동은 Tag로 자동 식별해 학습 데이터에서 제외하고, 순수 현금흐름만 예측에 반영되도록 정제했습니다.",
+        icon: "filter",
+        tags: ["#단일계좌기준", "#Tag분류"],
+        image: fintagSolutionPipeline,
       },
       {
-        title: "SHAP 기반 예측 근거 설명",
-        body: "SHAP 라이브러리를 도입해 각 피처(최근 매출, 고정비, 계절 요인 등)가 예측에 미친 영향도를 수치화하고 API 응답에 포함시켰습니다.",
+        title: "Prophet + LightGBM 잔차 보정 + 고정지출 등록",
+        body: "Prophet으로 추세·계절성을 1차 예측한 뒤 LightGBM으로 Prophet이 설명하지 못한 잔차를 추가 학습시켜 오차를 줄였습니다. 급여일·카드결제일 같은 반복 패턴을 모델에 직접 등록해 예측 안정성과 정밀도를 더 끌어올렸습니다.",
+        icon: "layers",
+        tags: ["#잔차보정", "#고정지출등록"],
+        image: fintagSolutionSteps,
       },
       {
-        title: "Isolation Forest 이상 탐지",
-        body: "거래 내역에서 통계적 이상치를 자동 탐지하는 Isolation Forest 모델을 별도 파이프라인으로 구성해 알림 API와 연결했습니다.",
+        title: "SHAP·LLM 기반 예측 설명 및 이상거래 탐지",
+        body: "LightGBM 예측 기여도를 SHAP으로 분석하고, AWS Bedrock(Claude 3)으로 예측 근거와 이상거래 의심 사유를 자연어로 생성했습니다. 규칙 기반 탐지와 IsolationForest·PyOD ECOD를 결합해 이상거래를 식별하고, 담당자가 근거를 확인한 뒤 선택적으로 제거할 수 있게 했습니다.",
+        icon: "sparkle",
+        tags: ["#SHAP", "#Bedrock"],
+        image: fintagSolutionExplainUi,
       },
     ],
     outcome: [
-      { stat: "67%", label: "예측 오차율 감소" },
-      { stat: "3종", label: "앙상블 모델 구성" },
-      { stat: "2개", label: "신규 API 기능 추가" },
+      { stat: "76%", label: "평균 예측 오차율(MAPE) 감소", icon: "trend-down" },
+      { stat: "3단계", label: "Prophet·LightGBM·고정지출 파이프라인", icon: "layers" },
+      { stat: "SHAP+LLM", label: "예측 근거 자연어 설명 기능", icon: "sparkle" },
     ],
+    outcomeImage: fintagOutcomeChart,
     tech: [
       { category: "Backend", items: ["Python", "FastAPI", "PostgreSQL"] },
       {
         category: "ML",
-        items: ["LightGBM", "Prophet", "ARIMA", "SHAP", "Isolation Forest"],
+        items: ["Prophet", "LightGBM", "SHAP", "Isolation Forest", "PyOD ECOD"],
       },
-      { category: "Infra", items: ["Docker", "AWS EC2", "S3"] },
+      { category: "AI", items: ["AWS Bedrock (Claude 3)", "Prompt Engineering"] },
+      { category: "Infra", items: ["AWS EC2", "AWS Lambda", "Amazon RDS"] },
     ],
   },
   "02": {
@@ -435,9 +484,11 @@ function GradientBackground({
       const isVisible = accentOn && activeSlot === slot && !enteringDetail
       // 상세 페이지는 메인 페이지의 파랑 앰비언트 base를 꺼둔 상태라(위 background:
       // detailMode ? "transparent" 참고) 이 색이 화면에 남는 유일한 색이다.
-      // 메인 페이지 배경(연한 파스텔 톤)과 밝기를 맞추기 위해 흰색을 넉넉히 섞는다.
+      // 흰색을 과하게 섞으면 파스텔로 washed-out돼 위에 얹히는 저채도 텍스트와
+      // 명도 대비가 부족해지므로, 그라디언트 자체의 커버리지(effectiveAlpha)는
+      // 그대로 두고 색 톤만 조금 더 짙게 유지한다.
       const color = detailMode
-        ? mixWithWhite(accentSlots[slot].blobs[blobIndex], 0.6)
+        ? mixWithWhite(accentSlots[slot].blobs[blobIndex], 0.42)
         : accentSlots[slot].blobs[blobIndex]
       // 배경 밝기(위 흰색 혼합 비율)는 그대로 두고, 그라디언트 자체의 존재감만
       // alpha(커버리지)를 살짝 올려서 더 뚜렷하게 만든다 — 메인 페이지 호버 강도에는
@@ -543,8 +594,10 @@ function GradientBackground({
         <div
           className="gradient-blob-a absolute"
           style={{
-            width: "70vw",
-            height: "70vw",
+            // 상세 페이지에서는 채도(색 자체)는 그대로 두되, blob이 퍼지는 면적만
+            // 줄여서 색이 화면 전체를 덮지 않고 좀 더 국소적으로 보이게 한다.
+            width: detailMode ? "46vw" : "70vw",
+            height: detailMode ? "46vw" : "70vw",
             top: "-20%",
             left: "-15%",
             translate: `${p * -16}vw ${p * 26}vh`,
@@ -559,12 +612,12 @@ function GradientBackground({
             background: `radial-gradient(ellipse at center, rgba(199,210,254,${
               detailMode || enteringDetail ? 0 : 0.8
             }) 0%, transparent 70%)`,
-            filter: warping ? "blur(58px)" : "blur(40px)",
+            filter: warping ? "blur(58px)" : detailMode ? "blur(30px)" : "blur(40px)",
             transition:
               (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.5s ${warpEase}, filter 0.35s ease-out`
                 : `translate 0.5s ${settleEase}, scale 0.6s ${settleEase}, filter 0.6s ease-out`) +
-              ", background 0.6s ease",
+              ", background 0.6s ease, width 0.6s ease, height 0.6s ease",
           }}
         >
           <div
@@ -603,8 +656,8 @@ function GradientBackground({
         <div
           className="gradient-blob-b absolute"
           style={{
-            width: "60vw",
-            height: "60vw",
+            width: detailMode ? "38vw" : "60vw",
+            height: detailMode ? "38vw" : "60vw",
             bottom: "-10%",
             right: "-10%",
             translate: `${p * 13}vw ${p * -19}vh`,
@@ -613,12 +666,12 @@ function GradientBackground({
             background: `radial-gradient(ellipse at center, rgba(165,180,252,${
               detailMode || enteringDetail ? 0 : 0.7
             }) 0%, transparent 70%)`,
-            filter: warping ? "blur(64px)" : "blur(46px)",
+            filter: warping ? "blur(64px)" : detailMode ? "blur(34px)" : "blur(46px)",
             transition:
               (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.55s ${warpEase}, filter 0.35s ease-out`
                 : `translate 0.65s ${settleEase}, scale 0.65s ${settleEase}, filter 0.65s ease-out`) +
-              ", background 0.6s ease",
+              ", background 0.6s ease, width 0.6s ease, height 0.6s ease",
           }}
         >
           <div
@@ -647,8 +700,8 @@ function GradientBackground({
         <div
           className="gradient-blob-c absolute"
           style={{
-            width: "55vw",
-            height: "55vw",
+            width: detailMode ? "34vw" : "55vw",
+            height: detailMode ? "34vw" : "55vw",
             top: "30%",
             left: "28%",
             translate: `${p * -9}vw ${p * 13}vh`,
@@ -657,12 +710,12 @@ function GradientBackground({
             background: `radial-gradient(ellipse at center, rgba(224,231,255,${
               detailMode || enteringDetail ? 0 : 0.62
             }) 0%, transparent 65%)`,
-            filter: warping ? "blur(70px)" : "blur(54px)",
+            filter: warping ? "blur(70px)" : detailMode ? "blur(40px)" : "blur(54px)",
             transition:
               (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.6s ${warpEase}, filter 0.35s ease-out`
                 : `translate 0.8s ${settleEase}, scale 0.7s ${settleEase}, filter 0.7s ease-out`) +
-              ", background 0.6s ease",
+              ", background 0.6s ease, width 0.6s ease, height 0.6s ease",
           }}
         >
           <div
@@ -1562,6 +1615,131 @@ const DETAIL_PAGE_LABELS = [
   "Stack",
 ]
 
+// Problem/Solution/Outcome 카드 아이콘. 획일적인 아이콘 라이브러리 대신 사이트
+// 톤(가는 획, 둥근 끝)에 맞춘 최소한의 프리미티브 조합으로 직접 그린다.
+function DetailIcon({ name }: { name: DetailIconKey }) {
+  const p = {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.5,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    className: "w-full h-full",
+  }
+  switch (name) {
+    case "duplicate":
+      return (
+        <svg {...p}>
+          <rect x="3" y="3" width="13" height="13" rx="2.5" opacity="0.4" />
+          <rect x="8" y="8" width="13" height="13" rx="2.5" />
+        </svg>
+      )
+    case "target":
+      return (
+        <svg {...p}>
+          <circle cx="10" cy="10" r="7.5" />
+          <circle cx="10" cy="10" r="4" />
+          <circle cx="10" cy="10" r="0.6" fill="currentColor" stroke="none" />
+          <path d="M16.5 3.5 H21 V8" />
+          <path d="M21 3.5 L15 9.5" />
+        </svg>
+      )
+    case "alert":
+      return (
+        <svg {...p}>
+          <path d="M4 20 H20" />
+          <rect x="6" y="13" width="3" height="7" opacity="0.4" />
+          <rect x="11" y="9" width="3" height="11" opacity="0.4" />
+          <rect x="16" y="14" width="3" height="6" opacity="0.4" />
+          <circle cx="17.5" cy="4.5" r="2.6" />
+          <path d="M17.5 3.2 V4.9" />
+          <circle cx="17.5" cy="6.1" r="0.15" fill="currentColor" stroke="none" />
+        </svg>
+      )
+    case "filter":
+      return (
+        <svg {...p}>
+          <path d="M4 5 H20 L14 12.5 V18.5 L10 20.5 V12.5 Z" />
+        </svg>
+      )
+    case "layers":
+      return (
+        <svg {...p}>
+          <path d="M12 3 L21 8 L12 13 L3 8 Z" />
+          <path d="M3 13 L12 18 L21 13" />
+          <path d="M3 17.5 L12 22 L21 17.5" opacity="0.4" />
+        </svg>
+      )
+    case "sparkle":
+      return (
+        <svg {...p}>
+          <path d="M12 3 L13.8 9.4 L20 11 L13.8 12.6 L12 19 L10.2 12.6 L4 11 L10.2 9.4 Z" />
+        </svg>
+      )
+    case "trend-down":
+      return (
+        <svg {...p}>
+          <path d="M3 6 L10 13 L14 9 L21 16" />
+          <path d="M21 9.5 V16 H14.5" />
+        </svg>
+      )
+  }
+}
+
+// Overview 히어로 배경의 대형 장식 비주얼. 실사진이 없는 코드 포트폴리오라
+// 프로젝트 성격(Fintag는 현금흐름 예측 모델 고도화)을 은유하는 추상 그래픽을
+// 직접 그린다. 텍스트 칼럼과 겹치지 않도록 xl 이상에서만 화면 우측에 별도
+// 컬럼으로 렌더링한다 (아래 slides 배열의 wrapper 참고).
+function HeroVisual({ name, color }: { name: HeroVisualKey; color: string }) {
+  switch (name) {
+    case "chart": {
+      // 미니멀한 성장 막대 — 컴파운드 인터레스트 다이어그램처럼 가는 선
+      // 막대가 꾸준히 높아지는 실루엣만으로 "고도화·성장"을 은유한다.
+      // 배경을 물들이는 채움·그라디언트·그리드 없이 획(stroke)만 사용해
+      // 다른 슬라이드와 배경 톤이 완전히 동일하게 유지된다
+      const barCount = 18
+      const xStart = 50
+      const xEnd = 510
+      const gap = (xEnd - xStart) / (barCount - 1)
+      const baseline = 460
+      const minH = 14
+      const maxH = 230
+      return (
+        <svg
+          viewBox="0 0 560 700"
+          preserveAspectRatio="xMaxYMax meet"
+          className="w-full h-full"
+        >
+          {Array.from({ length: barCount }, (_, i) => {
+            const x = xStart + i * gap
+            const t = i / (barCount - 1)
+            const h = minH + Math.pow(t, 1.7) * (maxH - minH)
+            return (
+              <line
+                key={i}
+                x1={x}
+                y1={baseline}
+                x2={x}
+                y2={baseline - h}
+                stroke={color}
+                strokeOpacity="0.6"
+                strokeWidth="3"
+                strokeLinecap="round"
+                className="chart-bar-rise"
+                style={{
+                  transformOrigin: `${x}px ${baseline}px`,
+                  animationDelay: `${0.4 + i * 0.035}s`,
+                }}
+              />
+            )
+          })}
+        </svg>
+      )
+    }
+  }
+}
+
 function DetailNav({
   slide,
   onClose,
@@ -1677,6 +1855,7 @@ function ProjectDetailView({
   const touchStart = useRef<number | null>(null)
   const detail = PROJECT_DETAILS[projectId]
   const project = PROJECTS.find((p) => p.id === projectId)!
+  const accentColor = PROJECT_ACCENT[projectId]?.primary ?? "#4F6EF7"
   const TOTAL_D = DETAIL_PAGE_LABELS.length
 
   useEffect(() => {
@@ -1742,36 +1921,58 @@ function ProjectDetailView({
   }, [nextSlide, prevSlide])
 
   const slides = [
-    // 개요
-    <div className="h-screen flex items-center justify-center px-8 md:px-20 shrink-0">
-      <div className="max-w-2xl w-full">
-        <span
-          style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase"
+    // 개요 — 실사진이 없는 대신, 큰 타이틀(또는 로고)이 세로 중앙에 걸리는
+    // 에디토리얼 케이스 스터디 구성(레퍼런스 레이아웃)으로 바꿨다.
+    // 좌측 고정 네비게이터(DetailNav, left-6 + 라벨 폭 ~130px)와 겹치지 않도록
+    // 텍스트 칼럼은 항상 충분한 좌측 여백을 확보한다
+    <div className="h-screen flex items-center pl-32 md:pl-44 lg:pl-56 pr-8 md:pr-16 shrink-0 relative overflow-hidden">
+      {/* 장식 차트는 텍스트 칼럼(max-w-xl, 최대 우측 끝 ~800px)과 절대 겹치지
+          않도록 화면 폭이 충분한 xl(1280px)부터만 우측 고정폭 컬럼에 그린다 */}
+      {detail.heroVisual && (
+        <div
+          className="hidden xl:block absolute inset-y-0 right-0 w-[420px] 2xl:w-[520px]"
+          aria-hidden="true"
         >
-          {project.id} — {project.subtitle}
-        </span>
-        <h2
-          style={{ fontFamily: "var(--font-display)", lineHeight: 1.2 }}
-          className="text-[clamp(2.2rem,5vw,4rem)] font-light text-[#0C0F1A] mt-4 mb-8"
-        >
-          {project.title}
-        </h2>
+          <HeroVisual name={detail.heroVisual} color={accentColor} />
+        </div>
+      )}
+      <div className="max-w-xl w-full relative z-10">
+        {detail.logoSrc ? (
+          <img
+            src={detail.logoSrc}
+            alt={project.title}
+            className="relative h-24 sm:h-28 md:h-32 lg:h-36 w-auto mb-2"
+          />
+        ) : (
+          <h2
+            style={{ fontFamily: "var(--font-display)", lineHeight: 0.95 }}
+            className="relative text-[clamp(3rem,8vw,6.5rem)] font-light text-[#0C0F1A]"
+          >
+            {project.title}
+          </h2>
+        )}
         <p
           style={{ fontFamily: "var(--font-body)" }}
-          className="text-base text-[#0C0F1A]/55 leading-loose font-light mb-10"
+          className="relative text-base italic text-[#0C0F1A]/45 font-light mt-3 mb-6"
+        >
+          {project.subtitle}
+        </p>
+        <div className="w-16 h-px mb-6" style={{ background: accentColor }} />
+        <p
+          style={{ fontFamily: "var(--font-body)" }}
+          className="text-sm text-[#0C0F1A]/55 leading-relaxed font-light max-w-md mb-8"
         >
           {detail.overview}
         </p>
-        <div className="flex flex-col gap-3 border-t border-[#0C0F1A]/8 pt-8">
+        <div className="flex gap-10">
           {[
             ["Period", detail.period],
             ["Role", detail.role],
           ].map(([k, v]) => (
-            <div key={k} className="flex gap-8 items-baseline">
+            <div key={k} className="flex flex-col gap-1.5">
               <span
                 style={{ fontFamily: "var(--font-mono)" }}
-                className="text-xs text-[#0C0F1A]/25 uppercase tracking-[0.04em] w-8 shrink-0"
+                className="text-xs text-[#0C0F1A]/25 uppercase tracking-[0.04em]"
               >
                 {k}
               </span>
@@ -1786,37 +1987,86 @@ function ProjectDetailView({
         </div>
       </div>
     </div>,
-    // 문제
-    <div className="h-screen flex items-center justify-center px-8 md:px-20 shrink-0">
-      <div className="max-w-2xl w-full">
+    // 문제 — PPT 발표자료의 카드 레이아웃(헤더 색 바 + 아이콘 + 태그)만 가져오고
+    // 색/폰트 등 PPT 자체 템플릿 스타일은 따르지 않는다
+    <div className="min-h-screen flex items-center justify-center px-8 md:px-16 shrink-0 py-24">
+      <div className="max-w-6xl w-full">
         <span
           style={{ fontFamily: "var(--font-mono)" }}
           className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-10 block"
         >
           Problem
         </span>
-        <div className="space-y-8">
+        <div className="grid md:grid-cols-3 gap-5">
           {detail.problem.map((item, i) => (
-            <div key={i} className="flex gap-6">
-              <span
-                style={{ fontFamily: "var(--font-mono)" }}
-                className="text-xs text-[#0C0F1A]/20 mt-1 shrink-0"
-              >
-                0{i + 1}
-              </span>
-              <div>
-                <h3
-                  style={{ fontFamily: "var(--font-display)" }}
-                  className="text-lg font-medium text-[#0C0F1A] mb-2"
-                >
-                  {item.title}
-                </h3>
-                <p
-                  style={{ fontFamily: "var(--font-body)" }}
-                  className="text-sm text-[#0C0F1A]/50 leading-loose font-light"
-                >
-                  {item.body}
-                </p>
+            <div
+              key={i}
+              className="relative overflow-hidden rounded-2xl border border-[#0C0F1A]/8 bg-white/50 backdrop-blur-sm flex flex-col"
+            >
+              <div
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 h-1 z-10"
+                style={{ background: accentColor }}
+              />
+              {item.image && (
+                <div className="h-36 md:h-40 overflow-hidden bg-[#0C0F1A]/[0.03]">
+                  <img
+                    src={item.image}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    width={531}
+                    height={386}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <div className="p-6 flex flex-col gap-4 flex-1">
+                <div className="flex items-start justify-between">
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center p-2.5 shrink-0"
+                    style={{ background: hexToRgba(accentColor, 0.1), color: accentColor }}
+                  >
+                    {item.icon && <DetailIcon name={item.icon} />}
+                  </div>
+                  <span
+                    style={{ fontFamily: "var(--font-mono)" }}
+                    className="text-xs text-[#0C0F1A]/20"
+                  >
+                    0{i + 1}
+                  </span>
+                </div>
+                <div>
+                  <h3
+                    style={{ fontFamily: "var(--font-display)" }}
+                    className="text-base font-medium text-[#0C0F1A] mb-2"
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    style={{ fontFamily: "var(--font-body)" }}
+                    className="text-sm text-[#0C0F1A]/50 leading-relaxed font-light"
+                  >
+                    {item.body}
+                  </p>
+                </div>
+                {item.tags && (
+                  <div className="flex flex-wrap gap-2 mt-auto pt-1">
+                    {item.tags.map((t) => (
+                      <span
+                        key={t}
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          color: accentColor,
+                          borderColor: hexToRgba(accentColor, 0.25),
+                        }}
+                        className="text-[10px] px-2.5 py-1 rounded-full border tracking-[0.02em]"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -1824,36 +2074,84 @@ function ProjectDetailView({
       </div>
     </div>,
     // 해결
-    <div className="h-screen flex items-center justify-center px-8 md:px-20 shrink-0">
-      <div className="max-w-2xl w-full">
+    <div className="min-h-screen flex items-center justify-center px-8 md:px-16 shrink-0 py-24">
+      <div className="max-w-6xl w-full">
         <span
           style={{ fontFamily: "var(--font-mono)" }}
           className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-10 block"
         >
           Solution
         </span>
-        <div className="space-y-8">
+        <div className="grid md:grid-cols-3 gap-5">
           {detail.solution.map((item, i) => (
-            <div key={i} className="flex gap-6">
-              <span
-                style={{ fontFamily: "var(--font-mono)" }}
-                className="text-xs text-[#4F6EF7]/60 mt-1 shrink-0"
-              >
-                0{i + 1}
-              </span>
-              <div>
-                <h3
-                  style={{ fontFamily: "var(--font-display)" }}
-                  className="text-lg font-medium text-[#0C0F1A] mb-2"
-                >
-                  {item.title}
-                </h3>
-                <p
-                  style={{ fontFamily: "var(--font-body)" }}
-                  className="text-sm text-[#0C0F1A]/50 leading-loose font-light"
-                >
-                  {item.body}
-                </p>
+            <div
+              key={i}
+              className="relative overflow-hidden rounded-2xl border border-[#0C0F1A]/8 bg-white/50 backdrop-blur-sm flex flex-col"
+            >
+              <div
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 h-1 z-10"
+                style={{ background: accentColor }}
+              />
+              {item.image && (
+                <div className="h-36 md:h-40 overflow-hidden bg-[#0C0F1A]/[0.03]">
+                  <img
+                    src={item.image}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    width={1400}
+                    height={460}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <div className="p-6 flex flex-col gap-4 flex-1">
+                <div className="flex items-start justify-between">
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center p-2.5 shrink-0"
+                    style={{ background: hexToRgba(accentColor, 0.1), color: accentColor }}
+                  >
+                    {item.icon && <DetailIcon name={item.icon} />}
+                  </div>
+                  <span
+                    style={{ fontFamily: "var(--font-mono)" }}
+                    className="text-xs text-[#0C0F1A]/20"
+                  >
+                    0{i + 1}
+                  </span>
+                </div>
+                <div>
+                  <h3
+                    style={{ fontFamily: "var(--font-display)" }}
+                    className="text-base font-medium text-[#0C0F1A] mb-2"
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    style={{ fontFamily: "var(--font-body)" }}
+                    className="text-sm text-[#0C0F1A]/50 leading-relaxed font-light"
+                  >
+                    {item.body}
+                  </p>
+                </div>
+                {item.tags && (
+                  <div className="flex flex-wrap gap-2 mt-auto pt-1">
+                    {item.tags.map((t) => (
+                      <span
+                        key={t}
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          color: accentColor,
+                          borderColor: hexToRgba(accentColor, 0.25),
+                        }}
+                        className="text-[10px] px-2.5 py-1 rounded-full border tracking-[0.02em]"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -1861,33 +2159,63 @@ function ProjectDetailView({
       </div>
     </div>,
     // 성과
-    <div className="h-screen flex items-center justify-center px-8 md:px-20 shrink-0">
-      <div className="max-w-2xl w-full">
+    <div className="min-h-screen flex items-center justify-center px-8 md:px-16 shrink-0 py-24">
+      <div className="max-w-6xl w-full">
         <span
           style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-12 block"
+          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-10 block"
         >
           Outcome
         </span>
-        <div className="grid grid-cols-3 gap-8 mb-14">
+        <div className="grid md:grid-cols-3 gap-5 mb-6">
           {detail.outcome.map((item) => (
-            <div key={item.label}>
+            <div
+              key={item.label}
+              className="relative overflow-hidden rounded-2xl border border-[#0C0F1A]/8 bg-white/50 backdrop-blur-sm p-6 flex flex-col gap-4"
+            >
               <div
-                style={{ fontFamily: "var(--font-display)" }}
-                className="text-[clamp(1.8rem,4vw,3rem)] font-semibold text-[#0C0F1A] leading-none mb-3"
-              >
-                {item.stat}
-              </div>
-              <div
-                style={{ fontFamily: "var(--font-mono)" }}
-                className="text-xs text-[#0C0F1A]/35 uppercase tracking-[0.02em] leading-relaxed"
-              >
-                {item.label}
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 h-1"
+                style={{ background: accentColor }}
+              />
+              {item.icon && (
+                <div
+                  className="w-11 h-11 rounded-xl flex items-center justify-center p-2.5"
+                  style={{ background: hexToRgba(accentColor, 0.1), color: accentColor }}
+                >
+                  <DetailIcon name={item.icon} />
+                </div>
+              )}
+              <div>
+                <div
+                  style={{ fontFamily: "var(--font-display)" }}
+                  className="text-[clamp(1.5rem,3vw,2.2rem)] font-semibold text-[#0C0F1A] leading-none mb-2"
+                >
+                  {item.stat}
+                </div>
+                <div
+                  style={{ fontFamily: "var(--font-mono)" }}
+                  className="text-xs text-[#0C0F1A]/35 uppercase tracking-[0.02em] leading-relaxed"
+                >
+                  {item.label}
+                </div>
               </div>
             </div>
           ))}
         </div>
-        <div className="bg-[#0C0F1A] px-10 py-10">
+        {detail.outcomeImage && (
+          <div className="relative overflow-hidden rounded-2xl border border-[#0C0F1A]/8 bg-white/50 backdrop-blur-sm mb-6 h-40 md:h-48">
+            <img
+              src={detail.outcomeImage}
+              alt="전처리 및 잔차 보정 적용 후 30일 Walk-forward 예측이 실제 잔액을 촘촘히 따라가는 것을 보여주는 차트"
+              loading="lazy"
+              width={1000}
+              height={807}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+        <div className="bg-[#0C0F1A] rounded-2xl px-10 py-10">
           <p
             style={{ fontFamily: "var(--font-display)", lineHeight: 1.5 }}
             className="text-xl font-light text-[#F0F3F9]"
