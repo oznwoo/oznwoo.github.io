@@ -511,12 +511,14 @@ export function ProjectDetailView({
       style={
         isMobile
           ? {
-              transform: mobileShown ? "scale(1)" : "scale(0.88)",
+              // 확대/축소 없이 페이드만 — 화면이 바뀌는 신호는 공유 배경에서
+              // 프로젝트 색으로 재생되는 웜프 버스트(0.7s, App의 flashNonce)가
+              // 맡고, 패널은 그 위로 자연스럽게 떠오르듯 나타난다. 버스트가
+              // 절반 이상 보이도록 페이드도 비슷한 속도로 맞춘다.
               opacity: mobileShown ? 1 : 0,
               pointerEvents: mobileShown ? "auto" : "none",
-              transition:
-                "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
-              willChange: "transform, opacity",
+              transition: "opacity 0.6s ease-out",
+              willChange: "opacity",
             }
           : undefined
       }
