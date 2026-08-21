@@ -5,14 +5,13 @@ import { MobileNav } from "@/components/nav/MobileNav"
 import { ProjectDetailView } from "@/components/project-detail/ProjectDetailView"
 import { useIsMobile } from "@/hooks/useIsMobile"
 import { SECTIONS } from "@/data/navigation"
-import { PROJECTS, PROJECT_ACCENT, PROJECT_PULL, DEFAULT_ACCENT } from "@/data/projects"
+import { PROJECT_ACCENT, PROJECT_PULL, DEFAULT_ACCENT } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
 import { PageHome } from "@/pages/PageHome"
 import { PageAbout } from "@/pages/PageAbout"
 import { PageResume } from "@/pages/PageResume"
 import { PageProjects } from "@/pages/PageProjects"
 import { PageContact } from "@/pages/PageContact"
-import { MobileProjectPage } from "@/pages/MobileProjectPage"
 
 const TOTAL = SECTIONS.length
 
@@ -226,23 +225,23 @@ export default function App() {
   const progress = TOTAL > 1 ? current / (TOTAL - 1) : 0
 
   // 모바일은 세로 대신 가로로 페이지를 넘긴다 — 세로 스크롤/스와이프는
-  // 브라우저 자체의 pull-to-refresh와 겹치기 때문. Projects는 카드 4개를
-  // 한 화면에 욱여넣지 않고 프로젝트마다 화면 하나를 쓰도록 쪼갠다.
+  // 브라우저 자체의 pull-to-refresh와 겹치기 때문. 페이지 구성 자체는
+  // 데스크톱과 동일(Home/About/Resume/Projects/Contact 5개) — Projects도
+  // Resume처럼 위→아래 리스트로 한 화면에 담기므로 더 이상 쪼갤 필요가 없다.
   // ─── State + Effects: 모바일 전용 가로 페이지 전환 ─────────────────────
-  const MOBILE_TOTAL = 3 + PROJECTS.length + 1
   const [mobilePage, setMobilePage] = useState(0)
-  const mobileProgress = MOBILE_TOTAL > 1 ? mobilePage / (MOBILE_TOTAL - 1) : 0
+  const mobileProgress = TOTAL > 1 ? mobilePage / (TOTAL - 1) : 0
   // 데스크톱의 goTo와 동일하게 triggerWarp를 태워야 배경 blob의 웜프(회전·
   // 스케일·버스트 플래시) 반응이 모바일 페이지 전환에도 재생된다 — 이걸
   // 빼먹었더니 모바일에서만 배경이 그냥 멈춰있는 것처럼 보였음.
   const goMobile = useCallback(
     (idx: number) => {
-      const next = Math.max(0, Math.min(MOBILE_TOTAL - 1, idx))
+      const next = Math.max(0, Math.min(TOTAL - 1, idx))
       if (next === mobilePage) return
       triggerWarp(next > mobilePage ? 1 : -1)
       setMobilePage(next)
     },
-    [MOBILE_TOTAL, mobilePage, triggerWarp],
+    [mobilePage, triggerWarp],
   )
   const mobileTouchStart = useRef<{ x: number; y: number } | null>(null)
 
@@ -276,24 +275,8 @@ export default function App() {
   }, [isMobile, mobilePage, goMobile])
 
   // ─── 페이지 목록: 실제 pages/*.tsx 컴포넌트를 순서대로 배치 ────────────
-  // mobilePages: 모바일 가로 전환용 (Projects가 프로젝트별로 쪼개짐)
-  const mobilePages = [
-    <PageHome key="home" />,
-    <PageAbout key="about" />,
-    <PageResume key="resume" />,
-    ...PROJECTS.map((p, i) => (
-      <MobileProjectPage
-        key={p.id}
-        project={p}
-        index={i}
-        total={PROJECTS.length}
-        onOpen={setActiveProject}
-      />
-    )),
-    <PageContact key="contact" />,
-  ]
-
-  // pages: 데스크톱 세로 전환용 (Projects는 그리드 한 페이지)
+  // 데스크톱 세로 슬라이드·모바일 가로 슬라이드 양쪽에서 동일한 5페이지
+  // 구성을 그대로 재사용한다 (Projects 내부에서 isMobile로 카드/리스트 분기).
   const pages = [
     <PageHome />,
     <PageAbout />,
@@ -346,8 +329,7 @@ export default function App() {
   // ═══ 렌더 분기 A: 모바일 (가로 슬라이드) ═══════════════════════════════
   // 모바일은 데스크톱과 같은 "페이지 하나 = 화면 하나" 원칙을 유지하되 축만
   // 세로 → 가로로 바꾼다. 세로 스크롤이 브라우저 pull-to-refresh와 겹치는
-  // 문제를 원천적으로 피하면서, Projects는 화면 하나에 4개를 욱여넣는 대신
-  // 프로젝트마다 한 페이지씩 준다.
+  // 문제를 원천적으로 피한다. 페이지 구성은 데스크톱과 동일한 5개.
   if (isMobile) {
     return (
       <div className="fixed inset-0 overflow-hidden">
@@ -355,7 +337,7 @@ export default function App() {
         {!isDetail && (
           <MobileNav
             current={mobilePage}
-            total={MOBILE_TOTAL}
+            total={TOTAL}
             onPrev={() => goMobile(mobilePage - 1)}
             onNext={() => goMobile(mobilePage + 1)}
             onHome={() => goMobile(0)}
@@ -366,11 +348,11 @@ export default function App() {
           style={{
             transform: `translateX(-${mobilePage * 100}vw)`,
             transition: "transform 0.6s cubic-bezier(0.77,0,0.18,1)",
-            width: `${MOBILE_TOTAL * 100}vw`,
+            width: `${TOTAL * 100}vw`,
             willChange: "transform",
           }}
         >
-          {mobilePages.map((page, i) => (
+          {pages.map((page, i) => (
             <div key={i} className="h-screen w-screen shrink-0">
               {page}
             </div>

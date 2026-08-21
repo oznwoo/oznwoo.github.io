@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Page } from "@/components/layout/Page"
 import { PROJECTS, PROJECT_ACCENT } from "@/data/projects"
 import { hexToRgba, mixWithWhite } from "@/lib/color"
+import { useIsMobile } from "@/hooks/useIsMobile"
 
 export function PageProjects({
   onOpen,
@@ -11,6 +12,7 @@ export function PageProjects({
   onHover: (id: string | null) => void
 }) {
   const [hovered, setHovered] = useState<string | null>(null)
+  const isMobile = useIsMobile()
   return (
     <Page>
       <div>
@@ -39,6 +41,68 @@ export function PageProjects({
             GitHub →
           </a>
         </div>
+        {isMobile ? (
+          // 모바일은 카드 그리드 대신 Resume 페이지와 동일한 위→아래 리스트 +
+          // divider로 프로젝트 4개를 한 화면(스크롤)에 담는다.
+          <div className="flex flex-col">
+            {PROJECTS.map((p) => {
+              const accent = PROJECT_ACCENT[p.id] ?? null
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => onOpen(p.id)}
+                  className="text-left py-5 border-t border-[#0C0F1A]/8 first:border-t-0 first:pt-0 flex flex-col gap-2"
+                >
+                  <div className="flex items-baseline justify-between gap-3">
+                    <h3
+                      style={{ fontFamily: "var(--font-nanum)", fontWeight: 800 }}
+                      className="text-lg text-[#0C0F1A] leading-snug"
+                    >
+                      {p.title}
+                    </h3>
+                    <span
+                      style={{ fontFamily: "var(--font-mono)" }}
+                      className="shrink-0 text-xs text-[#0C0F1A]/30"
+                    >
+                      {p.year}
+                    </span>
+                  </div>
+                  <p
+                    style={{ fontFamily: "var(--font-body)" }}
+                    className="text-xs text-[#0C0F1A]/45 font-light"
+                  >
+                    {p.subtitle}
+                  </p>
+                  <p
+                    style={{ fontFamily: "var(--font-body)" }}
+                    className="text-xs text-[#0C0F1A]/55 leading-relaxed font-light"
+                  >
+                    {p.description}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5 mt-1">
+                    {p.tags.map((t) => (
+                      <span
+                        key={t}
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          background: accent
+                            ? hexToRgba(accent.primary, 0.08)
+                            : "rgba(12,15,26,0.05)",
+                          color: accent
+                            ? hexToRgba(accent.primary, 0.85)
+                            : "rgba(12,15,26,0.4)",
+                        }}
+                        className="text-[9px] px-2.5 py-1 rounded-full uppercase tracking-[0.08em]"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </button>
+              )
+            })}
+          </div>
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {PROJECTS.map((p) => {
             const cardAccent = PROJECT_ACCENT[p.id] ?? null
@@ -195,6 +259,7 @@ export function PageProjects({
             )
           })}
         </div>
+        )}
       </div>
     </Page>
   )
