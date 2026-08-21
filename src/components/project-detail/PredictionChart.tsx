@@ -1,8 +1,8 @@
-// Overview 히어로에 넣는 손그림 스타일 현금흐름 예측 차트. 실제 발표자료
-// 캡처(matplotlib 기본 스타일) 대신, 사이트 톤(가는 획·accent 컬러·은은한
-// 애니메이션)에 맞춰 "실제값 vs 예측값이 촘촘히 겹쳐 따라가는" 형태만
-// 벡터로 직접 그린다 — 정확한 수치 재현이 아니라 스토리(예측이 실제를
-// 촘촘히 따라간다)를 전달하는 장식 차트다.
+// Overview 히어로 배경에 크게 까는 장식 애니메이션. 실제 발표자료 캡처
+// (matplotlib 기본 스타일) 대신, "실제값 vs 예측값이 촘촘히 겹쳐
+// 우상향한다"는 차트의 실루엣만 가져와 벡터로 직접 그린다. 정확한 수치를
+// 보여주는 정보 그래픽이 아니라, 텍스트 뒤에서 은은하게 존재감을 주는
+// 히어로 애니메이션이라 획을 옅게 하고 그리드·배경 채움은 넣지 않는다.
 const WIDTH = 600
 const HEIGHT = 260
 const PAD_X = 24
@@ -45,25 +45,12 @@ export function PredictionChart({ color }: { color: string }) {
       role="img"
       aria-label="시간에 따라 우상향하며 실제값을 촘촘히 따라가는 현금흐름 예측 그래프"
     >
-      {/* 은은한 기준선 4개 — 그리드 느낌만 살짝 */}
-      {[0.22, 0.44, 0.66, 0.88].map((r) => (
-        <line
-          key={r}
-          x1={PAD_X}
-          x2={WIDTH - PAD_X}
-          y1={PAD_Y + r * (HEIGHT - PAD_Y * 2)}
-          y2={PAD_Y + r * (HEIGHT - PAD_Y * 2)}
-          stroke="#0C0F1A"
-          strokeOpacity="0.05"
-          strokeWidth="1"
-        />
-      ))}
       <path
         d={actualPath}
         pathLength={1}
         fill="none"
         stroke="#0C0F1A"
-        strokeOpacity="0.28"
+        strokeOpacity="0.12"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -75,6 +62,7 @@ export function PredictionChart({ color }: { color: string }) {
         pathLength={1}
         fill="none"
         stroke={color}
+        strokeOpacity="0.4"
         strokeWidth="2.75"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -82,12 +70,13 @@ export function PredictionChart({ color }: { color: string }) {
         className="chart-line-draw"
         style={{ animationDelay: "0.15s" }}
       />
-      <circle cx={last.x} cy={last.y} r="4.5" fill={color} />
+      <circle cx={last.x} cy={last.y} r="4.5" fill={color} fillOpacity="0.5" />
       <circle
         cx={last.x}
         cy={last.y}
         r="4.5"
         fill={color}
+        fillOpacity="0.5"
         className="chart-dot-pulse"
       />
     </svg>
