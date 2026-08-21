@@ -42,6 +42,14 @@ export function PageResume() {
             </div>
           </div>
           <div>
+            <ResumeCardHeader label="Certifications" color={CATEGORY_COLOR.자격증} />
+            <div className="space-y-2 sm:space-y-3 md:space-y-4">
+              {certificate?.items.map((item) => (
+                <TimelineItem key={item.name} item={item} />
+              ))}
+            </div>
+          </div>
+          <div>
             <ResumeCardHeader label="Skills" color="rgba(12,15,26,0.35)" />
             <div className="grid grid-cols-3 gap-x-2 gap-y-1.5 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-3">
               {CORE_SKILLS.map((item) => (
@@ -56,14 +64,6 @@ export function PageResume() {
                     {item}
                   </span>
                 </div>
-              ))}
-            </div>
-          </div>
-          <div>
-            <ResumeCardHeader label="Certifications" color={CATEGORY_COLOR.자격증} />
-            <div className="space-y-2 sm:space-y-3 md:space-y-4">
-              {certificate?.items.map((item) => (
-                <TimelineItem key={item.name} item={item} />
               ))}
             </div>
           </div>
