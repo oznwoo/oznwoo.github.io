@@ -48,11 +48,28 @@ html {
   pointer-events: none;
 }
 
-/* Overview 히어로 하단의 장식 막대 차트 — 막대가 순차적으로 솟아오르며
-   등장한다. 이후 마우스 hover 반응은 각 막대의 Tailwind hover:scale-y로 처리 */
+/* Overview 히어로 하단의 장식 막대 차트 — 막대가 순차적으로 솟아오르며 등장한다 */
 @keyframes bar-rise {
   from { transform: scaleY(0); }
   to { transform: scaleY(1); }
+}
+
+/* 마우스가 지나가는 막대는 크게, 양옆 1~2개는 그보다 작게 함께 솟아올라
+   "물결"처럼 번지는 느낌을 준다. 뒤 형제는 인접 결합자(+)로, 앞 형제는
+   :has()로 "바로 다음이 hover 중인 막대"를 찾아 대칭으로 반응시킨다. */
+.hero-bar {
+  transition: scale 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.hero-bar:hover {
+  scale: 1 2.1;
+}
+.hero-bar:has(+ .hero-bar:hover),
+.hero-bar:hover + .hero-bar {
+  scale: 1 1.6;
+}
+.hero-bar:has(+ .hero-bar + .hero-bar:hover),
+.hero-bar:hover + .hero-bar + .hero-bar {
+  scale: 1 1.28;
 }
 
 body {

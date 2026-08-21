@@ -1,17 +1,22 @@
 // Overview 히어로 하단에 까는 장식 막대 차트. 정보 그래픽이 아니라
-// 텍스트 뒤에서 존재감을 주는 히어로 애니메이션이라, 정확한 수치 대신
-// "현금흐름이 우상향한다"는 실루엣만 우상향 노이즈로 만든다. 순수 CSS
-// hover(각 막대 자체의 :hover)만으로 반응하게 해 — 마우스가 지나가는
-// 막대만 즉시 솟아올랐다가, 커서가 빠지면 다시 가라앉는다.
+// 텍스트 뒤에서 존재감을 주는 히어로 애니메이션이라, 우상향 추세를 주지
+// 않고 평균 높이는 비슷하되 들쑥날쑥한 실루엣(오디오 이퀄라이저에 가까운
+// 느낌)으로 만든다. 순수 CSS hover(각 막대 자체의 :hover)만으로 반응하게
+// 해 — 마우스가 지나가는 막대만 즉시 솟아올랐다가, 커서가 빠지면 가라앉는다.
 const BAR_COUNT = 48
 
 function buildHeights() {
   return Array.from({ length: BAR_COUNT }, (_, i) => {
-    const t = i / (BAR_COUNT - 1)
-    const trend = Math.pow(t, 1.4)
-    const noise = Math.sin(i * 1.9) * 0.5 + Math.cos(i * 0.7) * 0.5
-    const pct = 14 + trend * 62 + noise * 6
-    return Math.max(8, Math.min(95, pct))
+    // 서로 다른 주기의 sin/cos 네 개를 겹쳐 추세 없이 완만하게 굴곡지는
+    // 실루엣을 만든다 — 평균은 대략 45% 부근에서 유지된다. 고주파(짧은 주기)
+    // 성분의 비중을 낮게 둬서 이웃 막대끼리 너무 튀지 않게 한다.
+    const noise =
+      Math.sin(i * 1.9) * 0.4 +
+      Math.cos(i * 0.7) * 0.35 +
+      Math.sin(i * 3.3 + 1) * 0.15 +
+      Math.cos(i * 5.1 + 2) * 0.1
+    const pct = 45 + noise * 20
+    return Math.max(15, Math.min(80, pct))
   })
 }
 
@@ -25,7 +30,7 @@ export function HeroBarChart({ color }: { color: string }) {
       {heights.map((h, i) => (
         <div
           key={i}
-          className="flex-1 rounded-t-sm origin-bottom transition-transform duration-300 ease-out hover:scale-y-[1.35]"
+          className="hero-bar flex-1 rounded-t-sm origin-bottom"
           style={{
             height: `${h}%`,
             background: color,
