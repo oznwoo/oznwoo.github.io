@@ -63,7 +63,7 @@ export function PageProjects({
               }}
               className={
                 "group text-left rounded-2xl flex flex-col transition-all duration-200 " +
-                (isMobile ? "p-5 gap-3" : "p-6 gap-4")
+                (isMobile ? "p-4 gap-2.5" : "p-6 gap-4")
               }
               style={{
                 // 한쪽에서 옅어지는 선형 그라디언트 대신, 카드 곳곳에 부드러운
@@ -93,7 +93,7 @@ export function PageProjects({
               <div className="flex items-start justify-between gap-2">
                 <div
                   className={
-                    "flex flex-wrap " + (isMobile ? "gap-1" : "gap-1.5")
+                    "flex flex-wrap " + (isMobile ? "gap-0.5" : "gap-1.5")
                   }
                 >
                   {p.tags.map((t) => {
@@ -131,7 +131,7 @@ export function PageProjects({
                         className={
                           "relative flex items-center rounded-full uppercase " +
                           (isMobile
-                            ? "text-[8px] px-1.5 py-0.5 tracking-[0.02em]"
+                            ? "text-[8px] px-1 py-0.5 tracking-normal"
                             : "text-[9px] px-2.5 py-1 tracking-[0.08em]")
                         }
                       >

@@ -318,6 +318,7 @@ export default function App() {
   const detailOverlay = renderedProject && (
     <ProjectDetailView
       projectId={renderedProject}
+      open={isDetail}
       onClose={() => {
         triggerWarp(-1)
         setActiveProject(null)

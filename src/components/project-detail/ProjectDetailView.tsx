@@ -10,12 +10,14 @@ import { DetailNav } from "./DetailNav"
 
 export function ProjectDetailView({
   projectId,
+  open,
   onClose,
   onTransition,
   // 상세 내부 슬라이드 전환마다 공유 배경의 웜프(회전·버스트)를 같이 재생해
   // 메인 페이지 전환과 동일한 애니메이션 언어를 쓰게 한다.
 }: {
   projectId: string
+  open: boolean
   onClose: () => void
   onTransition: (direction: 1 | -1) => void
 }) {
@@ -27,6 +29,18 @@ export function ProjectDetailView({
   const accentColor = PROJECT_ACCENT[projectId]?.primary ?? "#4F6EF7"
   const TOTAL_D = DETAIL_PAGE_LABELS.length
   const isMobile = useIsMobile()
+  // 모바일은 가로 슬라이드 축을 메인 페이지 전환에 이미 쓰고 있어서, 상세
+  // 진입은 카드가 화면 안으로 "빨려들어가듯" 확대·페이드되는 연출로 구분한다.
+  // 마운트 직후 한 프레임은 닫힌(축소) 상태로 그려야 이후 open=true로 바뀌는
+  // 순간 실제로 트랜지션이 재생된다 — 첫 프레임부터 열린 채로 그리면 전환 없이
+  // 바로 나타나 버린다.
+  const [entered, setEntered] = useState(false)
+  useEffect(() => {
+    if (!isMobile) return
+    const raf = requestAnimationFrame(() => setEntered(true))
+    return () => cancelAnimationFrame(raf)
+  }, [isMobile])
+  const mobileShown = open && entered
   const detailSlideIds = DETAIL_PAGE_LABELS.map((_, i) => `detail-slide-${i}`)
   // 모바일(stack 모드)에서는 세로 슬라이드 트랙 대신 자연스러운 문서 스크롤을
   // 쓰므로, 활성 dot은 goSlide가 아니라 실제로 보이는 섹션을 관찰해 정한다.
@@ -493,6 +507,18 @@ export function ProjectDetailView({
         isMobile
           ? "fixed inset-0 z-40 overflow-y-auto bg-[#EEF1F9]"
           : "w-screen h-screen relative overflow-hidden"
+      }
+      style={
+        isMobile
+          ? {
+              transform: mobileShown ? "scale(1)" : "scale(0.88)",
+              opacity: mobileShown ? 1 : 0,
+              pointerEvents: mobileShown ? "auto" : "none",
+              transition:
+                "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
+              willChange: "transform, opacity",
+            }
+          : undefined
       }
     >
       {/* 배경은 자체 색을 칠하지 않고 App의 공유 GradientBackground를 그대로
