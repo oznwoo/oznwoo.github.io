@@ -2462,10 +2462,18 @@ export default function App() {
   // 한 화면에 욱여넣지 않고 프로젝트마다 화면 하나를 쓰도록 쪼갠다.
   const MOBILE_TOTAL = 3 + PROJECTS.length + 1
   const [mobilePage, setMobilePage] = useState(0)
+  const mobileProgress = MOBILE_TOTAL > 1 ? mobilePage / (MOBILE_TOTAL - 1) : 0
+  // 데스크톱의 goTo와 동일하게 triggerWarp를 태워야 배경 blob의 웜프(회전·
+  // 스케일·버스트 플래시) 반응이 모바일 페이지 전환에도 재생된다 — 이걸
+  // 빼먹었더니 모바일에서만 배경이 그냥 멈춰있는 것처럼 보였음.
   const goMobile = useCallback(
-    (idx: number) =>
-      setMobilePage(Math.max(0, Math.min(MOBILE_TOTAL - 1, idx))),
-    [MOBILE_TOTAL],
+    (idx: number) => {
+      const next = Math.max(0, Math.min(MOBILE_TOTAL - 1, idx))
+      if (next === mobilePage) return
+      triggerWarp(next > mobilePage ? 1 : -1)
+      setMobilePage(next)
+    },
+    [MOBILE_TOTAL, mobilePage, triggerWarp],
   )
   const mobileTouchStart = useRef<{ x: number; y: number } | null>(null)
 
@@ -2488,9 +2496,7 @@ export default function App() {
       const dy = t.clientY - mobileTouchStart.current.y
       mobileTouchStart.current = null
       if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return
-      setMobilePage((p) =>
-        Math.max(0, Math.min(MOBILE_TOTAL - 1, p + (dx < 0 ? 1 : -1))),
-      )
+      goMobile(mobilePage + (dx < 0 ? 1 : -1))
     }
     window.addEventListener("touchstart", onStart, { passive: true })
     window.addEventListener("touchend", onEnd, { passive: true })
@@ -2498,7 +2504,7 @@ export default function App() {
       window.removeEventListener("touchstart", onStart)
       window.removeEventListener("touchend", onEnd)
     }
-  }, [isMobile, MOBILE_TOTAL])
+  }, [isMobile, mobilePage, goMobile])
 
   const mobilePages = [
     <PageHome key="home" />,
@@ -2535,8 +2541,8 @@ export default function App() {
 
   const background = (
     <GradientBackground
-      progress={progress}
-      page={current}
+      progress={isMobile ? mobileProgress : progress}
+      page={isMobile ? mobilePage : current}
       warping={warping}
       rotation={rotation}
       accentSlots={slotColors}
