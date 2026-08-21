@@ -73,12 +73,6 @@ export function PageProjects({
                   >
                     {p.subtitle}
                   </p>
-                  <p
-                    style={{ fontFamily: "var(--font-body)" }}
-                    className="text-[11px] text-[#0C0F1A]/55 leading-relaxed font-light"
-                  >
-                    {p.description}
-                  </p>
                   <div className="flex flex-wrap gap-1.5 mt-1">
                     {p.tags.map((t) => (
                       <span
