@@ -1027,9 +1027,9 @@ function PageHome() {
 function PageAbout() {
   return (
     <Page>
-      <div className="grid grid-cols-[76px_1fr] gap-5 items-center sm:grid-cols-[100px_1fr] sm:gap-8 md:grid-cols-[180px_1fr] md:gap-12">
+      <div className="flex flex-col items-start gap-5 md:grid md:grid-cols-[180px_1fr] md:items-center md:gap-12">
         <div
-          className="overflow-hidden shrink-0"
+          className="overflow-hidden shrink-0 w-36 sm:w-40 md:w-auto"
           style={{
             aspectRatio: "3/4",
             borderRadius: "16px",
