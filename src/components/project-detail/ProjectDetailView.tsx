@@ -5,8 +5,8 @@ import { DETAIL_PAGE_LABELS } from "@/data/navigation"
 import { PROJECTS, PROJECT_DETAILS, PROJECT_ACCENT } from "@/data/projects"
 import { hexToRgba } from "@/lib/color"
 import { DetailIcon } from "./DetailIcon"
-import { HeroVisual } from "./HeroVisual"
 import { DetailNav } from "./DetailNav"
+import { PredictionChart } from "./PredictionChart"
 
 export function ProjectDetailView({
   projectId,
@@ -111,78 +111,59 @@ export function ProjectDetailView({
     : goSlide
 
   const slides = [
-    // 개요 — 실사진이 없는 대신, 큰 타이틀(또는 로고)이 세로 중앙에 걸리는
-    // 에디토리얼 케이스 스터디 구성(레퍼런스 레이아웃)으로 바꿨다.
-    // 좌측 고정 네비게이터(DetailNav, left-6 + 라벨 폭 ~130px)와 겹치지 않도록
-    // 텍스트 칼럼은 항상 충분한 좌측 여백을 확보한다. 모바일은 DetailNav 라벨이
-    // 숨겨져 dot만 보이므로(hidden md:inline-block) pl-16이면 충분하다.
+    // 개요 — 로고 → 큰 타이틀 → 개요 → 기간/역할 → 증빙 그래프가 세로로
+    // 쌓이는 중앙 정렬 히어로 구성(레퍼런스 레이아웃 참고). 배경 그라디언트는
+    // 이 슬라이드에서 직접 칠하지 않고 공유 GradientBackground를 그대로 쓴다.
     <div
       className={
         isMobile
-          ? "min-h-screen w-full flex items-center pl-16 pr-6 py-20 relative overflow-hidden"
-          : "h-screen flex items-center pl-32 md:pl-44 lg:pl-56 pr-8 md:pr-16 shrink-0 relative overflow-hidden"
+          ? "min-h-screen w-full flex flex-col items-center justify-center text-center pl-16 pr-6 py-20 gap-5"
+          : "h-screen flex flex-col items-center justify-center text-center px-8 md:px-16 shrink-0 gap-5"
       }
     >
-      {/* 장식 차트는 텍스트 칼럼(max-w-xl, 최대 우측 끝 ~800px)과 절대 겹치지
-          않도록 화면 폭이 충분한 xl(1280px)부터만 우측 고정폭 컬럼에 그린다 */}
-      {detail.heroVisual && (
-        <div
-          className="hidden xl:block absolute inset-y-0 right-0 w-[420px] 2xl:w-[520px]"
-          aria-hidden="true"
+      {detail.logoSrc ? (
+        <img
+          src={detail.logoSrc}
+          alt={project.title}
+          className="h-12 sm:h-14 w-auto"
+        />
+      ) : (
+        <span
+          style={{ fontFamily: "var(--font-mono)" }}
+          className="text-xs text-[#0C0F1A]/40 tracking-[0.04em] uppercase"
         >
-          <HeroVisual name={detail.heroVisual} color={accentColor} />
+          {project.title}
+        </span>
+      )}
+      <h2
+        style={{ fontFamily: "var(--font-display)", lineHeight: 1.1 }}
+        className="text-[clamp(1.8rem,5vw,3.25rem)] font-medium text-[#0C0F1A] max-w-3xl"
+      >
+        {project.subtitle}
+      </h2>
+      <p
+        style={{ fontFamily: "var(--font-body)" }}
+        className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal max-w-lg -mt-2"
+      >
+        {detail.overview}
+      </p>
+      <div
+        style={{ fontFamily: "var(--font-mono)" }}
+        className="flex items-center gap-4 text-xs text-[#0C0F1A]/45 uppercase tracking-[0.04em]"
+      >
+        <span>{detail.period}</span>
+        <span className="w-1 h-1 rounded-full bg-[#0C0F1A]/30" />
+        <span>{detail.role}</span>
+      </div>
+      {/* 채팅창 자리에 실사진 대신, 사이트 톤에 맞춰 직접 그린 현금흐름
+          예측 차트를 넣어 "증빙"으로 삼는다 */}
+      {detail.outcomeImage && (
+        <div className="w-full max-w-2xl mt-1">
+          <div className="overflow-hidden rounded-2xl border border-[#0C0F1A]/8 bg-white/60 backdrop-blur-sm shadow-[0_24px_60px_rgba(12,15,26,0.12)] px-6 py-5 sm:px-8 sm:py-6">
+            <PredictionChart color={accentColor} />
+          </div>
         </div>
       )}
-      <div className="max-w-xl w-full relative z-10">
-        {detail.logoSrc ? (
-          <img
-            src={detail.logoSrc}
-            alt={project.title}
-            className="relative h-24 sm:h-28 md:h-32 lg:h-36 w-auto mb-2"
-          />
-        ) : (
-          <h2
-            style={{ fontFamily: "var(--font-display)", lineHeight: 0.95 }}
-            className="relative text-[clamp(3rem,8vw,6.5rem)] font-light text-[#0C0F1A]"
-          >
-            {project.title}
-          </h2>
-        )}
-        <p
-          style={{ fontFamily: "var(--font-body)" }}
-          className="relative text-base italic text-[#0C0F1A]/45 font-light mt-3 mb-6"
-        >
-          {project.subtitle}
-        </p>
-        <div className="w-16 h-px mb-6" style={{ background: accentColor }} />
-        <p
-          style={{ fontFamily: "var(--font-body)" }}
-          className="text-sm text-[#0C0F1A]/55 leading-relaxed font-light max-w-md mb-8"
-        >
-          {detail.overview}
-        </p>
-        <div className="flex gap-10">
-          {[
-            ["Period", detail.period],
-            ["Role", detail.role],
-          ].map(([k, v]) => (
-            <div key={k} className="flex flex-col gap-1.5">
-              <span
-                style={{ fontFamily: "var(--font-mono)" }}
-                className="text-xs text-[#0C0F1A]/25 uppercase tracking-[0.04em]"
-              >
-                {k}
-              </span>
-              <span
-                style={{ fontFamily: "var(--font-body)" }}
-                className="text-sm text-[#0C0F1A]/55 font-light"
-              >
-                {v}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>,
     // 문제 — PPT 발표자료의 카드 레이아웃(헤더 색 바 + 아이콘 + 태그)만 가져오고
     // 색/폰트 등 PPT 자체 템플릿 스타일은 따르지 않는다

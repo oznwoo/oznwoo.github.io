@@ -108,22 +108,17 @@ export type DetailIconKey =
   | "sparkle"
   | "trend-down"
 
-// Overview 슬라이드 배경에 까는 대형 장식 비주얼. 실제 사진/렌더링이 없는
-// 코드 포트폴리오라 프로젝트 성격을 대변하는 추상 그래픽을 직접 그려 넣는다.
-export type HeroVisualKey = "chart"
-
 export const PROJECT_DETAILS: Record<string, {
   period: string
   role: string
   overview: string
-  heroVisual?: HeroVisualKey
   // Overview 히어로에서 타이틀 텍스트 대신 보여줄 실제 로고. 있으면 텍스트
   // 타이틀을 대체한다 (Fintag처럼 워드마크 자체가 브랜드를 대변하는 경우)
   logoSrc?: string
   problem: { title: string; body: string; icon?: DetailIconKey; tags?: string[]; image?: string }[]
   solution: { title: string; body: string; icon?: DetailIconKey; tags?: string[]; image?: string }[]
   outcome: { stat: string; label: string; icon?: DetailIconKey }[]
-  // Outcome 슬라이드 하단 인용구 위에 곁들이는 성과 증빙 차트(선택)
+  // 성과 증빙 차트(선택) — Overview 히어로와 Outcome 슬라이드 양쪽에서 쓴다
   outcomeImage?: string
   tech: { category: string; items: string[] }[]
 }> = {
@@ -132,7 +127,6 @@ export const PROJECT_DETAILS: Record<string, {
     role: "백엔드 개발 · ML 엔지니어링 (인턴십)",
     overview:
       "중소기업이 통장에 묶어두는 유휴 자금을 실시간으로 감지하고, 적합한 금융 상품을 제안하는 자금 관리 SaaS. 실제 거래 내역 데이터를 기반으로 미래 현금흐름을 예측하는 모델과 이를 서빙하는 백엔드 시스템을 담당했습니다.",
-    heroVisual: "chart",
     logoSrc: fintagLogo,
     problem: [
       {
