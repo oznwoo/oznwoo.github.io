@@ -24,6 +24,8 @@ export function PageResume() {
         >
           이력
         </h2>
+        {/* 모바일은 한 컬럼으로 위→아래 나열되니 섹션 사이에 얇은 divider를
+            그어 구분을 준다. md 이상은 2열 그리드라 gap만으로 충분해 border는 끈다. */}
         <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:gap-x-8 sm:gap-y-6 md:grid-cols-2 md:gap-x-14 md:gap-y-10">
           <div>
             <ResumeCardHeader label="Education" color={CATEGORY_COLOR.교육} />
@@ -33,7 +35,7 @@ export function PageResume() {
               ))}
             </div>
           </div>
-          <div>
+          <div className="pt-5 border-t border-[#0C0F1A]/8 sm:pt-6 md:pt-0 md:border-t-0">
             <ResumeCardHeader label="Activities" color={CATEGORY_COLOR.활동} />
             <div className="space-y-2 sm:space-y-3 md:space-y-4">
               {activity?.items.map((item) => (
@@ -41,7 +43,7 @@ export function PageResume() {
               ))}
             </div>
           </div>
-          <div>
+          <div className="pt-5 border-t border-[#0C0F1A]/8 sm:pt-6 md:pt-0 md:border-t-0">
             <ResumeCardHeader label="Certifications" color={CATEGORY_COLOR.자격증} />
             <div className="space-y-2 sm:space-y-3 md:space-y-4">
               {certificate?.items.map((item) => (
@@ -49,7 +51,7 @@ export function PageResume() {
               ))}
             </div>
           </div>
-          <div>
+          <div className="pt-5 border-t border-[#0C0F1A]/8 sm:pt-6 md:pt-0 md:border-t-0">
             <ResumeCardHeader label="Skills" color="rgba(12,15,26,0.35)" />
             <div className="grid grid-cols-3 gap-x-2 gap-y-1.5 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-3">
               {CORE_SKILLS.map((item) => (
