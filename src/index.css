@@ -48,6 +48,20 @@ html {
   pointer-events: none;
 }
 
+/* 모바일 상세 진입/퇴장 전용 — warp-burst보다 느리게, 절정에서 한 번 머무는
+   구간(25%~55%)을 둬서 그 사이에 화면 내용이 완전히 가려진 채로 바뀌고,
+   그 뒤로는 펄스가 걷히기만 하며 이미 바뀐 화면이 드러나게 한다. */
+@keyframes mobile-detail-burst {
+  0% { scale: 0.4; opacity: 0; }
+  25% { scale: 1.5; opacity: 0.95; }
+  55% { scale: 2; opacity: 0.92; }
+  100% { scale: 2.6; opacity: 0; }
+}
+.mobile-detail-burst {
+  animation: mobile-detail-burst 0.95s cubic-bezier(0.4,0,0.2,1) both;
+  pointer-events: none;
+}
+
 /* 프로젝트 상세 히어로의 차트 비주얼 — 막대가 순차적으로 솟아오른다 */
 @keyframes chart-bar-rise {
   from { transform: scaleY(0); }

@@ -278,15 +278,17 @@ export default function App() {
   // ─── State + Handlers: 모바일 상세 진입·퇴장 색 펄스 ────────────────────
   // PC는 좌우 슬라이드가 전환의 "무게감"을 담당하지만, 모바일은 그 축을 메인
   // 페이지 전환에 이미 쓰고 있어 슬라이드를 재사용할 수 없다. 대신 화면
-  // 전체가 프로젝트 색으로 잠깐 펄스했다가 사그라들면서 그 뒤에 있던 페이지가
-  // 드러나는 방식으로 같은 수준의 전환감을 낸다 — 펄스가 절정에 이르기 전까지는
-  // 상세 패널을 숨겨두고, 펄스가 사그라들기 시작할 때 드러낸다(반대 방향도 동일).
+  // 전체가 프로젝트 색으로 펄스하며 그 절정 구간(mobile-detail-burst의
+  // 25~55%, 950ms 중 약 240~520ms) 동안 화면 내용을 완전히 가린 채로 바꾸고,
+  // 펄스가 걷히는 나머지 구간에는 순수하게 펄스만 사그라들며 이미 바뀐 화면이
+  // 드러나게 한다 — 내용이 바뀌는 순간 자체가 펄스와 함께 "보이지" 않아야
+  // 자연스럽다(반대 방향도 대칭).
   const [mobilePulse, setMobilePulse] = useState<{ nonce: number; color: string } | null>(
     null,
   )
   const [mobilePanelVisible, setMobilePanelVisible] = useState(false)
   const panelRevealTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const PULSE_REVEAL_DELAY = 260
+  const PULSE_REVEAL_DELAY = 300
 
   const handleOpenProject = useCallback(
     (id: string) => {
@@ -407,9 +409,11 @@ export default function App() {
           ))}
         </div>
         {detailOverlay}
-        {/* 상세 진입·퇴장 색 펄스 — 페이지 전환·호버에 쓰는 것과 같은
-            gradient-warp-burst(0.7s)를 화면 전체를 덮을 만큼 키워서 재사용한다.
-            납작한 단색 대신 부드럽게 번지는 그라디언트라 전환 언어가 일관된다.
+        {/* 상세 진입·퇴장 색 펄스 — 페이지 전환·호버에 쓰는 gradient-warp-burst와
+            같은 언어(부드러운 radial-gradient bloom)이지만, 화면 전체를 확실히
+            가리는 절정 구간을 갖도록 더 느리게(mobile-detail-burst, 0.95s)
+            재생한다. 그 구간 동안 내용이 바뀌므로 전환 자체는 안 보이고,
+            펄스가 걷히는 나머지 구간에는 이미 바뀐 화면만 자연스럽게 드러난다.
             nonce가 바뀔 때마다 remount돼 애니메이션이 처음부터 재생된다. */}
         {mobilePulse && (
           <div
@@ -418,7 +422,7 @@ export default function App() {
             className="fixed inset-0 z-50 overflow-hidden pointer-events-none"
           >
             <div
-              className="gradient-warp-burst absolute rounded-full"
+              className="mobile-detail-burst absolute rounded-full"
               style={{
                 width: "260vw",
                 height: "260vw",
@@ -426,7 +430,7 @@ export default function App() {
                 left: "50%",
                 marginTop: "-130vw",
                 marginLeft: "-130vw",
-                background: `radial-gradient(circle, ${hexToRgba(mobilePulse.color, 0.85)} 0%, ${hexToRgba(mobilePulse.color, 0)} 68%)`,
+                background: `radial-gradient(circle, ${hexToRgba(mobilePulse.color, 0.98)} 0%, ${hexToRgba(mobilePulse.color, 0.85)} 45%, ${hexToRgba(mobilePulse.color, 0)} 68%)`,
               }}
             />
           </div>
