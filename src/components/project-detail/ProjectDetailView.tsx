@@ -111,8 +111,8 @@ export function ProjectDetailView({
     : goSlide
 
   const slides = [
-    // 개요 — 로고 → 큰 타이틀만 중앙 정렬로 쌓이는 순수 Hero. 소개 문단과
-    // 기간/역할은 바로 다음 "소개" 슬라이드로 넘긴다.
+    // 개요 — 로고 → 큰 타이틀 → 태그 pill → 기간/역할이 중앙 정렬로 쌓이는
+    // Hero. 소개 문단만 바로 다음 "소개" 슬라이드로 넘긴다.
     // 화면 맨 아래에는 장식 막대 차트가 깔린다(레퍼런스 레이아웃 참고).
     // 정보 그래픽이 아니라 마우스가 지나가는 막대만 즉시 솟아올랐다가
     // 커서가 빠지면 가라앉는 히어로 장식이라, 순수 CSS :hover로만
@@ -152,11 +152,34 @@ export function ProjectDetailView({
         >
           {project.subtitle}
         </h2>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {project.tags.map((t) => (
+            <span
+              key={t}
+              style={{
+                fontFamily: "var(--font-mono)",
+                color: accentColor,
+                borderColor: hexToRgba(accentColor, 0.25),
+                background: hexToRgba(accentColor, 0.08),
+              }}
+              className="text-[10px] px-3 py-1 rounded-full border uppercase tracking-[0.06em]"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+        <div
+          style={{ fontFamily: "var(--font-mono)" }}
+          className="flex items-center gap-4 text-xs text-[#0C0F1A]/45 uppercase tracking-[0.04em]"
+        >
+          <span>{detail.period}</span>
+          <span className="w-1 h-1 rounded-full bg-[#0C0F1A]/30" />
+          <span>{detail.role}</span>
+        </div>
       </div>
     </div>,
     // 소개 — Overview 히어로 다음, 프로젝트를 실제로 설명하는 전용 화면.
-    // 로고/타이틀은 앞 슬라이드에서 이미 보여줬으니 여기서는 소개 문단과
-    // 기간·역할 메타만 차분하게 다시 보여준다.
+    // 로고/타이틀/메타는 앞 슬라이드에서 이미 보여줬으니 소개 문단만 둔다.
     <div
       className={
         isMobile
@@ -177,14 +200,6 @@ export function ProjectDetailView({
         >
           {detail.overview}
         </p>
-        <div
-          style={{ fontFamily: "var(--font-mono)" }}
-          className="flex items-center gap-4 text-xs text-[#0C0F1A]/45 uppercase tracking-[0.04em]"
-        >
-          <span>{detail.period}</span>
-          <span className="w-1 h-1 rounded-full bg-[#0C0F1A]/30" />
-          <span>{detail.role}</span>
-        </div>
       </div>
     </div>,
     // 문제 — PPT 발표자료의 카드 레이아웃(헤더 색 바 + 아이콘 + 태그)만 가져오고
