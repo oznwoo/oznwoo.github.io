@@ -1,4 +1,5 @@
 import fintagLogo from "@/imports/fintag-logo.png"
+import fintagAboutHero from "@/imports/fintag/fintag-about-hero.webp"
 import fintagProblemPreprocessing from "@/imports/fintag/fintag-problem-preprocessing.webp"
 import fintagProblemAccuracy from "@/imports/fintag/fintag-problem-accuracy.webp"
 import fintagProblemExplain from "@/imports/fintag/fintag-problem-explain.webp"
@@ -115,6 +116,8 @@ export const PROJECT_DETAILS: Record<string, {
   // Overview 히어로에서 타이틀 텍스트 대신 보여줄 실제 로고. 있으면 텍스트
   // 타이틀을 대체한다 (Fintag처럼 워드마크 자체가 브랜드를 대변하는 경우)
   logoSrc?: string
+  // About 슬라이드에서 소개 문단과 함께 보여줄 실제 서비스 화면 스크린샷(선택)
+  aboutImage?: string
   problem: { title: string; body: string; icon?: DetailIconKey; tags?: string[]; image?: string }[]
   solution: { title: string; body: string; icon?: DetailIconKey; tags?: string[]; image?: string }[]
   outcome: { stat: string; label: string; icon?: DetailIconKey }[]
@@ -128,6 +131,7 @@ export const PROJECT_DETAILS: Record<string, {
     overview:
       "중소기업이 통장에 묶어두는 유휴 자금을 실시간으로 감지하고, 적합한 금융 상품을 제안하는 자금 관리 SaaS. 실제 거래 내역 데이터를 기반으로 미래 현금흐름을 예측하는 모델과 이를 서빙하는 백엔드 시스템을 담당했습니다.",
     logoSrc: fintagLogo,
+    aboutImage: fintagAboutHero,
     problem: [
       {
         title: "데이터 전처리 부재",
