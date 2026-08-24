@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react"
 import type { Project, ProjectDetail } from "@/data/projects"
-import { DEFAULT_ACCENT } from "@/data/projects"
-import { hexToRgba, mixWithWhite } from "@/lib/color"
 import type { ProjectAccent } from "@/lib/color"
+import { AccentPill } from "../AccentPill"
 import { HeroBarChart } from "../HeroBarChart"
 
 // 상세 패널이 메인에서 슬라이드-인하는 가로 전환(App.tsx, 0.75s)과 맞춘
@@ -87,33 +86,15 @@ export function OverviewSlide({
           {project.subtitle}
         </h2>
         <div className="flex flex-wrap items-center justify-center gap-2">
-          {project.tags.map((t) => {
-            const pillAccent = accent ?? DEFAULT_ACCENT
-            // 메인 프로젝트 카드 호버 시 pill 디자인과 동일 — 상세 페이지는
-            // 이미 이 프로젝트 색으로 물들어 있으니 항상 "활성" 톤으로 보여준다
-            const pillWhiteMix = projectId === "02" ? 0.2 : 0.5
-            return (
-              <span
-                key={t}
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  color: "rgba(255,255,255,0.95)",
-                  WebkitTextStroke: "0.35px currentColor",
-                  boxShadow: `0 6px 16px ${hexToRgba(accentColor, 0.18)}, 0 1px 3px rgba(12,15,26,0.08)`,
-                }}
-                className="relative flex items-center text-[9px] px-2.5 py-1 rounded-full uppercase tracking-[0.08em]"
-              >
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-0 rounded-full"
-                  style={{
-                    background: `radial-gradient(ellipse at center, ${hexToRgba(pillAccent.primary, 0.3)} 0%, transparent 72%), linear-gradient(135deg, ${mixWithWhite(pillAccent.blobs[0], pillWhiteMix)}, ${mixWithWhite(pillAccent.blobs[1], pillWhiteMix)}, ${mixWithWhite(pillAccent.blobs[2], pillWhiteMix)})`,
-                  }}
-                />
-                <span className="relative">{t}</span>
-              </span>
-            )
-          })}
+          {project.tags.map((t) => (
+            <AccentPill
+              key={t}
+              label={t}
+              accent={accent}
+              accentColor={accentColor}
+              projectId={projectId}
+            />
+          ))}
         </div>
         <div
           style={{ fontFamily: "var(--font-mono)" }}
