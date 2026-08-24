@@ -1,17 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Hahmlet:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css');
-@import url('https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css');
 @import 'tailwindcss';
 
 @theme {
   --font-display: 'Hahmlet', 'Noto Serif KR', Georgia, serif;
   --font-body: 'Noto Sans KR', system-ui, sans-serif;
   --font-mono: 'Pretendard Variable', 'Pretendard', system-ui, sans-serif;
-  /* 이름과 달리 실제로는 Pretendard다 — 기존에 이미 여러 곳(PageProjects,
-     PageResume 등)에서 쓰고 있어 값은 그대로 두고 아래에 진짜 나눔스퀘어
-     토큰을 별도로 추가한다 */
   --font-nanum: 'Pretendard Variable', 'Pretendard', system-ui, sans-serif;
-  --font-nanum-square: 'NanumSquare', 'Noto Sans KR', system-ui, sans-serif;
 }
 
 html {
