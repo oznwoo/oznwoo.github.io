@@ -24,8 +24,8 @@ export function ProblemSlide({
       accent={accent}
       accentColor={accentColor}
       projectId={projectId}
-      imageWidth={531}
-      imageHeight={386}
+      imageWidth={1024}
+      imageHeight={765}
       isMobile={isMobile}
     />
   )

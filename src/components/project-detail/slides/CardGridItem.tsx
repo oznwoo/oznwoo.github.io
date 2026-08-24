@@ -35,7 +35,7 @@ export function CardGridItem({
         <div
           onMouseEnter={() => setImgHovered(true)}
           onMouseLeave={() => setImgHovered(false)}
-          className="h-36 md:h-40 rounded-2xl overflow-hidden border cursor-default"
+          className="rounded-2xl overflow-hidden border cursor-default"
           style={{
             borderColor: imgHovered
               ? hexToRgba(accentColor, 0.35)
@@ -50,6 +50,9 @@ export function CardGridItem({
               "transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease-out, border-color 0.4s ease-out",
           }}
         >
+          {/* 고정 높이 박스에 object-cover로 채우면 위아래가 잘려서, 원본
+              비율 그대로(w-full h-auto) 보여준다 — 대신 소스 이미지 자체를
+              같은 크기로 맞춰둬야 카드 세 개의 높이가 가지런히 정렬된다 */}
           <img
             src={item.image}
             alt=""
@@ -57,7 +60,7 @@ export function CardGridItem({
             loading="lazy"
             width={imageWidth}
             height={imageHeight}
-            className="w-full h-full object-cover block"
+            className="w-full h-auto block"
           />
         </div>
       )}
