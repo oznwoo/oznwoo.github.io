@@ -7,6 +7,9 @@ import fintagSolutionPipeline from "@/imports/fintag/fintag-solution-pipeline.we
 import fintagSolutionSteps from "@/imports/fintag/fintag-solution-steps.webp";
 import fintagSolutionExplainUi from "@/imports/fintag/fintag-solution-explain-ui.webp";
 import fintagOutcomeChart from "@/imports/fintag/fintag-outcome-chart.webp";
+import fintagOutcomePreprocessing from "@/imports/fintag/fintag-outcome-preprocessing.webp";
+import fintagOutcomeAccuracy from "@/imports/fintag/fintag-outcome-accuracy.webp";
+import fintagOutcomeExplain from "@/imports/fintag/fintag-outcome-explain.webp";
 import type { ProjectAccent } from "@/lib/color";
 
 // 프로젝트 카드 호버 시 반영할 브랜드 컬러 (로고/배너 기반). 로고를 받은 프로젝트만
@@ -249,12 +252,40 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       },
     ],
     outcomeImage: fintagOutcomeChart,
-    // TODO: 아래 3장은 실제 '해결된 버전' 스크린샷으로 교체 예정 — 그 전까지는
-    // PROBLEM 이미지를 임시로 재사용해 갤러리 틀만 잡아둔다.
     outcomeGallery: [
-      { title: "데이터 전처리 부재", body: "", image: fintagProblemPreprocessing },
-      { title: "예측 정확도 부족", body: "", image: fintagProblemAccuracy },
-      { title: "예측 설명 부재", body: "", image: fintagProblemExplain },
+      {
+        title: "데이터 전처리 부재 → 해결",
+        body: "",
+        shortBody: [
+          "은행 거래만 선별해 **단일 기준**으로 정제",
+          "중복 집계·내부 계좌 이동 **자동 필터링** 완료",
+          "정제된 시계열 데이터로 변환 완료",
+        ],
+        tags: ["#단일계좌기준", "#Tag분류"],
+        image: fintagOutcomePreprocessing,
+      },
+      {
+        title: "예측 정확도 부족 → 해결",
+        body: "",
+        shortBody: [
+          "급여일·카드결제일 등 **고정지출 패턴 등록** 완료",
+          "잔차 보정으로 **안정적인 예측** 추세 확보",
+          "평균 예측 오차율(MAPE) **76% 감소**",
+        ],
+        tags: ["#잔차보정", "#고정지출등록"],
+        image: fintagOutcomeAccuracy,
+      },
+      {
+        title: "예측 설명 부재 → 해결",
+        body: "",
+        shortBody: [
+          "예측 근거를 **자연어로 설명**",
+          "매출·지출 변동 요인을 **순위별로 제시**",
+          "담당자가 근거를 확인한 뒤 신뢰 가능",
+        ],
+        tags: ["#SHAP", "#Bedrock"],
+        image: fintagOutcomeExplain,
+      },
     ],
     tech: [
       { category: "Backend", items: ["Python", "FastAPI", "PostgreSQL"] },
