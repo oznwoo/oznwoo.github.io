@@ -58,7 +58,7 @@ export function GradientBackground({
   // blob과 무관하게 화면 전체가 뿌옇게(washed-out) 보인다. blob 그라디언트
   // 자체(아래 gradient-blob-a/b/c, renderAccentSlots)는 건드리지 않고, 그
   // 아래 깔리는 고정 바탕색만 거의 흰색에 가깝게 낮춘다.
-  const baseBackground = detailMode ? "#FBFBFD" : "#EEF1F9"
+  const baseBackground = detailMode ? "#F5F6FA" : "#EEF1F9"
 
   const pulseTransition = pulseActive
     ? "scale 0.16s cubic-bezier(0.34,1.56,0.64,1), translate 0.5s cubic-bezier(0.22,1,0.36,1)"
