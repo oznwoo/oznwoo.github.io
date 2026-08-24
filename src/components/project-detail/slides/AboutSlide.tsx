@@ -64,8 +64,8 @@ export function AboutSlide({ project, detail, accentColor, isMobile }: AboutSlid
               // 갱신되지 않아 스크롤 없이는 이미지가 영영 로드되지 않는
               // 문제가 있었다 — eager로 바꿔 우회한다.
               loading="eager"
-              width={1274}
-              height={768}
+              width={1590}
+              height={956}
               className="w-full h-auto block"
             />
           </div>
