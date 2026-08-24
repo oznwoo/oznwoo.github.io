@@ -123,7 +123,11 @@ export interface ProjectDetailCardItem {
 export interface ProjectDetail {
   period: string
   role: string
-  overview: string
+  // About 슬라이드에서 마크다운 h1처럼 크고 진하게 보여줄 한 줄 — 서비스가
+  // 무엇인지 설명하는 소개 문단의 첫 문장
+  overviewHeadline: string
+  // h2/본문처럼 작고 옅게 보여줄 나머지 문장 — 담당 역할·과정 설명
+  overviewBody: string
   // Overview 히어로에서 타이틀 텍스트 대신 보여줄 실제 로고. 있으면 텍스트
   // 타이틀을 대체한다 (Fintag처럼 워드마크 자체가 브랜드를 대변하는 경우)
   logoSrc?: string
@@ -141,8 +145,10 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
   "01": {
     period: "2026.04 – 2026.06",
     role: "백엔드 개발 · ML 엔지니어링 (인턴십)",
-    overview:
-      "중소기업이 통장에 묶어두는 유휴 자금을 실시간으로 감지하고, 적합한 금융 상품을 제안하는 자금 관리 SaaS. 실제 거래 내역 데이터를 기반으로 미래 현금흐름을 예측하는 모델과 이를 서빙하는 백엔드 시스템을 담당했습니다.",
+    overviewHeadline:
+      "중소기업이 통장에 묶어두는 유휴 자금을 실시간으로 감지하고, 적합한 금융 상품을 제안하는 자금 관리 SaaS.",
+    overviewBody:
+      "실제 거래 내역 데이터를 기반으로 미래 현금흐름을 예측하는 모델과 이를 서빙하는 백엔드 시스템을 담당했습니다.",
     logoSrc: fintagLogo,
     aboutImage: fintagAboutHero,
     problem: [
@@ -210,8 +216,10 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
   "02": {
     period: "2026.03 – 2026.04",
     role: "서비스 기획 총괄 · 풀스택 개발 · 팀 리더",
-    overview:
-      "Slack, Discord, 카카오톡 등 여러 메신저에 흩어진 업무 알림을 하나의 대시보드로 통합하고, AI가 메시지 긴급도를 자동 분류해주는 B2B SaaS. 구름 DEEP DIVE 해커톤에서 아이디어를 제안하고 6인 팀을 리드하며 당일 풀스택 개발에 참여했습니다.",
+    overviewHeadline:
+      "Slack, Discord, 카카오톡 등 여러 메신저에 흩어진 업무 알림을 하나의 대시보드로 통합하고, AI가 메시지 긴급도를 자동 분류해주는 B2B SaaS.",
+    overviewBody:
+      "구름 DEEP DIVE 해커톤에서 아이디어를 제안하고 6인 팀을 리드하며 당일 풀스택 개발에 참여했습니다.",
     problem: [
       {
         title: "메신저 파편화로 인한 정보 누락",
@@ -254,8 +262,9 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
   "03": {
     period: "2025.06 – 진행 중",
     role: "기획 · 디자인 · 풀스택 개발 (개인 프로젝트)",
-    overview:
-      "예약제 없이 운영되는 소규모 미용실을 위한 고객·매출 관리 앱. 어머니의 미용실이 수기로 장부를 관리하는 것을 보고 직접 기획했습니다. UI/UX 설계부터 React Native 앱 개발, 백엔드 서버 배포까지 전 과정을 혼자 진행했습니다.",
+    overviewHeadline: "예약제 없이 운영되는 소규모 미용실을 위한 고객·매출 관리 앱.",
+    overviewBody:
+      "어머니의 미용실이 수기로 장부를 관리하는 것을 보고 직접 기획했습니다. UI/UX 설계부터 React Native 앱 개발, 백엔드 서버 배포까지 전 과정을 혼자 진행했습니다.",
     problem: [
       {
         title: "소규모 미용실을 위한 서비스 부재",
@@ -294,8 +303,10 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
   "04": {
     period: "2024.09 – 2025.06",
     role: "기획 · UI/UX · 풀스택 개발 · 논문 저자",
-    overview:
-      "카카오톡, 문자, 이메일 등 다양한 채널의 알림을 통합하고 AI가 중요도를 분류·요약해주는 모바일 앱. 메신저 다양화가 오히려 소통의 장애를 유발한다는 문제를 인식하고, 소통의 본질을 회복하기 위해 기획했습니다. 한양대 졸업 프로젝트로 진행했으며 KIPS 학술대회에 논문을 발표했습니다.",
+    overviewHeadline:
+      "카카오톡, 문자, 이메일 등 다양한 채널의 알림을 통합하고 AI가 중요도를 분류·요약해주는 모바일 앱.",
+    overviewBody:
+      "메신저 다양화가 오히려 소통의 장애를 유발한다는 문제를 인식하고, 소통의 본질을 회복하기 위해 기획했습니다. 한양대 졸업 프로젝트로 진행했으며 KIPS 학술대회에 논문을 발표했습니다.",
     problem: [
       {
         title: "알림 과부하 (Notification Overload)",

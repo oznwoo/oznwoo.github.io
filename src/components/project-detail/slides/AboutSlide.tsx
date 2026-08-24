@@ -70,15 +70,27 @@ export function AboutSlide({ project, detail, accentColor, isMobile }: AboutSlid
             />
           </div>
         )}
-        <p
-          style={{ fontFamily: "var(--font-body)" }}
+        <div
           className={
-            (detail.aboutImage ? "max-w-xl" : "") +
-            " text-base sm:text-lg text-[#0C0F1A]/70 leading-relaxed font-normal"
+            (detail.aboutImage ? "max-w-xl" : "") + " flex flex-col gap-3"
           }
         >
-          {detail.overview}
-        </p>
+          {/* 마크다운 h1 느낌 — 서비스가 무엇인지 설명하는 한 줄을 크고
+              진하게 먼저 보여준다 */}
+          <p
+            style={{ fontFamily: "var(--font-display)", lineHeight: 1.35 }}
+            className="text-lg sm:text-xl font-medium text-[#0C0F1A]"
+          >
+            {detail.overviewHeadline}
+          </p>
+          {/* 마크다운 h2/본문 느낌 — 담당 역할·과정은 작고 옅게 보조 설명으로 */}
+          <p
+            style={{ fontFamily: "var(--font-body)" }}
+            className="text-sm sm:text-base text-[#0C0F1A]/55 leading-relaxed font-normal"
+          >
+            {detail.overviewBody}
+          </p>
+        </div>
       </div>
     </div>
   )
