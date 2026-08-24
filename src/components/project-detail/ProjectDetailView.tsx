@@ -130,12 +130,12 @@ export function ProjectDetailView({
           <HeroBarChart color={accentColor} />
         </div>
       )}
-      <div className="relative z-10 flex flex-col items-center gap-8">
+      <div className="relative z-10 flex flex-col items-center gap-6">
         {detail.logoSrc ? (
           <img
             src={detail.logoSrc}
             alt={project.title}
-            className="h-16 sm:h-20 w-auto"
+            className="h-20 sm:h-24 w-auto"
           />
         ) : (
           <span
