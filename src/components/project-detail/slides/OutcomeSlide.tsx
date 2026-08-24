@@ -1,16 +1,47 @@
 import type { Project, ProjectDetail } from "@/data/projects"
+import type { ProjectAccent } from "@/lib/color"
 import { hexToRgba } from "@/lib/color"
 import { DetailIcon } from "../DetailIcon"
+import { CardGridSlide } from "./CardGridSlide"
 
 interface OutcomeSlideProps {
   project: Project
   detail: ProjectDetail
+  accent: ProjectAccent | null
   accentColor: string
+  projectId: string
   isMobile: boolean
+  isActive: boolean
 }
 
-// 성과
-export function OutcomeSlide({ project, detail, accentColor, isMobile }: OutcomeSlideProps) {
+// 성과 — outcomeGallery가 있는 프로젝트(Fintag)는 PROBLEM/SOLUTION과 완전히
+// 동일한 카드 그리드 구조로 '해결된 버전'을 보여준다. 없는 프로젝트는 기존
+// 스탯 카드 레이아웃을 그대로 쓴다.
+export function OutcomeSlide({
+  project,
+  detail,
+  accent,
+  accentColor,
+  projectId,
+  isMobile,
+  isActive,
+}: OutcomeSlideProps) {
+  if (detail.outcomeGallery) {
+    return (
+      <CardGridSlide
+        eyebrow="Outcome"
+        items={detail.outcomeGallery}
+        accent={accent}
+        accentColor={accentColor}
+        projectId={projectId}
+        imageWidth={1024}
+        imageHeight={765}
+        isMobile={isMobile}
+        isActive={isActive}
+      />
+    )
+  }
+
   return (
     <div
       className={

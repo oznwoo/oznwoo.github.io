@@ -141,13 +141,24 @@ export function ProjectDetailView({
       isActive={displaySlide === 2}
     />,
     <SolutionSlide
+      problemItems={detail.problem}
       items={detail.solution}
       accent={accent}
       accentColor={accentColor}
       projectId={projectId}
       isMobile={isMobile}
+      isActive={displaySlide === 3}
+      onTransition={onTransition}
     />,
-    <OutcomeSlide project={project} detail={detail} accentColor={accentColor} isMobile={isMobile} />,
+    <OutcomeSlide
+      project={project}
+      detail={detail}
+      accent={accent}
+      accentColor={accentColor}
+      projectId={projectId}
+      isMobile={isMobile}
+      isActive={displaySlide === 4}
+    />,
     <StackSlide tech={detail.tech} isMobile={isMobile} />,
   ]
 

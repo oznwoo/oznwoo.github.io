@@ -48,6 +48,13 @@ html {
   pointer-events: none;
 }
 
+/* Fintag SOLUTION 쇼케이스 — 스텝을 넘길 때 새 콘텐츠가 아래에서 살짝
+   떠오르며 자연스럽게 전환된다 */
+@keyframes step-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Overview 히어로 하단의 장식 막대 차트 — 막대가 순차적으로 솟아오르며 등장한다 */
 @keyframes bar-rise {
   from { transform: scaleY(0); }

@@ -8,15 +8,15 @@ import { AccentPill } from "../AccentPill"
 // 내려오며 나타난다.
 const SLIDE_TRANSITION_MS = 750
 
-interface FintagProblemCardProps {
+interface RevealCardProps {
   item: ProjectDetailCardItem
   accent: ProjectAccent | null
   accentColor: string
   projectId: string
   imageWidth: number
   imageHeight: number
-  // Problem이 지금 화면에 보이는 슬라이드인지 — true가 되고 슬라이드 전환이
-  // 끝나면 설명이 이미지 아래에서 내려오며 나타난다.
+  // 이 카드가 속한 슬라이드(Problem/Solution)가 지금 화면에 보이는지 —
+  // true가 되고 슬라이드 전환이 끝나면 설명이 이미지 아래에서 내려오며 나타난다.
   isActive: boolean
 }
 
@@ -34,11 +34,11 @@ function renderWithEmphasis(text: string) {
   )
 }
 
-// Fintag Problem 카드 실험 버전 — 번호는 없애고 타이틀을 이미지 위로
-// 올린다. 태그는 이미지 밖 맨 아래에 두고, 설명 문단은 상시 노출하되
-// Problem 슬라이드로 전환해 들어올 때마다 이미지 아래에서 내려오며
-// 나타나는 연출을 다시 재생한다.
-export function FintagProblemCard({
+// Problem/Solution 카드 — 번호는 없애고 타이틀을 이미지 위로 올린다. 태그는
+// 이미지 밖 맨 아래에 두고, 설명 문단은 상시 노출하되 이 카드가 속한
+// 슬라이드로 전환해 들어올 때마다 이미지 아래에서 내려오며 나타나는
+// 연출을 다시 재생한다.
+export function RevealCard({
   item,
   accent,
   accentColor,
@@ -46,7 +46,7 @@ export function FintagProblemCard({
   imageWidth,
   imageHeight,
   isActive,
-}: FintagProblemCardProps) {
+}: RevealCardProps) {
   // 이미지 자체의 hover 살짝 뜨는 효과 — 설명 노출과는 별개로 마우스
   // 호버에만 반응한다.
   const [imgHovered, setImgHovered] = useState(false)
@@ -103,62 +103,65 @@ export function FintagProblemCard({
       )}
       {/* 설명 문단 — 바깥 grid-template-rows(0fr<->1fr)로 아래 태그가 밀려날
           공간을 부드럽게 확보하고, 안쪽 translateY+opacity로 실제로 이미지
-          아래에서 내려오며 나타나는 움직임을 만든다 */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateRows: revealed ? "1fr" : "0fr",
-          transition: "grid-template-rows 0.5s cubic-bezier(0.16,1,0.3,1)",
-        }}
-      >
-        <div className="overflow-hidden">
-          <div
-            style={{
-              transform: revealed ? "translateY(0)" : "translateY(-10px)",
-              opacity: revealed ? 1 : 0,
-              transition:
-                "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
-            }}
-          >
+          아래에서 내려오며 나타나는 움직임을 만든다. 설명이 없는 카드(예:
+          Outcome 갤러리)는 이 블록 자체를 렌더링하지 않는다 */}
+      {(item.body || item.shortBody) && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateRows: revealed ? "1fr" : "0fr",
+            transition: "grid-template-rows 0.5s cubic-bezier(0.16,1,0.3,1)",
+          }}
+        >
+          <div className="overflow-hidden">
             <div
-              className="rounded-2xl p-4 backdrop-blur-sm"
               style={{
-                // 완전한 흰색은 화면과 겉돌아 어색하다 — 흰색에 accent를
-                // 아주 옅게만 섞어 "거의 흰색인데 은은히 톤이 있는" 색을
-                // 반투명하게 얹는다
-                background: hexToRgba(mixWithWhite(accentColor, 0.93), 0.62),
-                border: "1px solid rgba(12,15,26,0.06)",
+                transform: revealed ? "translateY(0)" : "translateY(-10px)",
+                opacity: revealed ? 1 : 0,
+                transition:
+                  "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
               }}
             >
-              {item.shortBody ? (
-                <ul className="flex flex-col gap-1.5">
-                  {item.shortBody.map((line, i) => (
-                    <li
-                      key={i}
-                      style={{ fontFamily: "var(--font-body)" }}
-                      className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal flex items-start gap-2"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className="w-1 h-1 rounded-full shrink-0 mt-2"
-                        style={{ background: accentColor }}
-                      />
-                      <span>{renderWithEmphasis(line)}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p
-                  style={{ fontFamily: "var(--font-body)" }}
-                  className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal"
-                >
-                  {item.body}
-                </p>
-              )}
+              <div
+                className="rounded-2xl p-4 backdrop-blur-sm"
+                style={{
+                  // 완전한 흰색은 화면과 겉돌아 어색하다 — 흰색에 accent를
+                  // 아주 옅게만 섞어 "거의 흰색인데 은은히 톤이 있는" 색을
+                  // 반투명하게 얹는다
+                  background: hexToRgba(mixWithWhite(accentColor, 0.93), 0.62),
+                  border: "1px solid rgba(12,15,26,0.06)",
+                }}
+              >
+                {item.shortBody ? (
+                  <ul className="flex flex-col gap-1.5">
+                    {item.shortBody.map((line, i) => (
+                      <li
+                        key={i}
+                        style={{ fontFamily: "var(--font-body)" }}
+                        className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal flex items-start gap-2"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="w-1 h-1 rounded-full shrink-0 mt-2"
+                          style={{ background: accentColor }}
+                        />
+                        <span>{renderWithEmphasis(line)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p
+                    style={{ fontFamily: "var(--font-body)" }}
+                    className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal"
+                  >
+                    {item.body}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
       {item.tags && (
         <div className="flex flex-wrap gap-2">
           {item.tags.map((t) => (

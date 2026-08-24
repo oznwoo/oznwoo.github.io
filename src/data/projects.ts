@@ -140,8 +140,12 @@ export interface ProjectDetail {
   problem: ProjectDetailCardItem[];
   solution: ProjectDetailCardItem[];
   outcome: { stat: string; label: string; icon?: DetailIconKey }[];
-  // 성과 증빙 차트(선택) — Overview 히어로와 Outcome 슬라이드 양쪽에서 쓴다
+  // 성과 증빙 차트(선택) — Overview 히어로에서 쓴다
   outcomeImage?: string;
+  // PROBLEM 이미지와 같은 순서로 짝지은 '해결된 버전' 스크린샷 갤러리(선택).
+  // 있으면 Outcome 슬라이드 전체가 PROBLEM/SOLUTION과 동일한 CardGridSlide
+  // 구조(타이틀+이미지 카드 그리드)로 렌더링된다.
+  outcomeGallery?: ProjectDetailCardItem[];
   tech: { category: string; items: string[] }[];
 }
 
@@ -197,6 +201,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       {
         title: "은행 거래 기반 전처리 파이프라인",
         body: "카드·보험 등 별도 집계 대신 은행 계좌 입출금 단일 기준으로 데이터를 수집하고 Tag로 지출 성격을 분류했습니다. 내부 계좌 간 이동은 Tag로 자동 식별해 학습 데이터에서 제외하고, 순수 현금흐름만 예측에 반영되도록 정제했습니다.",
+        shortBody: [
+          "**은행 계좌 입출금 단일 기준**으로 데이터 수집",
+          "Tag로 지출 성격을 자동 분류",
+          "**내부 계좌 이동**은 학습 데이터에서 자동 제외",
+        ],
         icon: "filter",
         tags: ["#단일계좌기준", "#Tag분류"],
         image: fintagSolutionPipeline,
@@ -204,6 +213,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       {
         title: "Prophet + LightGBM 잔차 보정 + 고정지출 등록",
         body: "Prophet으로 추세·계절성을 1차 예측한 뒤 LightGBM으로 Prophet이 설명하지 못한 잔차를 추가 학습시켜 오차를 줄였습니다. 급여일·카드결제일 같은 반복 패턴을 모델에 직접 등록해 예측 안정성과 정밀도를 더 끌어올렸습니다.",
+        shortBody: [
+          "시계열 예측 모델(Prophet)로 **추세·계절성 1차 예측**",
+          "**LightGBM으로 잔차를 추가 학습**시켜 오차 보정",
+          "급여일·카드결제일 패턴을 모델에 **직접 등록**",
+        ],
         icon: "layers",
         tags: ["#잔차보정", "#고정지출등록"],
         image: fintagSolutionSteps,
@@ -211,6 +225,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       {
         title: "SHAP·LLM 기반 예측 설명 및 이상거래 탐지",
         body: "LightGBM 예측 기여도를 SHAP으로 분석하고, AWS Bedrock(Claude 3)으로 예측 근거와 이상거래 의심 사유를 자연어로 생성했습니다. 규칙 기반 탐지와 IsolationForest·PyOD ECOD를 결합해 이상거래를 식별하고, 담당자가 근거를 확인한 뒤 선택적으로 제거할 수 있게 했습니다.",
+        shortBody: [
+          "예측 기여도 분석 기법(SHAP)으로 **근거 산출**",
+          "AI(AWS Bedrock)가 예측 근거를 **자연어로 설명**",
+          "이상거래 탐지 알고리즘으로 **의심 거래 자동 식별**",
+        ],
         icon: "sparkle",
         tags: ["#SHAP", "#Bedrock"],
         image: fintagSolutionExplainUi,
@@ -230,6 +249,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       },
     ],
     outcomeImage: fintagOutcomeChart,
+    // TODO: 아래 3장은 실제 '해결된 버전' 스크린샷으로 교체 예정 — 그 전까지는
+    // PROBLEM 이미지를 임시로 재사용해 갤러리 틀만 잡아둔다.
+    outcomeGallery: [
+      { title: "데이터 전처리 부재", body: "", image: fintagProblemPreprocessing },
+      { title: "예측 정확도 부족", body: "", image: fintagProblemAccuracy },
+      { title: "예측 설명 부재", body: "", image: fintagProblemExplain },
+    ],
     tech: [
       { category: "Backend", items: ["Python", "FastAPI", "PostgreSQL"] },
       {
@@ -254,24 +280,48 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       {
         title: "메신저 파편화로 인한 정보 누락",
         body: "업무 채널이 Slack, Discord, 카카오톡으로 분산되면서 중요한 알림을 놓치는 일이 잦아졌습니다. 탭을 오가는 컨텍스트 스위칭 비용도 생산성을 크게 낮췄습니다.",
+        shortBody: [
+          "업무 채널이 **Slack·Discord·카카오톡**으로 분산",
+          "중요한 알림을 **놓치는 일이 잦음**",
+          "탭 전환에 따른 **컨텍스트 스위칭 비용** 증가",
+        ],
       },
       {
         title: "긴급도 판단의 주관성",
         body: "같은 메시지라도 사람마다 긴급도를 다르게 판단합니다. 일관된 기준 없이 알림을 처리하다 보니 우선순위 혼란이 발생했습니다.",
+        shortBody: [
+          "같은 메시지도 **사람마다 긴급도 판단이 다름**",
+          "일관된 기준 없이 알림 처리",
+          "**우선순위 혼란** 발생",
+        ],
       },
     ],
     solution: [
       {
         title: "Webhook 기반 통합 수신",
         body: "Slack Event API, Discord Webhook을 연결해 메시지를 단일 서버로 수신하는 파이프라인을 구축했습니다. OAuth 인증으로 워크스페이스별 연동을 지원합니다.",
+        shortBody: [
+          "Slack·Discord 메시지를 **단일 서버로 통합 수신**",
+          "실시간 알림 연동 방식(Webhook) 기반 파이프라인",
+          "**OAuth 인증**으로 워크스페이스별 연동 지원",
+        ],
       },
       {
         title: "LLM 긴급도 분류기",
         body: "GPT API를 활용해 메시지 맥락을 분석하고 긴급/보통/낮음 3단계로 분류합니다. 프롬프트 엔지니어링으로 업무 도메인에 맞는 분류 기준을 적용했습니다.",
+        shortBody: [
+          "AI(GPT)가 메시지 맥락을 분석",
+          "**긴급/보통/낮음 3단계**로 자동 분류",
+          "프롬프트 설계로 업무 도메인에 맞게 기준 조정",
+        ],
       },
       {
         title: "집중모드 기능",
         body: "긴급 메시지만 필터링해 표시하는 집중모드를 구현해 딥워크 중 방해를 최소화할 수 있게 했습니다.",
+        shortBody: [
+          "**긴급 메시지만 필터링**해 표시",
+          "딥워크 중 **방해 최소화**",
+        ],
       },
     ],
     outcome: [
@@ -300,24 +350,49 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       {
         title: "소규모 미용실을 위한 서비스 부재",
         body: "시중의 미용실 관리 솔루션은 대부분 예약 시스템 중심으로 구성되어 있어 예약 없이 운영하는 소규모 미용실에는 불필요한 기능이 많고 복잡했습니다.",
+        shortBody: [
+          "기존 솔루션은 **예약 시스템 중심**으로 구성",
+          "예약 없이 운영하는 미용실엔 **불필요한 기능**이 많음",
+          "설정과 사용법이 복잡함",
+        ],
       },
       {
         title: "수기 장부의 한계",
         body: "고객별 방문 이력, 선호 시술, 미수금 등을 수기로 관리하다 보니 실수가 잦고 월 매출 집계에 많은 시간이 소요됐습니다.",
+        shortBody: [
+          "방문 이력·선호 시술·미수금을 **수기로 관리**",
+          "기록 실수가 잦음",
+          "**월 매출 집계에 많은 시간** 소요",
+        ],
       },
     ],
     solution: [
       {
         title: "고객 카드 기반 관리",
         body: "고객별 방문 이력, 시술 내용, 결제 금액을 카드 형태로 저장하고 검색할 수 있는 UI를 설계했습니다. 자주 오는 고객은 즐겨찾기로 빠르게 접근할 수 있습니다.",
+        shortBody: [
+          "방문 이력·시술 내용·결제 금액을 **카드 형태로 저장**",
+          "검색으로 고객 정보 바로 조회",
+          "자주 오는 고객은 **즐겨찾기로 빠르게 접근**",
+        ],
       },
       {
         title: "간편 매출 입력 플로우",
         body: "시술 항목을 사전에 등록해두고 탭 몇 번으로 매출을 기록할 수 있는 최소 동작 UX를 설계했습니다. 실사용자(어머니)의 피드백을 반영해 여러 차례 개선했습니다.",
+        shortBody: [
+          "시술 항목을 사전 등록해두고 **탭 몇 번으로 매출 기록**",
+          "최소 동작으로 입력 부담을 줄인 UX",
+          "**실사용자(어머니) 피드백**을 반영해 반복 개선",
+        ],
       },
       {
         title: "월별 매출 대시보드",
         body: "일별·월별 매출 집계와 시술 종류별 비중을 시각화해 경영 현황을 한눈에 파악할 수 있게 했습니다.",
+        shortBody: [
+          "일별·월별 매출을 **자동 집계**",
+          "시술 종류별 비중을 **시각화**",
+          "경영 현황을 한눈에 파악",
+        ],
       },
     ],
     outcome: [
@@ -342,24 +417,45 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       {
         title: "알림 과부하 (Notification Overload)",
         body: "스마트폰 사용자는 하루 평균 80개 이상의 푸시 알림을 받습니다. 채널이 늘어날수록 진짜 중요한 메시지는 오히려 묻히는 역설이 발생합니다.",
+        shortBody: [
+          "하루 평균 **80개 이상**의 푸시 알림",
+          "채널이 늘수록 **중요한 메시지가 오히려 묻힘**",
+        ],
       },
       {
         title: "메신저별 맥락 단절",
         body: "같은 주제의 대화가 여러 채널에 나뉘어 있어 전체 맥락을 파악하기 위해 앱을 계속 전환해야 합니다.",
+        shortBody: [
+          "같은 주제 대화가 **여러 채널에 분산**",
+          "맥락 파악을 위해 **앱을 계속 전환**해야 함",
+        ],
       },
     ],
     solution: [
       {
         title: "AI 긴급도 판별 엔진",
         body: "메시지 텍스트와 발신자, 시간대, 채널 특성을 종합적으로 분석하는 분류 모델을 설계했습니다. Fine-tuning 없이 프롬프트 설계만으로 도메인 적응성을 확보했습니다.",
+        shortBody: [
+          "텍스트·발신자·시간대·채널 특성을 **종합 분석**",
+          "**추가 학습(Fine-tuning) 없이 프롬프트 설계**만으로 적응",
+        ],
       },
       {
         title: "통합 타임라인 UI",
         body: "채널에 관계없이 모든 메시지를 중요도 순으로 정렬해 단일 피드에 표시합니다. 긴급 메시지는 상단 고정, 낮은 중요도는 자동 그룹화합니다.",
+        shortBody: [
+          "모든 메시지를 **중요도 순으로 단일 피드**에 표시",
+          "긴급 메시지는 **상단 고정**",
+          "낮은 중요도는 **자동 그룹화**",
+        ],
       },
       {
         title: "문맥 요약 기능",
         body: "대화 스레드를 LLM이 3줄로 요약해 전체 내용을 읽지 않아도 핵심을 파악할 수 있게 했습니다.",
+        shortBody: [
+          "AI(LLM)가 대화 스레드를 **3줄로 요약**",
+          "전체를 읽지 않아도 핵심 파악 가능",
+        ],
       },
     ],
     outcome: [
