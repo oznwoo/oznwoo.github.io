@@ -2,8 +2,8 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useIsMobile } from "@/hooks/useIsMobile"
 import { useSectionObserver } from "@/hooks/useSectionObserver"
 import { DETAIL_PAGE_LABELS } from "@/data/navigation"
-import { PROJECTS, PROJECT_DETAILS, PROJECT_ACCENT } from "@/data/projects"
-import { hexToRgba } from "@/lib/color"
+import { PROJECTS, PROJECT_DETAILS, PROJECT_ACCENT, DEFAULT_ACCENT } from "@/data/projects"
+import { hexToRgba, mixWithWhite } from "@/lib/color"
 import { DetailIcon } from "./DetailIcon"
 import { DetailNav } from "./DetailNav"
 import { HeroBarChart } from "./HeroBarChart"
@@ -24,7 +24,8 @@ export function ProjectDetailView({
   const touchStart = useRef<number | null>(null)
   const detail = PROJECT_DETAILS[projectId]
   const project = PROJECTS.find((p) => p.id === projectId)!
-  const accentColor = PROJECT_ACCENT[projectId]?.primary ?? "#4F6EF7"
+  const accent = PROJECT_ACCENT[projectId] ?? null
+  const accentColor = accent?.primary ?? "#4F6EF7"
   const TOTAL_D = DETAIL_PAGE_LABELS.length
   const isMobile = useIsMobile()
   const detailSlideIds = DETAIL_PAGE_LABELS.map((_, i) => `detail-slide-${i}`)
@@ -153,20 +154,33 @@ export function ProjectDetailView({
           {project.subtitle}
         </h2>
         <div className="flex flex-wrap items-center justify-center gap-2">
-          {project.tags.map((t) => (
-            <span
-              key={t}
-              style={{
-                fontFamily: "var(--font-mono)",
-                color: accentColor,
-                borderColor: hexToRgba(accentColor, 0.25),
-                background: hexToRgba(accentColor, 0.08),
-              }}
-              className="text-[10px] px-3 py-1 rounded-full border uppercase tracking-[0.06em]"
-            >
-              {t}
-            </span>
-          ))}
+          {project.tags.map((t) => {
+            const pillAccent = accent ?? DEFAULT_ACCENT
+            // 메인 프로젝트 카드 호버 시 pill 디자인과 동일 — 상세 페이지는
+            // 이미 이 프로젝트 색으로 물들어 있으니 항상 "활성" 톤으로 보여준다
+            const pillWhiteMix = projectId === "02" ? 0.2 : 0.5
+            return (
+              <span
+                key={t}
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  color: "rgba(255,255,255,0.95)",
+                  WebkitTextStroke: "0.35px currentColor",
+                  boxShadow: `0 6px 16px ${hexToRgba(accentColor, 0.18)}, 0 1px 3px rgba(12,15,26,0.08)`,
+                }}
+                className="relative flex items-center text-[9px] px-2.5 py-1 rounded-full uppercase tracking-[0.08em]"
+              >
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background: `radial-gradient(ellipse at center, ${hexToRgba(pillAccent.primary, 0.3)} 0%, transparent 72%), linear-gradient(135deg, ${mixWithWhite(pillAccent.blobs[0], pillWhiteMix)}, ${mixWithWhite(pillAccent.blobs[1], pillWhiteMix)}, ${mixWithWhite(pillAccent.blobs[2], pillWhiteMix)})`,
+                  }}
+                />
+                <span className="relative">{t}</span>
+              </span>
+            )
+          })}
         </div>
         <div
           style={{ fontFamily: "var(--font-mono)" }}
@@ -502,8 +516,6 @@ export function ProjectDetailView({
       </div>
     </div>,
   ]
-
-  const accent = PROJECT_ACCENT[projectId] ?? null
 
   return (
     <div
