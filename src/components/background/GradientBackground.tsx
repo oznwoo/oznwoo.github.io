@@ -54,6 +54,11 @@ export function GradientBackground({
   enteringDetail: boolean
 }) {
   const p = progress
+  // 상세 페이지는 blob 아래 깔리는 "바탕"이 메인 페이지와 같은 라벤더 톤이면
+  // blob과 무관하게 화면 전체가 뿌옇게(washed-out) 보인다. blob 그라디언트
+  // 자체(아래 gradient-blob-a/b/c, renderAccentSlots)는 건드리지 않고, 그
+  // 아래 깔리는 고정 바탕색만 거의 흰색에 가깝게 낮춘다.
+  const baseBackground = detailMode ? "#FBFBFD" : "#EEF1F9"
 
   const pulseTransition = pulseActive
     ? "scale 0.16s cubic-bezier(0.34,1.56,0.64,1), translate 0.5s cubic-bezier(0.22,1,0.36,1)"
@@ -115,7 +120,7 @@ export function GradientBackground({
     <div
       aria-hidden="true"
       className="fixed inset-0 -z-10 overflow-hidden pointer-events-none"
-      style={{ background: "#EEF1F9" }}
+      style={{ background: baseBackground }}
     >
       {/* 프로젝트 호버 시 캔버스 바탕색 자체도 브랜드 컬러 쪽으로 은은하게 물든다.
           blob과 별개로 회전 wrapper 바깥에 둬서 화면 전체가 고르게 톤이 바뀐다.
@@ -129,7 +134,10 @@ export function GradientBackground({
             className="absolute inset-0"
             style={{
               backgroundColor: accentSlots[slot].primary,
-              opacity: isVisible ? (detailMode ? 0.13 : 0.09) : 0,
+              // 상세 페이지는 이 바탕색 wash가 blob과 무관하게 화면 전체를
+              // 계속 물들이고 있어(리스트 호버보다 더 진했음) 뿌옇게 보이는
+              // 주 원인이었다 — blob 강도는 그대로 두고 이 wash만 낮춘다.
+              opacity: isVisible ? (detailMode ? 0.045 : 0.09) : 0,
               transition: isVisible
                 ? "opacity 0.3s ease-out"
                 : "opacity 0.7s ease-in",
