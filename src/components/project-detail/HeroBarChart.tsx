@@ -6,7 +6,14 @@ import { useEffect, useRef, useState } from "react"
 // 느낌)으로 만든다. 순수 CSS hover(각 막대 자체의 :hover)만으로 반응하게
 // 해 — 마우스가 지나가는 막대만 즉시 솟아올랐다가, 커서가 빠지면 가라앉는다.
 const BAR_COUNT = 48
-const STAGGER_STEP_S = 0.012
+const ENTER_DURATION_S = 0.6
+const ENTER_STAGGER_STEP_S = 0.012
+// 이탈은 진입보다 훨씬 빠듯하게 잡는다 — 상세 패널을 닫을 때는 App.tsx의
+// 750ms 타이머가 지나면 이 컴포넌트 자체가 통째로 언마운트되는데, 진입과
+// 같은 타이밍(최대 지연 0.564s + 0.5s ≈ 1.06s)을 쓰면 언마운트가 먼저
+// 일어나 오른쪽부터 가라앉는 게 보이지 않고 통째로 뚝 끊겨 사라져 버린다.
+const EXIT_DURATION_S = 0.35
+const EXIT_STAGGER_STEP_S = 0.006
 
 function buildHeights() {
   return Array.from({ length: BAR_COUNT }, (_, i) => {
@@ -44,6 +51,17 @@ export function HeroBarChart({
     if (visible) setHasEntered(true)
   }, [visible])
 
+  // visible이 바뀔 때마다 세대를 올려 막대 DOM을 강제로 새로 마운트한다.
+  // 실사용 속도로 슬라이드를 빠르게 오가면 진행 중이던 이탈(reverse)
+  // 애니메이션이 끝나기 전에 진입 애니메이션으로 바뀌는데, 이때 같은
+  // DOM 노드에서 animation 값만 갈아끼우면 브라우저가 자연스럽게 이어받지
+  // 못하고 애니메이션 없이 최종 상태로 점프해버리는 경우가 있었다. 매번
+  // 새 노드로 마운트하면 항상 깨끗하게 처음부터 재생된다.
+  const [gen, setGen] = useState({ visible, n: 0 })
+  if (gen.visible !== visible) {
+    setGen({ visible, n: gen.n + 1 })
+  }
+
   return (
     <div
       aria-hidden="true"
@@ -62,18 +80,18 @@ export function HeroBarChart({
           // 일반 클래스보다 우선순위가 높음). backwards만 쓰면 delay
           // 동안엔 0% 상태(scaleY 0)를 보여주다가, 끝난 뒤엔 transform
           // 소유권을 완전히 내려놓아 이후 hover transition이 정상 동작한다.
-          style.animation = `bar-rise 0.6s cubic-bezier(0.16,1,0.3,1) ${i * STAGGER_STEP_S}s backwards`
+          style.animation = `bar-rise ${ENTER_DURATION_S}s cubic-bezier(0.16,1,0.3,1) ${i * ENTER_STAGGER_STEP_S}s backwards`
         } else if (hasEntered) {
           // 나타날 때와 반대로 오른쪽 막대부터 먼저 가라앉기 시작하도록
           // delay를 인덱스 역순으로 준다. reverse + forwards로 재생해
           // scaleY(1)에서 시작해 scaleY(0)에서 멈춰있게 한다.
-          style.animation = `bar-rise 0.5s cubic-bezier(0.4,0,1,1) ${(BAR_COUNT - 1 - i) * STAGGER_STEP_S}s reverse forwards`
+          style.animation = `bar-rise ${EXIT_DURATION_S}s cubic-bezier(0.4,0,1,1) ${(BAR_COUNT - 1 - i) * EXIT_STAGGER_STEP_S}s reverse forwards`
         } else {
           style.transform = "scaleY(0)"
         }
         return (
           <div
-            key={i}
+            key={`${i}-${gen.n}`}
             className="hero-bar flex-1 rounded-t-sm origin-bottom"
             style={style}
           />
