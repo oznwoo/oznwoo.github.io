@@ -1,8 +1,13 @@
+import { useEffect, useState } from "react"
 import type { Project, ProjectDetail } from "@/data/projects"
 import { DEFAULT_ACCENT } from "@/data/projects"
 import { hexToRgba, mixWithWhite } from "@/lib/color"
 import type { ProjectAccent } from "@/lib/color"
 import { HeroBarChart } from "../HeroBarChart"
+
+// 상세 패널이 메인에서 슬라이드-인하는 가로 전환(App.tsx, 0.75s)과 맞춘
+// 지연 시간 — 그 전환이 끝난 뒤에야 차트가 올라오며 나타난다.
+const PANEL_TRANSITION_MS = 750
 
 interface OverviewSlideProps {
   project: Project
@@ -11,6 +16,11 @@ interface OverviewSlideProps {
   accent: ProjectAccent | null
   accentColor: string
   isMobile: boolean
+  // 지금 보이고 있는 슬라이드가 Overview(첫 슬라이드) 자신인지 — 다른
+  // 슬라이드로 넘어가면 차트를 가라앉히며 숨긴다.
+  isActive: boolean
+  // 상세 패널을 닫는 중인지 — 메인으로 돌아갈 때도 차트를 먼저 가라앉힌다.
+  isClosing: boolean
 }
 
 // 개요 — 로고 → 큰 타이틀 → 태그 pill → 기간/역할이 중앙 정렬로 쌓이는
@@ -27,7 +37,20 @@ export function OverviewSlide({
   accent,
   accentColor,
   isMobile,
+  isActive,
+  isClosing,
 }: OverviewSlideProps) {
+  // projectId가 바뀔 때마다(다른 프로젝트로 재진입 등) 다시 지연부터
+  // 시작한다 — 이 컴포넌트가 프로젝트 전환 사이에 언마운트되지 않을 수 있어서다.
+  const [entered, setEntered] = useState(false)
+  useEffect(() => {
+    setEntered(false)
+    const timer = setTimeout(() => setEntered(true), PANEL_TRANSITION_MS)
+    return () => clearTimeout(timer)
+  }, [projectId])
+
+  const showChart = entered && isActive && !isClosing
+
   return (
     <div
       className={
@@ -39,7 +62,7 @@ export function OverviewSlide({
     >
       {detail.outcomeImage && (
         <div className="absolute inset-x-0 bottom-0 h-[30vh] sm:h-[36vh]">
-          <HeroBarChart color={accentColor} />
+          <HeroBarChart color={accentColor} visible={showChart} />
         </div>
       )}
       <div className="relative z-10 flex flex-col items-center gap-6">

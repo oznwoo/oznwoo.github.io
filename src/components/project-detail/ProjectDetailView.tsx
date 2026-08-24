@@ -23,6 +23,10 @@ export function ProjectDetailView({
   onTransition: (direction: 1 | -1) => void
 }) {
   const [slide, setSlide] = useState(0)
+  // 뒤로가기/Escape로 닫기 시작하는 순간 true — Overview의 하단 차트가
+  // 상세 패널이 실제로 닫히기(가로 슬라이드 0.75s) 전에 먼저 가라앉으며
+  // 사라지는 애니메이션을 재생할 시간을 벌어준다.
+  const [isClosing, setIsClosing] = useState(false)
   const animating = useRef(false)
   const touchStart = useRef<number | null>(null)
   const detail = PROJECT_DETAILS[projectId]
@@ -39,7 +43,13 @@ export function ProjectDetailView({
 
   useEffect(() => {
     setSlide(0)
+    setIsClosing(false)
   }, [projectId])
+
+  const handleClose = useCallback(() => {
+    setIsClosing(true)
+    onClose()
+  }, [onClose])
 
   const goSlide = useCallback(
     (idx: number) => {
@@ -74,7 +84,7 @@ export function ProjectDetailView({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onClose()
+        handleClose()
         return
       }
       if (isMobile) return
@@ -83,7 +93,7 @@ export function ProjectDetailView({
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [nextSlide, prevSlide, onClose, isMobile])
+  }, [nextSlide, prevSlide, handleClose, isMobile])
 
   useEffect(() => {
     const onStart = (e: TouchEvent) => {
@@ -118,6 +128,8 @@ export function ProjectDetailView({
       accent={accent}
       accentColor={accentColor}
       isMobile={isMobile}
+      isActive={displaySlide === 0}
+      isClosing={isClosing}
     />,
     <AboutSlide project={project} detail={detail} accentColor={accentColor} isMobile={isMobile} />,
     <ProblemSlide items={detail.problem} accentColor={accentColor} isMobile={isMobile} />,
@@ -140,7 +152,7 @@ export function ProjectDetailView({
       {/* 좌측 네비게이터 — 메인과 동일한 구조 */}
       <DetailNav
         slide={displaySlide}
-        onClose={onClose}
+        onClose={handleClose}
         goSlide={handleDotClick}
         accent={accent}
         isMobile={isMobile}
