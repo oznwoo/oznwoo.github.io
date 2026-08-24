@@ -111,7 +111,8 @@ export function ProjectDetailView({
     : goSlide
 
   const slides = [
-    // 개요 — 로고 → 큰 타이틀 → 개요 → 기간/역할이 중앙 정렬로 쌓이고,
+    // 개요 — 로고 → 큰 타이틀만 중앙 정렬로 쌓이는 순수 Hero. 소개 문단과
+    // 기간/역할은 바로 다음 "소개" 슬라이드로 넘긴다.
     // 화면 맨 아래에는 장식 막대 차트가 깔린다(레퍼런스 레이아웃 참고).
     // 정보 그래픽이 아니라 마우스가 지나가는 막대만 즉시 솟아올랐다가
     // 커서가 빠지면 가라앉는 히어로 장식이라, 순수 CSS :hover로만
@@ -151,9 +152,28 @@ export function ProjectDetailView({
         >
           {project.subtitle}
         </h2>
+      </div>
+    </div>,
+    // 소개 — Overview 히어로 다음, 프로젝트를 실제로 설명하는 전용 화면.
+    // 로고/타이틀은 앞 슬라이드에서 이미 보여줬으니 여기서는 소개 문단과
+    // 기간·역할 메타만 차분하게 다시 보여준다.
+    <div
+      className={
+        isMobile
+          ? "min-h-screen w-full flex items-center justify-center text-center pl-16 pr-6 py-20"
+          : "h-screen flex items-center justify-center px-8 md:px-16 shrink-0 text-center"
+      }
+    >
+      <div className="max-w-2xl flex flex-col items-center gap-8">
+        <span
+          style={{ fontFamily: "var(--font-mono)" }}
+          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase"
+        >
+          About
+        </span>
         <p
           style={{ fontFamily: "var(--font-body)" }}
-          className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal max-w-lg"
+          className="text-base sm:text-lg text-[#0C0F1A]/70 leading-relaxed font-normal"
         >
           {detail.overview}
         </p>
