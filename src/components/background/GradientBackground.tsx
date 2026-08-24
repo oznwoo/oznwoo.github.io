@@ -191,10 +191,13 @@ export function GradientBackground({
         <div
           className="gradient-blob-a absolute"
           style={{
-            // 상세 페이지에서는 채도(색 자체)는 그대로 두되, blob이 퍼지는 면적만
-            // 줄여서 색이 화면 전체를 덮지 않고 좀 더 국소적으로 보이게 한다.
-            width: detailMode ? "46vw" : "70vw",
-            height: detailMode ? "46vw" : "70vw",
+            // 상세 페이지도 크기/블러("형태")는 메인 페이지와 동일하게 유지한다 —
+            // 예전엔 detailMode에서 면적을 줄였는데, 단색 accent(blobs 3개가
+            // 같은 색인) 프로젝트는 반경이 줄면서 blob끼리 덜 겹쳐 프로젝트마다
+            // 보이는 blob 개수가 들쭉날쭉해 보이는 문제가 있었다. 색(아래 accent
+            // 믹스·알파)만 상세 페이지에서 다르게 하고 형태는 항상 통일한다.
+            width: "70vw",
+            height: "70vw",
             top: "-20%",
             left: "-15%",
             translate: `${p * -16}vw ${p * 26}vh`,
@@ -209,12 +212,12 @@ export function GradientBackground({
             background: `radial-gradient(ellipse at center, rgba(199,210,254,${
               detailMode || enteringDetail ? 0 : 0.8
             }) 0%, transparent 70%)`,
-            filter: warping ? "blur(58px)" : detailMode ? "blur(30px)" : "blur(40px)",
+            filter: warping ? "blur(58px)" : "blur(40px)",
             transition:
               (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.5s ${warpEase}, filter 0.35s ease-out`
                 : `translate 0.5s ${settleEase}, scale 0.6s ${settleEase}, filter 0.6s ease-out`) +
-              ", background 0.6s ease, width 0.6s ease, height 0.6s ease",
+              ", background 0.6s ease",
           }}
         >
           <div
@@ -253,8 +256,8 @@ export function GradientBackground({
         <div
           className="gradient-blob-b absolute"
           style={{
-            width: detailMode ? "38vw" : "60vw",
-            height: detailMode ? "38vw" : "60vw",
+            width: "60vw",
+            height: "60vw",
             bottom: "-10%",
             right: "-10%",
             translate: `${p * 13}vw ${p * -19}vh`,
@@ -263,12 +266,12 @@ export function GradientBackground({
             background: `radial-gradient(ellipse at center, rgba(165,180,252,${
               detailMode || enteringDetail ? 0 : 0.7
             }) 0%, transparent 70%)`,
-            filter: warping ? "blur(64px)" : detailMode ? "blur(34px)" : "blur(46px)",
+            filter: warping ? "blur(64px)" : "blur(46px)",
             transition:
               (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.55s ${warpEase}, filter 0.35s ease-out`
                 : `translate 0.65s ${settleEase}, scale 0.65s ${settleEase}, filter 0.65s ease-out`) +
-              ", background 0.6s ease, width 0.6s ease, height 0.6s ease",
+              ", background 0.6s ease",
           }}
         >
           <div
@@ -297,8 +300,8 @@ export function GradientBackground({
         <div
           className="gradient-blob-c absolute"
           style={{
-            width: detailMode ? "34vw" : "55vw",
-            height: detailMode ? "34vw" : "55vw",
+            width: "55vw",
+            height: "55vw",
             top: "30%",
             left: "28%",
             translate: `${p * -9}vw ${p * 13}vh`,
@@ -307,12 +310,12 @@ export function GradientBackground({
             background: `radial-gradient(ellipse at center, rgba(224,231,255,${
               detailMode || enteringDetail ? 0 : 0.62
             }) 0%, transparent 65%)`,
-            filter: warping ? "blur(70px)" : detailMode ? "blur(40px)" : "blur(54px)",
+            filter: warping ? "blur(70px)" : "blur(54px)",
             transition:
               (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.6s ${warpEase}, filter 0.35s ease-out`
                 : `translate 0.8s ${settleEase}, scale 0.7s ${settleEase}, filter 0.7s ease-out`) +
-              ", background 0.6s ease, width 0.6s ease, height 0.6s ease",
+              ", background 0.6s ease",
           }}
         >
           <div
