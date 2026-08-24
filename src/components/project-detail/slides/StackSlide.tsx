@@ -19,9 +19,13 @@ export function StackSlide({ tech, stackDiagram, accentColor, isMobile }: StackS
     : "h-screen flex items-center justify-center px-8 md:px-20 shrink-0"
 
   if (stackDiagram) {
+    const diagramWrapClass = isMobile
+      ? "min-h-screen w-full flex items-center justify-center px-4 pl-14 py-20"
+      : "h-screen flex items-center justify-center px-6 md:px-10 shrink-0"
+
     return (
-      <div className={wrapClass}>
-        <div className="max-w-4xl w-full">
+      <div className={diagramWrapClass}>
+        <div className="max-w-[1600px] w-full">
           <span
             style={{ fontFamily: "var(--font-mono)" }}
             className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-10 block"
