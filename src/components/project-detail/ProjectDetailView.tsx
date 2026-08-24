@@ -131,7 +131,13 @@ export function ProjectDetailView({
       isActive={displaySlide === 0}
       isClosing={isClosing}
     />,
-    <AboutSlide project={project} detail={detail} accentColor={accentColor} isMobile={isMobile} />,
+    <AboutSlide
+      project={project}
+      detail={detail}
+      accentColor={accentColor}
+      isMobile={isMobile}
+      isActive={displaySlide === 1}
+    />,
     <ProblemSlide
       items={detail.problem}
       accent={accent}

@@ -1,19 +1,32 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import type { Project, ProjectDetail } from "@/data/projects"
 import { hexToRgba } from "@/lib/color"
+
+const SLIDE_TRANSITION_MS = 750
 
 interface AboutSlideProps {
   project: Project
   detail: ProjectDetail
   accentColor: string
   isMobile: boolean
+  isActive: boolean
 }
 
 // 소개 — Overview 히어로 다음, 프로젝트를 실제로 설명하는 전용 화면.
 // 로고/타이틀/메타는 앞 슬라이드에서 이미 보여줬으니 소개 문단(+있으면
 // 실제 서비스 화면 스크린샷)만 둔다.
-export function AboutSlide({ project, detail, accentColor, isMobile }: AboutSlideProps) {
+export function AboutSlide({ project, detail, accentColor, isMobile, isActive }: AboutSlideProps) {
   const [shotHovered, setShotHovered] = useState(false)
+  const [revealed, setRevealed] = useState(false)
+
+  useEffect(() => {
+    if (!isActive) {
+      setRevealed(false)
+      return
+    }
+    const timer = setTimeout(() => setRevealed(true), SLIDE_TRANSITION_MS)
+    return () => clearTimeout(timer)
+  }, [isActive])
 
   return (
     <div
@@ -74,6 +87,12 @@ export function AboutSlide({ project, detail, accentColor, isMobile }: AboutSlid
           className={
             (detail.aboutImage ? "max-w-xl" : "") + " flex flex-col gap-3"
           }
+          style={{
+            transform: revealed ? "translateY(0)" : "translateY(-10px)",
+            opacity: revealed ? 1 : 0,
+            transition:
+              "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
+          }}
         >
           {/* 마크다운 h1 느낌 — 서비스가 무엇인지 설명하는 한 줄을 크고
               진하게 먼저 보여준다 */}
