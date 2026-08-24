@@ -201,7 +201,10 @@ export function GradientBackground({
             top: "-20%",
             left: "-15%",
             translate: `${p * -16}vw ${p * 26}vh`,
-            scale: warping ? 1.16 : 1,
+            // 상세 페이지는 이미 카드 콘텐츠가 많아 전환마다 blob이 크게
+            // 튀면 정신없어 보인다 — 형태(크기)는 메인과 같이 두되, 전환
+            // 순간의 확대 폭만 훨씬 약하게 낮춘다.
+            scale: warping ? (detailMode ? 1.02 : 1.16) : 1,
             borderRadius: "50%",
             // 상세 페이지(detailMode)뿐 아니라 상세로 넘어가는 슬라이드 도중
             // (enteringDetail)에도 이 메인 파란/보라 앰비언트 base를 꺼서, 슬라이드
@@ -212,7 +215,11 @@ export function GradientBackground({
             background: `radial-gradient(ellipse at center, rgba(199,210,254,${
               detailMode || enteringDetail ? 0 : 0.8
             }) 0%, transparent 70%)`,
-            filter: warping ? "blur(58px)" : "blur(40px)",
+            filter: warping
+              ? detailMode
+                ? "blur(43px)"
+                : "blur(58px)"
+              : "blur(40px)",
             transition:
               (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.5s ${warpEase}, filter 0.35s ease-out`
@@ -229,10 +236,17 @@ export function GradientBackground({
               // 꺼진 상태에서 배경색만 먼저 파란색으로 툭 바뀌어 보이는 문제가 생긴다.
               // detailMode는 상세 페이지에 머무는 동안 계속 true이므로 페이드아웃 내내
               // 프로젝트 색을 유지한다.
+              // 전환 플래시도 흰색을 섞어 채도를 낮춘다(기존 persistent
+              // glow에 쓰는 mixWithWhite와 같은 비율) — 순색 그대로면 전환마다
+              // 너무 쨍하게 튄다.
               background: detailMode
-                ? `radial-gradient(circle at 28% 32%, ${hexToRgba(accentSlots[activeSlot].blobs[0], 0.9)} 0%, ${hexToRgba(accentSlots[activeSlot].blobs[0], 0.25)} 42%, transparent 70%)`
+                ? `radial-gradient(circle at 28% 32%, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[0], 0.55), 0.9)} 0%, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[0], 0.55), 0.25)} 42%, transparent 70%)`
                 : "radial-gradient(circle at 28% 32%, rgba(79,110,247,0.9) 0%, rgba(79,110,247,0.25) 42%, transparent 70%)",
-              opacity: warping && (!detailMode || detailSectionWarp) ? 0.65 : 0,
+              opacity: warping && (!detailMode || detailSectionWarp)
+                ? detailMode
+                  ? 0.14
+                  : 0.65
+                : 0,
               transition: warping
                 ? "opacity 0.16s ease-out"
                 : "opacity 0.55s ease-in",
@@ -261,12 +275,16 @@ export function GradientBackground({
             bottom: "-10%",
             right: "-10%",
             translate: `${p * 13}vw ${p * -19}vh`,
-            scale: warping ? 1.11 : 1,
+            scale: warping ? (detailMode ? 1.016 : 1.11) : 1,
             borderRadius: "50%",
             background: `radial-gradient(ellipse at center, rgba(165,180,252,${
               detailMode || enteringDetail ? 0 : 0.7
             }) 0%, transparent 70%)`,
-            filter: warping ? "blur(64px)" : "blur(46px)",
+            filter: warping
+              ? detailMode
+                ? "blur(49px)"
+                : "blur(64px)"
+              : "blur(46px)",
             transition:
               (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.55s ${warpEase}, filter 0.35s ease-out`
@@ -278,9 +296,13 @@ export function GradientBackground({
             className="absolute inset-0 rounded-full"
             style={{
               background: detailMode
-                ? `radial-gradient(circle at 72% 30%, ${hexToRgba(accentSlots[activeSlot].blobs[1], 0.85)} 0%, ${hexToRgba(accentSlots[activeSlot].blobs[1], 0.22)} 42%, transparent 70%)`
+                ? `radial-gradient(circle at 72% 30%, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[1], 0.55), 0.85)} 0%, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[1], 0.55), 0.22)} 42%, transparent 70%)`
                 : "radial-gradient(circle at 72% 30%, rgba(67,93,235,0.85) 0%, rgba(67,93,235,0.22) 42%, transparent 70%)",
-              opacity: warping && (!detailMode || detailSectionWarp) ? 0.6 : 0,
+              opacity: warping && (!detailMode || detailSectionWarp)
+                ? detailMode
+                  ? 0.12
+                  : 0.6
+                : 0,
               transition: warping
                 ? "opacity 0.2s ease-out"
                 : "opacity 0.6s ease-in",
@@ -305,12 +327,16 @@ export function GradientBackground({
             top: "30%",
             left: "28%",
             translate: `${p * -9}vw ${p * 13}vh`,
-            scale: warping ? 1.19 : 1,
+            scale: warping ? (detailMode ? 1.02 : 1.19) : 1,
             borderRadius: "50%",
             background: `radial-gradient(ellipse at center, rgba(224,231,255,${
               detailMode || enteringDetail ? 0 : 0.62
             }) 0%, transparent 65%)`,
-            filter: warping ? "blur(70px)" : "blur(54px)",
+            filter: warping
+              ? detailMode
+                ? "blur(57px)"
+                : "blur(70px)"
+              : "blur(54px)",
             transition:
               (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.6s ${warpEase}, filter 0.35s ease-out`
@@ -322,9 +348,13 @@ export function GradientBackground({
             className="absolute inset-0 rounded-full"
             style={{
               background: detailMode
-                ? `radial-gradient(ellipse at center, ${hexToRgba(accentSlots[activeSlot].blobs[2], 0.6)} 0%, transparent 65%)`
+                ? `radial-gradient(ellipse at center, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[2], 0.55), 0.6)} 0%, transparent 65%)`
                 : "radial-gradient(ellipse at center, rgba(124,95,212,0.6) 0%, transparent 65%)",
-              opacity: warping && (!detailMode || detailSectionWarp) ? 0.55 : 0,
+              opacity: warping && (!detailMode || detailSectionWarp)
+                ? detailMode
+                  ? 0.1
+                  : 0.55
+                : 0,
               transition: warping
                 ? "opacity 0.24s ease-out"
                 : "opacity 0.65s ease-in",
