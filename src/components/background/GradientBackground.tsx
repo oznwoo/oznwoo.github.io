@@ -54,6 +54,11 @@ export function GradientBackground({
   enteringDetail: boolean
 }) {
   const p = progress
+  // 상세 페이지는 blob 아래 깔리는 "바탕"이 메인 페이지와 같은 라벤더 톤이면
+  // blob과 무관하게 화면 전체가 뿌옇게(washed-out) 보인다. blob 그라디언트
+  // 자체(아래 gradient-blob-a/b/c, renderAccentSlots)는 건드리지 않고, 그
+  // 아래 깔리는 고정 바탕색만 거의 흰색에 가깝게 낮춘다.
+  const baseBackground = detailMode ? "#F5F6FA" : "#EEF1F9"
 
   const pulseTransition = pulseActive
     ? "scale 0.16s cubic-bezier(0.34,1.56,0.64,1), translate 0.5s cubic-bezier(0.22,1,0.36,1)"
@@ -115,7 +120,7 @@ export function GradientBackground({
     <div
       aria-hidden="true"
       className="fixed inset-0 -z-10 overflow-hidden pointer-events-none"
-      style={{ background: "#EEF1F9" }}
+      style={{ background: baseBackground }}
     >
       {/* 프로젝트 호버 시 캔버스 바탕색 자체도 브랜드 컬러 쪽으로 은은하게 물든다.
           blob과 별개로 회전 wrapper 바깥에 둬서 화면 전체가 고르게 톤이 바뀐다.
@@ -129,7 +134,10 @@ export function GradientBackground({
             className="absolute inset-0"
             style={{
               backgroundColor: accentSlots[slot].primary,
-              opacity: isVisible ? (detailMode ? 0.13 : 0.09) : 0,
+              // 상세 페이지는 이 바탕색 wash가 blob과 무관하게 화면 전체를
+              // 계속 물들이고 있어(리스트 호버보다 더 진했음) 뿌옇게 보이는
+              // 주 원인이었다 — blob 강도는 그대로 두고 이 wash만 낮춘다.
+              opacity: isVisible ? (detailMode ? 0.045 : 0.09) : 0,
               transition: isVisible
                 ? "opacity 0.3s ease-out"
                 : "opacity 0.7s ease-in",
@@ -183,14 +191,20 @@ export function GradientBackground({
         <div
           className="gradient-blob-a absolute"
           style={{
-            // 상세 페이지에서는 채도(색 자체)는 그대로 두되, blob이 퍼지는 면적만
-            // 줄여서 색이 화면 전체를 덮지 않고 좀 더 국소적으로 보이게 한다.
-            width: detailMode ? "46vw" : "70vw",
-            height: detailMode ? "46vw" : "70vw",
+            // 상세 페이지도 크기/블러("형태")는 메인 페이지와 동일하게 유지한다 —
+            // 예전엔 detailMode에서 면적을 줄였는데, 단색 accent(blobs 3개가
+            // 같은 색인) 프로젝트는 반경이 줄면서 blob끼리 덜 겹쳐 프로젝트마다
+            // 보이는 blob 개수가 들쭉날쭉해 보이는 문제가 있었다. 색(아래 accent
+            // 믹스·알파)만 상세 페이지에서 다르게 하고 형태는 항상 통일한다.
+            width: "70vw",
+            height: "70vw",
             top: "-20%",
             left: "-15%",
             translate: `${p * -16}vw ${p * 26}vh`,
-            scale: warping ? 1.16 : 1,
+            // 상세 페이지는 이미 카드 콘텐츠가 많아 전환마다 blob이 크게
+            // 튀면 정신없어 보인다 — 형태(크기)는 메인과 같이 두되, 전환
+            // 순간의 확대 폭만 훨씬 약하게 낮춘다.
+            scale: warping ? (detailMode ? 1.02 : 1.16) : 1,
             borderRadius: "50%",
             // 상세 페이지(detailMode)뿐 아니라 상세로 넘어가는 슬라이드 도중
             // (enteringDetail)에도 이 메인 파란/보라 앰비언트 base를 꺼서, 슬라이드
@@ -201,12 +215,16 @@ export function GradientBackground({
             background: `radial-gradient(ellipse at center, rgba(199,210,254,${
               detailMode || enteringDetail ? 0 : 0.8
             }) 0%, transparent 70%)`,
-            filter: warping ? "blur(58px)" : detailMode ? "blur(30px)" : "blur(40px)",
+            filter: warping
+              ? detailMode
+                ? "blur(43px)"
+                : "blur(58px)"
+              : "blur(40px)",
             transition:
               (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.5s ${warpEase}, filter 0.35s ease-out`
                 : `translate 0.5s ${settleEase}, scale 0.6s ${settleEase}, filter 0.6s ease-out`) +
-              ", background 0.6s ease, width 0.6s ease, height 0.6s ease",
+              ", background 0.6s ease",
           }}
         >
           <div
@@ -218,10 +236,17 @@ export function GradientBackground({
               // 꺼진 상태에서 배경색만 먼저 파란색으로 툭 바뀌어 보이는 문제가 생긴다.
               // detailMode는 상세 페이지에 머무는 동안 계속 true이므로 페이드아웃 내내
               // 프로젝트 색을 유지한다.
+              // 전환 플래시도 흰색을 섞어 채도를 낮춘다(기존 persistent
+              // glow에 쓰는 mixWithWhite와 같은 비율) — 순색 그대로면 전환마다
+              // 너무 쨍하게 튄다.
               background: detailMode
-                ? `radial-gradient(circle at 28% 32%, ${hexToRgba(accentSlots[activeSlot].blobs[0], 0.9)} 0%, ${hexToRgba(accentSlots[activeSlot].blobs[0], 0.25)} 42%, transparent 70%)`
+                ? `radial-gradient(circle at 28% 32%, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[0], 0.55), 0.9)} 0%, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[0], 0.55), 0.25)} 42%, transparent 70%)`
                 : "radial-gradient(circle at 28% 32%, rgba(79,110,247,0.9) 0%, rgba(79,110,247,0.25) 42%, transparent 70%)",
-              opacity: warping && (!detailMode || detailSectionWarp) ? 0.65 : 0,
+              opacity: warping && (!detailMode || detailSectionWarp)
+                ? detailMode
+                  ? 0.14
+                  : 0.65
+                : 0,
               transition: warping
                 ? "opacity 0.16s ease-out"
                 : "opacity 0.55s ease-in",
@@ -245,31 +270,39 @@ export function GradientBackground({
         <div
           className="gradient-blob-b absolute"
           style={{
-            width: detailMode ? "38vw" : "60vw",
-            height: detailMode ? "38vw" : "60vw",
+            width: "60vw",
+            height: "60vw",
             bottom: "-10%",
             right: "-10%",
             translate: `${p * 13}vw ${p * -19}vh`,
-            scale: warping ? 1.11 : 1,
+            scale: warping ? (detailMode ? 1.016 : 1.11) : 1,
             borderRadius: "50%",
             background: `radial-gradient(ellipse at center, rgba(165,180,252,${
               detailMode || enteringDetail ? 0 : 0.7
             }) 0%, transparent 70%)`,
-            filter: warping ? "blur(64px)" : detailMode ? "blur(34px)" : "blur(46px)",
+            filter: warping
+              ? detailMode
+                ? "blur(49px)"
+                : "blur(64px)"
+              : "blur(46px)",
             transition:
               (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.55s ${warpEase}, filter 0.35s ease-out`
                 : `translate 0.65s ${settleEase}, scale 0.65s ${settleEase}, filter 0.65s ease-out`) +
-              ", background 0.6s ease, width 0.6s ease, height 0.6s ease",
+              ", background 0.6s ease",
           }}
         >
           <div
             className="absolute inset-0 rounded-full"
             style={{
               background: detailMode
-                ? `radial-gradient(circle at 72% 30%, ${hexToRgba(accentSlots[activeSlot].blobs[1], 0.85)} 0%, ${hexToRgba(accentSlots[activeSlot].blobs[1], 0.22)} 42%, transparent 70%)`
+                ? `radial-gradient(circle at 72% 30%, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[1], 0.55), 0.85)} 0%, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[1], 0.55), 0.22)} 42%, transparent 70%)`
                 : "radial-gradient(circle at 72% 30%, rgba(67,93,235,0.85) 0%, rgba(67,93,235,0.22) 42%, transparent 70%)",
-              opacity: warping && (!detailMode || detailSectionWarp) ? 0.6 : 0,
+              opacity: warping && (!detailMode || detailSectionWarp)
+                ? detailMode
+                  ? 0.12
+                  : 0.6
+                : 0,
               transition: warping
                 ? "opacity 0.2s ease-out"
                 : "opacity 0.6s ease-in",
@@ -289,31 +322,39 @@ export function GradientBackground({
         <div
           className="gradient-blob-c absolute"
           style={{
-            width: detailMode ? "34vw" : "55vw",
-            height: detailMode ? "34vw" : "55vw",
+            width: "55vw",
+            height: "55vw",
             top: "30%",
             left: "28%",
             translate: `${p * -9}vw ${p * 13}vh`,
-            scale: warping ? 1.19 : 1,
+            scale: warping ? (detailMode ? 1.02 : 1.19) : 1,
             borderRadius: "50%",
             background: `radial-gradient(ellipse at center, rgba(224,231,255,${
               detailMode || enteringDetail ? 0 : 0.62
             }) 0%, transparent 65%)`,
-            filter: warping ? "blur(70px)" : detailMode ? "blur(40px)" : "blur(54px)",
+            filter: warping
+              ? detailMode
+                ? "blur(57px)"
+                : "blur(70px)"
+              : "blur(54px)",
             transition:
               (warping
                 ? `translate ${SLIDE_S} ${warpEase}, scale 0.6s ${warpEase}, filter 0.35s ease-out`
                 : `translate 0.8s ${settleEase}, scale 0.7s ${settleEase}, filter 0.7s ease-out`) +
-              ", background 0.6s ease, width 0.6s ease, height 0.6s ease",
+              ", background 0.6s ease",
           }}
         >
           <div
             className="absolute inset-0 rounded-full"
             style={{
               background: detailMode
-                ? `radial-gradient(ellipse at center, ${hexToRgba(accentSlots[activeSlot].blobs[2], 0.6)} 0%, transparent 65%)`
+                ? `radial-gradient(ellipse at center, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[2], 0.55), 0.6)} 0%, transparent 65%)`
                 : "radial-gradient(ellipse at center, rgba(124,95,212,0.6) 0%, transparent 65%)",
-              opacity: warping && (!detailMode || detailSectionWarp) ? 0.55 : 0,
+              opacity: warping && (!detailMode || detailSectionWarp)
+                ? detailMode
+                  ? 0.1
+                  : 0.55
+                : 0,
               transition: warping
                 ? "opacity 0.24s ease-out"
                 : "opacity 0.65s ease-in",

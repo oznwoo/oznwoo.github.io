@@ -3,10 +3,13 @@ import { useIsMobile } from "@/hooks/useIsMobile"
 import { useSectionObserver } from "@/hooks/useSectionObserver"
 import { DETAIL_PAGE_LABELS } from "@/data/navigation"
 import { PROJECTS, PROJECT_DETAILS, PROJECT_ACCENT } from "@/data/projects"
-import { hexToRgba } from "@/lib/color"
-import { DetailIcon } from "./DetailIcon"
-import { HeroVisual } from "./HeroVisual"
 import { DetailNav } from "./DetailNav"
+import { OverviewSlide } from "./slides/OverviewSlide"
+import { AboutSlide } from "./slides/AboutSlide"
+import { ProblemSlide } from "./slides/ProblemSlide"
+import { SolutionSlide } from "./slides/SolutionSlide"
+import { OutcomeSlide } from "./slides/OutcomeSlide"
+import { StackSlide } from "./slides/StackSlide"
 
 export function ProjectDetailView({
   projectId,
@@ -20,11 +23,16 @@ export function ProjectDetailView({
   onTransition: (direction: 1 | -1) => void
 }) {
   const [slide, setSlide] = useState(0)
+  // 뒤로가기/Escape로 닫기 시작하는 순간 true — Overview의 하단 차트가
+  // 상세 패널이 실제로 닫히기(가로 슬라이드 0.75s) 전에 먼저 가라앉으며
+  // 사라지는 애니메이션을 재생할 시간을 벌어준다.
+  const [isClosing, setIsClosing] = useState(false)
   const animating = useRef(false)
   const touchStart = useRef<number | null>(null)
   const detail = PROJECT_DETAILS[projectId]
   const project = PROJECTS.find((p) => p.id === projectId)!
-  const accentColor = PROJECT_ACCENT[projectId]?.primary ?? "#4F6EF7"
+  const accent = PROJECT_ACCENT[projectId] ?? null
+  const accentColor = accent?.primary ?? "#4F6EF7"
   const TOTAL_D = DETAIL_PAGE_LABELS.length
   const isMobile = useIsMobile()
   const detailSlideIds = DETAIL_PAGE_LABELS.map((_, i) => `detail-slide-${i}`)
@@ -35,7 +43,13 @@ export function ProjectDetailView({
 
   useEffect(() => {
     setSlide(0)
+    setIsClosing(false)
   }, [projectId])
+
+  const handleClose = useCallback(() => {
+    setIsClosing(true)
+    onClose()
+  }, [onClose])
 
   const goSlide = useCallback(
     (idx: number) => {
@@ -70,7 +84,7 @@ export function ProjectDetailView({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onClose()
+        handleClose()
         return
       }
       if (isMobile) return
@@ -79,7 +93,7 @@ export function ProjectDetailView({
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [nextSlide, prevSlide, onClose, isMobile])
+  }, [nextSlide, prevSlide, handleClose, isMobile])
 
   useEffect(() => {
     const onStart = (e: TouchEvent) => {
@@ -99,10 +113,6 @@ export function ProjectDetailView({
     }
   }, [nextSlide, prevSlide, isMobile])
 
-  const slideWrapClass = isMobile
-    ? "min-h-screen w-full flex items-center justify-center px-6 pl-16 py-20"
-    : "h-screen flex items-center justify-center px-8 md:px-20 shrink-0"
-
   const handleDotClick = isMobile
     ? (i: number) =>
         document
@@ -111,381 +121,56 @@ export function ProjectDetailView({
     : goSlide
 
   const slides = [
-    // 개요 — 실사진이 없는 대신, 큰 타이틀(또는 로고)이 세로 중앙에 걸리는
-    // 에디토리얼 케이스 스터디 구성(레퍼런스 레이아웃)으로 바꿨다.
-    // 좌측 고정 네비게이터(DetailNav, left-6 + 라벨 폭 ~130px)와 겹치지 않도록
-    // 텍스트 칼럼은 항상 충분한 좌측 여백을 확보한다. 모바일은 DetailNav 라벨이
-    // 숨겨져 dot만 보이므로(hidden md:inline-block) pl-16이면 충분하다.
-    <div
-      className={
-        isMobile
-          ? "min-h-screen w-full flex items-center pl-16 pr-6 py-20 relative overflow-hidden"
-          : "h-screen flex items-center pl-32 md:pl-44 lg:pl-56 pr-8 md:pr-16 shrink-0 relative overflow-hidden"
-      }
-    >
-      {/* 장식 차트는 텍스트 칼럼(max-w-xl, 최대 우측 끝 ~800px)과 절대 겹치지
-          않도록 화면 폭이 충분한 xl(1280px)부터만 우측 고정폭 컬럼에 그린다 */}
-      {detail.heroVisual && (
-        <div
-          className="hidden xl:block absolute inset-y-0 right-0 w-[420px] 2xl:w-[520px]"
-          aria-hidden="true"
-        >
-          <HeroVisual name={detail.heroVisual} color={accentColor} />
-        </div>
-      )}
-      <div className="max-w-xl w-full relative z-10">
-        {detail.logoSrc ? (
-          <img
-            src={detail.logoSrc}
-            alt={project.title}
-            className="relative h-24 sm:h-28 md:h-32 lg:h-36 w-auto mb-2"
-          />
-        ) : (
-          <h2
-            style={{ fontFamily: "var(--font-display)", lineHeight: 0.95 }}
-            className="relative text-[clamp(3rem,8vw,6.5rem)] font-light text-[#0C0F1A]"
-          >
-            {project.title}
-          </h2>
-        )}
-        <p
-          style={{ fontFamily: "var(--font-body)" }}
-          className="relative text-base italic text-[#0C0F1A]/45 font-light mt-3 mb-6"
-        >
-          {project.subtitle}
-        </p>
-        <div className="w-16 h-px mb-6" style={{ background: accentColor }} />
-        <p
-          style={{ fontFamily: "var(--font-body)" }}
-          className="text-sm text-[#0C0F1A]/55 leading-relaxed font-light max-w-md mb-8"
-        >
-          {detail.overview}
-        </p>
-        <div className="flex gap-10">
-          {[
-            ["Period", detail.period],
-            ["Role", detail.role],
-          ].map(([k, v]) => (
-            <div key={k} className="flex flex-col gap-1.5">
-              <span
-                style={{ fontFamily: "var(--font-mono)" }}
-                className="text-xs text-[#0C0F1A]/25 uppercase tracking-[0.04em]"
-              >
-                {k}
-              </span>
-              <span
-                style={{ fontFamily: "var(--font-body)" }}
-                className="text-sm text-[#0C0F1A]/55 font-light"
-              >
-                {v}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>,
-    // 문제 — PPT 발표자료의 카드 레이아웃(헤더 색 바 + 아이콘 + 태그)만 가져오고
-    // 색/폰트 등 PPT 자체 템플릿 스타일은 따르지 않는다
-    <div
-      className={
-        isMobile
-          ? "min-h-screen w-full flex items-center justify-center px-6 pl-16 py-20"
-          : "min-h-screen flex items-center justify-center px-8 md:px-16 shrink-0 py-24"
-      }
-    >
-      <div className="max-w-6xl w-full">
-        <span
-          style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-10 block"
-        >
-          Problem
-        </span>
-        <div className="grid md:grid-cols-3 gap-5">
-          {detail.problem.map((item, i) => (
-            <div
-              key={i}
-              className="relative overflow-hidden rounded-2xl border border-[#0C0F1A]/8 bg-white/50 backdrop-blur-sm flex flex-col"
-            >
-              <div
-                aria-hidden="true"
-                className="absolute inset-x-0 top-0 h-1 z-10"
-                style={{ background: accentColor }}
-              />
-              {item.image && (
-                <div className="h-36 md:h-40 overflow-hidden bg-[#0C0F1A]/[0.03]">
-                  <img
-                    src={item.image}
-                    alt=""
-                    aria-hidden="true"
-                    loading="lazy"
-                    width={531}
-                    height={386}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-              <div className="p-6 flex flex-col gap-4 flex-1">
-                <div className="flex items-start justify-between">
-                  <div
-                    className="w-11 h-11 rounded-xl flex items-center justify-center p-2.5 shrink-0"
-                    style={{ background: hexToRgba(accentColor, 0.1), color: accentColor }}
-                  >
-                    {item.icon && <DetailIcon name={item.icon} />}
-                  </div>
-                  <span
-                    style={{ fontFamily: "var(--font-mono)" }}
-                    className="text-xs text-[#0C0F1A]/20"
-                  >
-                    0{i + 1}
-                  </span>
-                </div>
-                <div>
-                  <h3
-                    style={{ fontFamily: "var(--font-display)" }}
-                    className="text-base font-medium text-[#0C0F1A] mb-2"
-                  >
-                    {item.title}
-                  </h3>
-                  <p
-                    style={{ fontFamily: "var(--font-body)" }}
-                    className="text-sm text-[#0C0F1A]/50 leading-relaxed font-light"
-                  >
-                    {item.body}
-                  </p>
-                </div>
-                {item.tags && (
-                  <div className="flex flex-wrap gap-2 mt-auto pt-1">
-                    {item.tags.map((t) => (
-                      <span
-                        key={t}
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          color: accentColor,
-                          borderColor: hexToRgba(accentColor, 0.25),
-                        }}
-                        className="text-[10px] px-2.5 py-1 rounded-full border tracking-[0.02em]"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>,
-    // 해결
-    <div
-      className={
-        isMobile
-          ? "min-h-screen w-full flex items-center justify-center px-6 pl-16 py-20"
-          : "min-h-screen flex items-center justify-center px-8 md:px-16 shrink-0 py-24"
-      }
-    >
-      <div className="max-w-6xl w-full">
-        <span
-          style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-10 block"
-        >
-          Solution
-        </span>
-        <div className="grid md:grid-cols-3 gap-5">
-          {detail.solution.map((item, i) => (
-            <div
-              key={i}
-              className="relative overflow-hidden rounded-2xl border border-[#0C0F1A]/8 bg-white/50 backdrop-blur-sm flex flex-col"
-            >
-              <div
-                aria-hidden="true"
-                className="absolute inset-x-0 top-0 h-1 z-10"
-                style={{ background: accentColor }}
-              />
-              {item.image && (
-                <div className="h-36 md:h-40 overflow-hidden bg-[#0C0F1A]/[0.03]">
-                  <img
-                    src={item.image}
-                    alt=""
-                    aria-hidden="true"
-                    loading="lazy"
-                    width={1400}
-                    height={460}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-              <div className="p-6 flex flex-col gap-4 flex-1">
-                <div className="flex items-start justify-between">
-                  <div
-                    className="w-11 h-11 rounded-xl flex items-center justify-center p-2.5 shrink-0"
-                    style={{ background: hexToRgba(accentColor, 0.1), color: accentColor }}
-                  >
-                    {item.icon && <DetailIcon name={item.icon} />}
-                  </div>
-                  <span
-                    style={{ fontFamily: "var(--font-mono)" }}
-                    className="text-xs text-[#0C0F1A]/20"
-                  >
-                    0{i + 1}
-                  </span>
-                </div>
-                <div>
-                  <h3
-                    style={{ fontFamily: "var(--font-display)" }}
-                    className="text-base font-medium text-[#0C0F1A] mb-2"
-                  >
-                    {item.title}
-                  </h3>
-                  <p
-                    style={{ fontFamily: "var(--font-body)" }}
-                    className="text-sm text-[#0C0F1A]/50 leading-relaxed font-light"
-                  >
-                    {item.body}
-                  </p>
-                </div>
-                {item.tags && (
-                  <div className="flex flex-wrap gap-2 mt-auto pt-1">
-                    {item.tags.map((t) => (
-                      <span
-                        key={t}
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          color: accentColor,
-                          borderColor: hexToRgba(accentColor, 0.25),
-                        }}
-                        className="text-[10px] px-2.5 py-1 rounded-full border tracking-[0.02em]"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>,
-    // 성과
-    <div
-      className={
-        isMobile
-          ? "min-h-screen w-full flex items-center justify-center px-6 pl-16 py-20"
-          : "min-h-screen flex items-center justify-center px-8 md:px-16 shrink-0 py-24"
-      }
-    >
-      <div className="max-w-6xl w-full">
-        <span
-          style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-10 block"
-        >
-          Outcome
-        </span>
-        <div className="grid md:grid-cols-3 gap-5 mb-6">
-          {detail.outcome.map((item) => (
-            <div
-              key={item.label}
-              className="relative overflow-hidden rounded-2xl border border-[#0C0F1A]/8 bg-white/50 backdrop-blur-sm p-6 flex flex-col gap-4"
-            >
-              <div
-                aria-hidden="true"
-                className="absolute inset-x-0 top-0 h-1"
-                style={{ background: accentColor }}
-              />
-              {item.icon && (
-                <div
-                  className="w-11 h-11 rounded-xl flex items-center justify-center p-2.5"
-                  style={{ background: hexToRgba(accentColor, 0.1), color: accentColor }}
-                >
-                  <DetailIcon name={item.icon} />
-                </div>
-              )}
-              <div>
-                <div
-                  style={{ fontFamily: "var(--font-display)" }}
-                  className="text-[clamp(1.5rem,3vw,2.2rem)] font-semibold text-[#0C0F1A] leading-none mb-2"
-                >
-                  {item.stat}
-                </div>
-                <div
-                  style={{ fontFamily: "var(--font-mono)" }}
-                  className="text-xs text-[#0C0F1A]/35 uppercase tracking-[0.02em] leading-relaxed"
-                >
-                  {item.label}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        {detail.outcomeImage && (
-          <div className="relative overflow-hidden rounded-2xl border border-[#0C0F1A]/8 bg-white/50 backdrop-blur-sm mb-6 h-40 md:h-48">
-            <img
-              src={detail.outcomeImage}
-              alt="전처리 및 잔차 보정 적용 후 30일 Walk-forward 예측이 실제 잔액을 촘촘히 따라가는 것을 보여주는 차트"
-              loading="lazy"
-              width={1000}
-              height={807}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        )}
-        <div className="bg-[#0C0F1A] rounded-2xl px-10 py-10">
-          <p
-            style={{ fontFamily: "var(--font-display)", lineHeight: 1.5 }}
-            className="text-xl font-light text-[#F0F3F9]"
-          >
-            "{project.description}"
-          </p>
-        </div>
-      </div>
-    </div>,
-    // 기술
-    <div className={slideWrapClass}>
-      <div className="max-w-2xl w-full">
-        <span
-          style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-12 block"
-        >
-          Stack
-        </span>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-10 mb-12">
-          {detail.tech.map((group) => (
-            <div key={group.category}>
-              <div
-                style={{ fontFamily: "var(--font-mono)" }}
-                className="text-xs text-[#4F6EF7] uppercase tracking-[0.04em] mb-4"
-              >
-                {group.category}
-              </div>
-              <ul className="space-y-2.5">
-                {group.items.map((item) => (
-                  <li
-                    key={item}
-                    style={{ fontFamily: "var(--font-body)" }}
-                    className="text-sm text-[#0C0F1A]/55 font-light"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <a
-          href="https://github.com/oznwoo"
-          target="_blank"
-          rel="noreferrer"
-          style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/40 hover:text-[#0C0F1A] transition-colors uppercase tracking-[0.04em] border-b border-[#0C0F1A]/15 pb-0.5"
-        >
-          GitHub →
-        </a>
-      </div>
-    </div>,
+    <OverviewSlide
+      project={project}
+      projectId={projectId}
+      detail={detail}
+      accent={accent}
+      accentColor={accentColor}
+      isMobile={isMobile}
+      isActive={displaySlide === 0}
+      isClosing={isClosing}
+    />,
+    <AboutSlide
+      project={project}
+      detail={detail}
+      accentColor={accentColor}
+      isMobile={isMobile}
+      isActive={displaySlide === 1}
+    />,
+    <ProblemSlide
+      items={detail.problem}
+      accent={accent}
+      accentColor={accentColor}
+      projectId={projectId}
+      isMobile={isMobile}
+      isActive={displaySlide === 2}
+    />,
+    <SolutionSlide
+      problemItems={detail.problem}
+      items={detail.solution}
+      accent={accent}
+      accentColor={accentColor}
+      projectId={projectId}
+      isMobile={isMobile}
+      isActive={displaySlide === 3}
+    />,
+    <OutcomeSlide
+      project={project}
+      detail={detail}
+      accent={accent}
+      accentColor={accentColor}
+      projectId={projectId}
+      isMobile={isMobile}
+      isActive={displaySlide === 4}
+    />,
+    <StackSlide
+      tech={detail.tech}
+      stackDiagram={detail.stackDiagram}
+      accentColor={accentColor}
+      isMobile={isMobile}
+    />,
   ]
-
-  const accent = PROJECT_ACCENT[projectId] ?? null
 
   return (
     <div
@@ -501,7 +186,7 @@ export function ProjectDetailView({
       {/* 좌측 네비게이터 — 메인과 동일한 구조 */}
       <DetailNav
         slide={displaySlide}
-        onClose={onClose}
+        onClose={handleClose}
         goSlide={handleDotClick}
         accent={accent}
         isMobile={isMobile}
