@@ -1,0 +1,174 @@
+import { useEffect, useState } from "react"
+import type { ProjectDetailCardItem } from "@/data/projects"
+import type { ProjectAccent } from "@/lib/color"
+import { hexToRgba, mixWithWhite } from "@/lib/color"
+import { AccentPill } from "../AccentPill"
+
+// 세로 슬라이드 트랙 전환(ProjectDetailView, 0.75s)이 끝난 뒤에야 설명이
+// 내려오며 나타난다.
+const SLIDE_TRANSITION_MS = 750
+
+interface FintagProblemCardProps {
+  item: ProjectDetailCardItem
+  accent: ProjectAccent | null
+  accentColor: string
+  projectId: string
+  imageWidth: number
+  imageHeight: number
+  // Problem이 지금 화면에 보이는 슬라이드인지 — true가 되고 슬라이드 전환이
+  // 끝나면 설명이 이미지 아래에서 내려오며 나타난다.
+  isActive: boolean
+}
+
+// "**강조**" 구간만 진하게 렌더링한다 — 짧은 요약 문장에서 핵심 어구만
+// 도드라지게 하기 위한 아주 가벼운 마크업이라, 전용 파서 없이 split으로 충분하다.
+function renderWithEmphasis(text: string) {
+  return text.split(/\*\*(.+?)\*\*/g).map((part, i) =>
+    i % 2 === 1 ? (
+      <strong key={i} className="font-semibold text-[#0C0F1A]">
+        {part}
+      </strong>
+    ) : (
+      part
+    ),
+  )
+}
+
+// Fintag Problem 카드 실험 버전 — 번호는 없애고 타이틀을 이미지 위로
+// 올린다. 태그는 이미지 밖 맨 아래에 두고, 설명 문단은 상시 노출하되
+// Problem 슬라이드로 전환해 들어올 때마다 이미지 아래에서 내려오며
+// 나타나는 연출을 다시 재생한다.
+export function FintagProblemCard({
+  item,
+  accent,
+  accentColor,
+  projectId,
+  imageWidth,
+  imageHeight,
+  isActive,
+}: FintagProblemCardProps) {
+  // 이미지 자체의 hover 살짝 뜨는 효과 — 설명 노출과는 별개로 마우스
+  // 호버에만 반응한다.
+  const [imgHovered, setImgHovered] = useState(false)
+  const [revealed, setRevealed] = useState(false)
+
+  useEffect(() => {
+    if (!isActive) {
+      setRevealed(false)
+      return
+    }
+    const timer = setTimeout(() => setRevealed(true), SLIDE_TRANSITION_MS)
+    return () => clearTimeout(timer)
+  }, [isActive])
+
+  return (
+    <div className="flex flex-col gap-3">
+      {/* 타이틀은 Hahmlet(세리프) 대신 본문과 같은 Pretendard로 — 카드
+          맨 위에서 눈에 먼저 띄는 자리라 더 깔끔하고 또렷하게 보이게 한다 */}
+      <h3
+        style={{ fontFamily: "var(--font-body)" }}
+        className="text-base font-semibold text-[#0C0F1A]"
+      >
+        {item.title}
+      </h3>
+      {item.image && (
+        <div
+          onMouseEnter={() => setImgHovered(true)}
+          onMouseLeave={() => setImgHovered(false)}
+          className="rounded-2xl overflow-hidden border cursor-default"
+          style={{
+            borderColor: imgHovered
+              ? hexToRgba(accentColor, 0.35)
+              : "rgba(12,15,26,0.1)",
+            boxShadow: imgHovered
+              ? `0 20px 45px -14px ${hexToRgba(accentColor, 0.35)}, 0 8px 18px -8px rgba(12,15,26,0.28)`
+              : "0 14px 34px -18px rgba(12,15,26,0.24), 0 4px 10px -6px rgba(12,15,26,0.12)",
+            transform: imgHovered
+              ? "translateY(-3px) scale(1.012)"
+              : "translateY(0) scale(1)",
+            transition:
+              "transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease-out, border-color 0.4s ease-out",
+          }}
+        >
+          <img
+            src={item.image}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            width={imageWidth}
+            height={imageHeight}
+            className="w-full h-auto block"
+          />
+        </div>
+      )}
+      {/* 설명 문단 — 바깥 grid-template-rows(0fr<->1fr)로 아래 태그가 밀려날
+          공간을 부드럽게 확보하고, 안쪽 translateY+opacity로 실제로 이미지
+          아래에서 내려오며 나타나는 움직임을 만든다 */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateRows: revealed ? "1fr" : "0fr",
+          transition: "grid-template-rows 0.5s cubic-bezier(0.16,1,0.3,1)",
+        }}
+      >
+        <div className="overflow-hidden">
+          <div
+            style={{
+              transform: revealed ? "translateY(0)" : "translateY(-10px)",
+              opacity: revealed ? 1 : 0,
+              transition:
+                "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
+            }}
+          >
+            <div
+              className="rounded-2xl p-4 backdrop-blur-sm"
+              style={{
+                background: hexToRgba(mixWithWhite(accentColor, 0.85), 0.68),
+                border: "1px solid rgba(12,15,26,0.06)",
+              }}
+            >
+              {item.shortBody ? (
+                <ul className="flex flex-col gap-1.5">
+                  {item.shortBody.map((line, i) => (
+                    <li
+                      key={i}
+                      style={{ fontFamily: "var(--font-body)" }}
+                      className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal flex items-start gap-2"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="w-1 h-1 rounded-full shrink-0 mt-2"
+                        style={{ background: accentColor }}
+                      />
+                      <span>{renderWithEmphasis(line)}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p
+                  style={{ fontFamily: "var(--font-body)" }}
+                  className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal"
+                >
+                  {item.body}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      {item.tags && (
+        <div className="flex flex-wrap gap-2">
+          {item.tags.map((t) => (
+            <AccentPill
+              key={t}
+              label={t}
+              accent={accent}
+              accentColor={accentColor}
+              projectId={projectId}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}

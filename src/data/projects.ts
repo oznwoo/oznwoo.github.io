@@ -1,13 +1,13 @@
-import fintagLogo from "@/imports/fintag-logo.png"
-import fintagAboutHero from "@/imports/fintag/fintag-about-hero.webp"
-import fintagProblemPreprocessing from "@/imports/fintag/fintag-problem-preprocessing.webp"
-import fintagProblemAccuracy from "@/imports/fintag/fintag-problem-accuracy.webp"
-import fintagProblemExplain from "@/imports/fintag/fintag-problem-explain.webp"
-import fintagSolutionPipeline from "@/imports/fintag/fintag-solution-pipeline.webp"
-import fintagSolutionSteps from "@/imports/fintag/fintag-solution-steps.webp"
-import fintagSolutionExplainUi from "@/imports/fintag/fintag-solution-explain-ui.webp"
-import fintagOutcomeChart from "@/imports/fintag/fintag-outcome-chart.webp"
-import type { ProjectAccent } from "@/lib/color"
+import fintagLogo from "@/imports/fintag-logo.png";
+import fintagAboutHero from "@/imports/fintag/fintag-about-hero.webp";
+import fintagProblemPreprocessing from "@/imports/fintag/fintag-problem-preprocessing.webp";
+import fintagProblemAccuracy from "@/imports/fintag/fintag-problem-accuracy.webp";
+import fintagProblemExplain from "@/imports/fintag/fintag-problem-explain.webp";
+import fintagSolutionPipeline from "@/imports/fintag/fintag-solution-pipeline.webp";
+import fintagSolutionSteps from "@/imports/fintag/fintag-solution-steps.webp";
+import fintagSolutionExplainUi from "@/imports/fintag/fintag-solution-explain-ui.webp";
+import fintagOutcomeChart from "@/imports/fintag/fintag-outcome-chart.webp";
+import type { ProjectAccent } from "@/lib/color";
 
 // 프로젝트 카드 호버 시 반영할 브랜드 컬러 (로고/배너 기반). 로고를 받은 프로젝트만
 // 등록되어 있고, 없는 프로젝트는 호버해도 색이 바뀌지 않는다.
@@ -37,7 +37,7 @@ export const PROJECT_ACCENT: Record<string, ProjectAccent> = {
     primary: "#B8241E",
     blobs: ["#B8860A", "#1A2B6B", "#B8241E"],
   },
-}
+};
 
 // 카드 그리드(2열)에서 프로젝트가 위치한 사분면 방향으로 blob이 살짝 쏠리게 해
 // 호버할 때마다 그라디언트가 실제로 "반응"하는 느낌을 준다. x/y는 -1~1.
@@ -46,12 +46,12 @@ export const PROJECT_PULL: Record<string, { x: number; y: number }> = {
   "02": { x: 1, y: -1 },
   "03": { x: -1, y: 1 },
   "04": { x: 1, y: 1 },
-}
+};
 
 export const DEFAULT_ACCENT: ProjectAccent = {
   primary: "#4F6EF7",
   blobs: ["#4F6EF7", "#4F6EF7", "#4F6EF7"],
-}
+};
 
 export const PROJECTS = [
   {
@@ -98,9 +98,9 @@ export const PROJECTS = [
     year: "2024",
     link: "https://github.com/oznwoo",
   },
-]
+];
 
-export type Project = (typeof PROJECTS)[number]
+export type Project = (typeof PROJECTS)[number];
 
 export type DetailIconKey =
   | "duplicate"
@@ -109,68 +109,87 @@ export type DetailIconKey =
   | "filter"
   | "layers"
   | "sparkle"
-  | "trend-down"
+  | "trend-down";
 
 // Problem/Solution 카드 슬라이드에서 쓰는 항목 하나
 export interface ProjectDetailCardItem {
-  title: string
-  body: string
-  icon?: DetailIconKey
-  tags?: string[]
-  image?: string
+  title: string;
+  body: string;
+  // 카드 UI에 따라 body 대신 보여줄 불릿 포인트 목록(선택) — 한 줄에 핵심
+  // 하나씩, 문장이 아니라 키워드 위주 짧은 구로 스캔하기 쉽게 쓴다. 각
+  // 줄 안에서 **강조**로 핵심 단어만 진하게 표시할 수 있다.
+  shortBody?: string[];
+  icon?: DetailIconKey;
+  tags?: string[];
+  image?: string;
 }
 
 export interface ProjectDetail {
-  period: string
-  role: string
+  period: string;
+  role: string;
   // About 슬라이드에서 마크다운 h1처럼 크고 진하게 보여줄 한 줄 — 서비스가
   // 무엇인지 설명하는 소개 문단의 첫 문장
-  overviewHeadline: string
+  overviewHeadline: string;
   // h2/본문처럼 작고 옅게 보여줄 나머지 문장 — 담당 역할·과정 설명
-  overviewBody: string
+  overviewBody: string;
   // Overview 히어로에서 타이틀 텍스트 대신 보여줄 실제 로고. 있으면 텍스트
   // 타이틀을 대체한다 (Fintag처럼 워드마크 자체가 브랜드를 대변하는 경우)
-  logoSrc?: string
+  logoSrc?: string;
   // About 슬라이드에서 소개 문단과 함께 보여줄 실제 서비스 화면 스크린샷(선택)
-  aboutImage?: string
-  problem: ProjectDetailCardItem[]
-  solution: ProjectDetailCardItem[]
-  outcome: { stat: string; label: string; icon?: DetailIconKey }[]
+  aboutImage?: string;
+  problem: ProjectDetailCardItem[];
+  solution: ProjectDetailCardItem[];
+  outcome: { stat: string; label: string; icon?: DetailIconKey }[];
   // 성과 증빙 차트(선택) — Overview 히어로와 Outcome 슬라이드 양쪽에서 쓴다
-  outcomeImage?: string
-  tech: { category: string; items: string[] }[]
+  outcomeImage?: string;
+  tech: { category: string; items: string[] }[];
 }
 
 export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
   "01": {
     period: "2026.04 – 2026.06",
-    role: "백엔드 개발 · ML 엔지니어링 (인턴십)",
+    role: "백엔드 개발 | ML 엔지니어링 (인턴십)",
     overviewHeadline:
-      "중소기업이 통장에 묶어두는 유휴 자금을 실시간으로 감지하고, 적합한 금융 상품을 제안하는 자금 관리 SaaS.",
+      "재무 전문가가 부재한 중소기업을 위한 AI 자금 관리 에이전트",
     overviewBody:
-      "실제 거래 내역 데이터를 기반으로 미래 현금흐름을 예측하는 모델과 이를 서빙하는 백엔드 시스템을 담당했습니다.",
+      "Fintag 내부의 핵심 기능인 현금흐름 예측 기능 고도화를 담당했습니다.",
     logoSrc: fintagLogo,
     aboutImage: fintagAboutHero,
     problem: [
       {
         title: "데이터 전처리 부재",
         body: "은행·카드·보험 등에서 각각 집계한 거래가 동일 지출을 중복 반영해 학습 데이터를 왜곡시켰고, 내부 계좌 간 이동이 실제 지출로 잘못 분류되어 현금흐름이 과대 집계됐습니다.",
+        shortBody: [
+          "은행·카드·보험 거래가 **중복 집계**됨",
+          "**내부 계좌 이동**이 지출로 잘못 분류됨",
+          "현금흐름이 **과대 집계**됨",
+        ],
         icon: "duplicate",
-        tags: ["#내부이체", "#중복집계"],
+        tags: ["내부이체", "중복집계"],
         image: fintagProblemPreprocessing,
       },
       {
         title: "예측 정확도 부족",
         body: "Prophet 단독 모델은 추세·계절성 같은 큰 흐름은 잘 포착했지만 급여일·카드결제일 같은 단기 반복 패턴은 노이즈로 처리해 놓쳤습니다. 기업 유형에 따라 MAPE가 최대 수백 %에 달할 만큼 오차율이 크고 미세 조정도 불가능했습니다.",
+        shortBody: [
+          "시계열 예측 모델(Prophet)은 큰 흐름만 포착",
+          "**급여일·카드결제일 단기 패턴**은 노이즈로 놓침",
+          "예측 **오차율 최대 수백 %**",
+        ],
         icon: "target",
-        tags: ["#단기패턴누락", "#높은오차율"],
+        tags: ["미세조정불가", "높은오차율"],
         image: fintagProblemAccuracy,
       },
       {
         title: "예측 설명 부재",
         body: "예측값만 제공되고 왜 그런 결과가 나왔는지 근거가 없어 담당자가 신뢰하기 어려웠고, 이상거래가 필터링 없이 예측에 그대로 반영되어 결과 신뢰도를 떨어뜨렸습니다.",
+        shortBody: [
+          "예측 **근거 없이 결과값만** 제공",
+          "**이상거래**가 필터링 없이 반영",
+          "결과 신뢰도 저하",
+        ],
         icon: "alert",
-        tags: ["#근거없음", "#이상거래반영"],
+        tags: ["신뢰불가", "이상거래반영"],
         image: fintagProblemExplain,
       },
     ],
@@ -199,8 +218,16 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
     ],
     outcome: [
       { stat: "76%", label: "평균 예측 오차율(MAPE) 감소", icon: "trend-down" },
-      { stat: "3단계", label: "Prophet·LightGBM·고정지출 파이프라인", icon: "layers" },
-      { stat: "SHAP+LLM", label: "예측 근거 자연어 설명 기능", icon: "sparkle" },
+      {
+        stat: "3단계",
+        label: "Prophet·LightGBM·고정지출 파이프라인",
+        icon: "layers",
+      },
+      {
+        stat: "SHAP+LLM",
+        label: "예측 근거 자연어 설명 기능",
+        icon: "sparkle",
+      },
     ],
     outcomeImage: fintagOutcomeChart,
     tech: [
@@ -209,7 +236,10 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
         category: "ML",
         items: ["Prophet", "LightGBM", "SHAP", "Isolation Forest", "PyOD ECOD"],
       },
-      { category: "AI", items: ["AWS Bedrock (Claude 3)", "Prompt Engineering"] },
+      {
+        category: "AI",
+        items: ["AWS Bedrock (Claude 3)", "Prompt Engineering"],
+      },
       { category: "Infra", items: ["AWS EC2", "AWS Lambda", "Amazon RDS"] },
     ],
   },
@@ -262,7 +292,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
   "03": {
     period: "2025.06 – 진행 중",
     role: "기획 · 디자인 · 풀스택 개발 (개인 프로젝트)",
-    overviewHeadline: "예약제 없이 운영되는 소규모 미용실을 위한 고객·매출 관리 앱.",
+    overviewHeadline:
+      "예약제 없이 운영되는 소규모 미용실을 위한 고객·매출 관리 앱.",
     overviewBody:
       "어머니의 미용실이 수기로 장부를 관리하는 것을 보고 직접 기획했습니다. UI/UX 설계부터 React Native 앱 개발, 백엔드 서버 배포까지 전 과정을 혼자 진행했습니다.",
     problem: [
@@ -345,4 +376,4 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       { category: "Backend", items: ["FastAPI", "Firebase", "PostgreSQL"] },
     ],
   },
-}
+};

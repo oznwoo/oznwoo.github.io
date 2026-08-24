@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import type { ProjectDetailCardItem } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
 import { CardGridItem } from "./CardGridItem"
@@ -13,6 +14,10 @@ interface CardGridSlideProps {
   imageWidth: number
   imageHeight: number
   isMobile: boolean
+  // 기본 CardGridItem 대신 카드 하나를 다르게 그리고 싶을 때 넘기는 렌더
+  // prop(예: 특정 프로젝트만 다른 카드 디자인을 실험할 때). 이 컴포넌트는
+  // 어떤 프로젝트인지 몰라도 되도록 어떤 조건 분기도 갖지 않는다.
+  renderItem?: (item: ProjectDetailCardItem, index: number) => ReactNode
 }
 
 // Problem/Solution 슬라이드가 공유하는 카드 그리드 — 레이아웃만 담당하고
@@ -26,6 +31,7 @@ export function CardGridSlide({
   imageWidth,
   imageHeight,
   isMobile,
+  renderItem,
 }: CardGridSlideProps) {
   return (
     <div
@@ -43,18 +49,22 @@ export function CardGridSlide({
           {eyebrow}
         </span>
         <div className="grid md:grid-cols-3 gap-5">
-          {items.map((item, i) => (
-            <CardGridItem
-              key={i}
-              item={item}
-              index={i}
-              accent={accent}
-              accentColor={accentColor}
-              projectId={projectId}
-              imageWidth={imageWidth}
-              imageHeight={imageHeight}
-            />
-          ))}
+          {items.map((item, i) =>
+            renderItem ? (
+              <div key={i}>{renderItem(item, i)}</div>
+            ) : (
+              <CardGridItem
+                key={i}
+                item={item}
+                index={i}
+                accent={accent}
+                accentColor={accentColor}
+                projectId={projectId}
+                imageWidth={imageWidth}
+                imageHeight={imageHeight}
+              />
+            ),
+          )}
         </div>
       </div>
     </div>
