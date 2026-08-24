@@ -1,7 +1,7 @@
 import { useState } from "react"
 import type { ProjectDetailCardItem } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
-import { hexToRgba } from "@/lib/color"
+import { hexToRgba, mixWithWhite } from "@/lib/color"
 import { AccentPill } from "../AccentPill"
 
 interface CardGridItemProps {
@@ -65,9 +65,12 @@ export function CardGridItem({
         </div>
       )}
       <div
-        className="rounded-2xl p-6 flex flex-col gap-3 flex-1"
+        className="rounded-2xl p-6 flex flex-col gap-3 flex-1 backdrop-blur-sm"
         style={{
-          background: hexToRgba(accentColor, 0.05),
+          // 완전 불투명(솔리드)은 너무 답답해 보였다 — 흰색과 섞어 밝힌 색을
+          // 반투명하게(+backdrop-blur) 얹어서, 뒤에 깔린 blob 배경이 옅게
+          // 비치되 본문 텍스트 대비는 충분히 확보되는 선을 맞춘다.
+          background: hexToRgba(mixWithWhite(accentColor, 0.85), 0.55),
           border: "1px solid rgba(12,15,26,0.06)",
         }}
       >
