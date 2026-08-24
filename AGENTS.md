@@ -34,6 +34,15 @@ This project uses **Tailwind CSS v4** through the `@tailwindcss/vite` plugin con
 
 `src/main.tsx` imports `src/index.css`, so global font wiring belongs in `src/index.css`. Keep CSS `@import` statements first, then add any `@font-face` rules and font-family defaults there.
 
+## Component Structure
+
+Split UI by unit of meaning, not just by top-level page. When a component grows to contain several visually/functionally distinct sections (e.g. slides, steps, tabs, cards), extract each into its own file under a `slides/`, `steps/`, or similarly named subdirectory next to the parent component, and have the parent import and compose them. Don't let one file accumulate multiple sections as inline JSX just because it's convenient in the moment — split as you add each new section, not in a single deferred cleanup pass.
+
+- Target 200-400 lines per component file; 800 lines is a hard ceiling that should trigger an immediate split, not a later one.
+- When two sections share most of their structure (e.g. two card-grid slides that only differ in image dimensions or copy), extract the shared shape into one parameterized component instead of duplicating it.
+- Prefer prop-driven, single-responsibility components over one large component branching on `isMobile`/section index inline — each extracted piece should still take its own `isMobile` (or similar) prop and lay itself out, rather than the parent computing per-section classNames.
+- Example: `src/components/project-detail/ProjectDetailView.tsx` orchestrates hooks, the slide track, and navigation; each slide (`OverviewSlide`, `AboutSlide`, `ProblemSlide`, `SolutionSlide`, `OutcomeSlide`, `StackSlide`) lives in `src/components/project-detail/slides/`, with `ProblemSlide`/`SolutionSlide` both wrapping a shared `CardGridSlide`. Follow this pattern for any future multi-section view.
+
 ## Code quality
 
 - Use double quotes for strings containing apostrophes (`"We're here to help"`), or escape them in single-quoted strings. An unescaped apostrophe in a single-quoted string breaks the build.

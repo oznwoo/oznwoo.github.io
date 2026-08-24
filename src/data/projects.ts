@@ -100,6 +100,8 @@ export const PROJECTS = [
   },
 ]
 
+export type Project = (typeof PROJECTS)[number]
+
 export type DetailIconKey =
   | "duplicate"
   | "target"
@@ -109,7 +111,16 @@ export type DetailIconKey =
   | "sparkle"
   | "trend-down"
 
-export const PROJECT_DETAILS: Record<string, {
+// Problem/Solution 카드 슬라이드에서 쓰는 항목 하나
+export interface ProjectDetailCardItem {
+  title: string
+  body: string
+  icon?: DetailIconKey
+  tags?: string[]
+  image?: string
+}
+
+export interface ProjectDetail {
   period: string
   role: string
   overview: string
@@ -118,13 +129,15 @@ export const PROJECT_DETAILS: Record<string, {
   logoSrc?: string
   // About 슬라이드에서 소개 문단과 함께 보여줄 실제 서비스 화면 스크린샷(선택)
   aboutImage?: string
-  problem: { title: string; body: string; icon?: DetailIconKey; tags?: string[]; image?: string }[]
-  solution: { title: string; body: string; icon?: DetailIconKey; tags?: string[]; image?: string }[]
+  problem: ProjectDetailCardItem[]
+  solution: ProjectDetailCardItem[]
   outcome: { stat: string; label: string; icon?: DetailIconKey }[]
   // 성과 증빙 차트(선택) — Overview 히어로와 Outcome 슬라이드 양쪽에서 쓴다
   outcomeImage?: string
   tech: { category: string; items: string[] }[]
-}> = {
+}
+
+export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
   "01": {
     period: "2026.04 – 2026.06",
     role: "백엔드 개발 · ML 엔지니어링 (인턴십)",
