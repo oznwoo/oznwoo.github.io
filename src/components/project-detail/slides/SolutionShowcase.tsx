@@ -67,7 +67,6 @@ export function SolutionShowcase({
     setStep(clamped)
   }
 
-  const problem = problems[step]
   const solution = solutions[step]
 
   return (
@@ -79,28 +78,29 @@ export function SolutionShowcase({
       }
     >
       <div className="max-w-4xl w-full">
-        <div className="flex items-center justify-between mb-10">
-          <span
-            style={{ fontFamily: "var(--font-mono)" }}
-            className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase block"
-          >
-            Solution
-          </span>
-          <div className="flex items-center gap-2">
-            {solutions.map((_, i) => (
-              <button
-                key={i}
-                aria-label={`Solution ${i + 1}`}
-                onClick={() => goStep(i)}
-                className="block rounded-full transition-all duration-300"
-                style={{
-                  width: i === step ? "20px" : "6px",
-                  height: "6px",
-                  background: i === step ? accentColor : "rgba(12,15,26,0.2)",
-                }}
-              />
-            ))}
-          </div>
+        <span
+          style={{ fontFamily: "var(--font-mono)" }}
+          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-5 block"
+        >
+          Solution
+        </span>
+        <div className="flex flex-wrap items-center gap-2 mb-8">
+          {problems.map((p, i) => (
+            <button
+              key={p.title}
+              onClick={() => goStep(i)}
+              style={{
+                fontFamily: "var(--font-body)",
+                background: i === step ? accentColor : "transparent",
+                borderColor:
+                  i === step ? accentColor : "rgba(12,15,26,0.14)",
+                color: i === step ? "#ffffff" : "rgba(12,15,26,0.5)",
+              }}
+              className="text-xs font-medium px-3.5 py-2 rounded-full border transition-colors duration-300"
+            >
+              {p.title}
+            </button>
+          ))}
         </div>
 
         <div
@@ -108,14 +108,6 @@ export function SolutionShowcase({
           style={{ animation: "step-in 0.5s cubic-bezier(0.16,1,0.3,1) both" }}
           className="flex flex-col gap-3"
         >
-          {problem && (
-            <span
-              style={{ fontFamily: "var(--font-mono)", color: accentColor }}
-              className="text-xs tracking-[0.02em] block"
-            >
-              문제: {problem.title}
-            </span>
-          )}
           <h3
             style={{ fontFamily: "var(--font-body)" }}
             className="text-xl font-semibold text-[#0C0F1A]"
@@ -126,7 +118,10 @@ export function SolutionShowcase({
             <div
               onMouseEnter={() => setImgHovered(true)}
               onMouseLeave={() => setImgHovered(false)}
-              className="rounded-2xl overflow-hidden border cursor-default"
+              // 세로로 긴 이미지(예측 설명 이미지)가 뷰포트 높이를 넘어 슬라이드
+              // 하단이 잘리지 않도록, 프레임을 이미지 실제 크기에 맞춰 inline-
+              // block으로 두고 최대 높이를 뷰포트 기준으로 제한한다
+              className="inline-block max-w-full mx-auto rounded-2xl overflow-hidden border cursor-default"
               style={{
                 borderColor: imgHovered
                   ? hexToRgba(accentColor, 0.35)
@@ -148,7 +143,8 @@ export function SolutionShowcase({
                 loading="lazy"
                 width={imageWidth}
                 height={imageHeight}
-                className="w-full h-auto block"
+                className="block w-auto h-auto max-w-full"
+                style={{ maxHeight: "38vh" }}
               />
             </div>
           )}
@@ -217,33 +213,6 @@ export function SolutionShowcase({
               ))}
             </div>
           )}
-        </div>
-
-        <div className="flex items-center gap-4 mt-10">
-          <button
-            aria-label="이전 해결 방안"
-            disabled={step === 0}
-            onClick={() => goStep(step - 1)}
-            className="flex items-center justify-center rounded-full border w-9 h-9 shrink-0 disabled:opacity-25 transition-opacity"
-            style={{ borderColor: "rgba(12,15,26,0.12)", color: "#0C0F1A" }}
-          >
-            ←
-          </button>
-          <button
-            aria-label="다음 해결 방안"
-            disabled={step === solutions.length - 1}
-            onClick={() => goStep(step + 1)}
-            className="flex items-center justify-center rounded-full border w-9 h-9 shrink-0 disabled:opacity-25 transition-opacity"
-            style={{ borderColor: "rgba(12,15,26,0.12)", color: "#0C0F1A" }}
-          >
-            →
-          </button>
-          <span
-            style={{ fontFamily: "var(--font-mono)" }}
-            className="text-xs text-[#0C0F1A]/30 tracking-[0.02em]"
-          >
-            {step + 1} / {solutions.length}
-          </span>
         </div>
       </div>
     </div>
