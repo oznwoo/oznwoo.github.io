@@ -148,7 +148,6 @@ export function ProjectDetailView({
       projectId={projectId}
       isMobile={isMobile}
       isActive={displaySlide === 3}
-      onTransition={onTransition}
     />,
     <OutcomeSlide
       project={project}
