@@ -84,19 +84,20 @@ export function SolutionShowcase({
         >
           Solution
         </span>
-        <div className="flex flex-wrap items-center gap-2 mb-8">
+        <div
+          className="flex flex-wrap items-center gap-6 mb-8"
+          style={{ borderBottom: "1px solid rgba(12,15,26,0.08)" }}
+        >
           {problems.map((p, i) => (
             <button
               key={p.title}
               onClick={() => goStep(i)}
               style={{
                 fontFamily: "var(--font-body)",
-                background: i === step ? accentColor : "transparent",
-                borderColor:
-                  i === step ? accentColor : "rgba(12,15,26,0.14)",
-                color: i === step ? "#ffffff" : "rgba(12,15,26,0.5)",
+                color: i === step ? "#0C0F1A" : "rgba(12,15,26,0.4)",
+                borderBottomColor: i === step ? accentColor : "transparent",
               }}
-              className="text-xs font-medium px-3.5 py-2 rounded-full border transition-colors duration-300"
+              className="text-sm font-medium pb-3 border-b-2 transition-colors duration-300"
             >
               {p.title}
             </button>
