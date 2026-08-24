@@ -123,7 +123,10 @@ export function FintagProblemCard({
             <div
               className="rounded-2xl p-4 backdrop-blur-sm"
               style={{
-                background: hexToRgba(mixWithWhite(accentColor, 0.85), 0.68),
+                // 완전한 흰색은 화면과 겉돌아 어색하다 — 흰색에 accent를
+                // 아주 옅게만 섞어 "거의 흰색인데 은은히 톤이 있는" 색을
+                // 반투명하게 얹는다
+                background: hexToRgba(mixWithWhite(accentColor, 0.93), 0.62),
                 border: "1px solid rgba(12,15,26,0.06)",
               }}
             >
