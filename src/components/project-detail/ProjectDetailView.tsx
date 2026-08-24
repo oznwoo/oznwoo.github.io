@@ -159,7 +159,12 @@ export function ProjectDetailView({
       isMobile={isMobile}
       isActive={displaySlide === 4}
     />,
-    <StackSlide tech={detail.tech} isMobile={isMobile} />,
+    <StackSlide
+      tech={detail.tech}
+      stackDiagram={detail.stackDiagram}
+      accentColor={accentColor}
+      isMobile={isMobile}
+    />,
   ]
 
   return (

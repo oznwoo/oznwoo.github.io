@@ -10,6 +10,7 @@ import fintagOutcomeChart from "@/imports/fintag/fintag-outcome-chart.webp";
 import fintagOutcomePreprocessing from "@/imports/fintag/fintag-outcome-preprocessing.webp";
 import fintagOutcomeAccuracy from "@/imports/fintag/fintag-outcome-accuracy.webp";
 import fintagOutcomeExplain from "@/imports/fintag/fintag-outcome-explain.webp";
+import fintagStackArchitecture from "@/imports/fintag/fintag-stack-architecture.webp";
 import type { ProjectAccent } from "@/lib/color";
 
 // 프로젝트 카드 호버 시 반영할 브랜드 컬러 (로고/배너 기반). 로고를 받은 프로젝트만
@@ -150,6 +151,9 @@ export interface ProjectDetail {
   // 구조(타이틀+이미지 카드 그리드)로 렌더링된다.
   outcomeGallery?: ProjectDetailCardItem[];
   tech: { category: string; items: string[] }[];
+  // 시스템 아키텍처 다이어그램(선택) — 있으면 STACK 슬라이드가 카테고리별
+  // 텍스트 목록 대신 이 이미지 하나만 보여준다.
+  stackDiagram?: string;
 }
 
 export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
@@ -299,6 +303,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       },
       { category: "Infra", items: ["AWS EC2", "AWS Lambda", "Amazon RDS"] },
     ],
+    stackDiagram: fintagStackArchitecture,
   },
   "02": {
     period: "2026.03 – 2026.04",
