@@ -119,7 +119,7 @@ export function ProjectDetailView({
       accentColor={accentColor}
       isMobile={isMobile}
     />,
-    <AboutSlide project={project} detail={detail} isMobile={isMobile} />,
+    <AboutSlide project={project} detail={detail} accentColor={accentColor} isMobile={isMobile} />,
     <ProblemSlide items={detail.problem} accentColor={accentColor} isMobile={isMobile} />,
     <SolutionSlide items={detail.solution} accentColor={accentColor} isMobile={isMobile} />,
     <OutcomeSlide project={project} detail={detail} accentColor={accentColor} isMobile={isMobile} />,

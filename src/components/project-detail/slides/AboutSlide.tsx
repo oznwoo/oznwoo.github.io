@@ -1,15 +1,20 @@
+import { useState } from "react"
 import type { Project, ProjectDetail } from "@/data/projects"
+import { hexToRgba } from "@/lib/color"
 
 interface AboutSlideProps {
   project: Project
   detail: ProjectDetail
+  accentColor: string
   isMobile: boolean
 }
 
 // 소개 — Overview 히어로 다음, 프로젝트를 실제로 설명하는 전용 화면.
 // 로고/타이틀/메타는 앞 슬라이드에서 이미 보여줬으니 소개 문단(+있으면
 // 실제 서비스 화면 스크린샷)만 둔다.
-export function AboutSlide({ project, detail, isMobile }: AboutSlideProps) {
+export function AboutSlide({ project, detail, accentColor, isMobile }: AboutSlideProps) {
+  const [shotHovered, setShotHovered] = useState(false)
+
   return (
     <div
       className={
@@ -32,8 +37,24 @@ export function AboutSlide({ project, detail, isMobile }: AboutSlideProps) {
         </span>
         {detail.aboutImage && (
           <div
-            className="w-full rounded-2xl overflow-hidden border border-[#0C0F1A]/8"
-            style={{ boxShadow: "0 24px 60px -20px rgba(12,15,26,0.25)" }}
+            onMouseEnter={() => setShotHovered(true)}
+            onMouseLeave={() => setShotHovered(false)}
+            className="w-full rounded-2xl overflow-hidden border cursor-default"
+            style={{
+              borderColor: shotHovered
+                ? hexToRgba(accentColor, 0.35)
+                : "rgba(12,15,26,0.1)",
+              // 앰비언트(넓고 옅은) + 컨택트(좁고 진한) 그림자를 겹쳐 입체감을
+              // 주고, hover 시 accent 컬러가 은은하게 번지는 그림자로 전환한다
+              boxShadow: shotHovered
+                ? `0 32px 70px -18px ${hexToRgba(accentColor, 0.35)}, 0 10px 26px -10px rgba(12,15,26,0.3)`
+                : "0 24px 60px -24px rgba(12,15,26,0.28), 0 6px 16px -8px rgba(12,15,26,0.14)",
+              transform: shotHovered
+                ? "translateY(-4px) scale(1.012)"
+                : "translateY(0) scale(1)",
+              transition:
+                "transform 0.45s cubic-bezier(0.16,1,0.3,1), box-shadow 0.45s ease-out, border-color 0.45s ease-out",
+            }}
           >
             <img
               src={detail.aboutImage}
