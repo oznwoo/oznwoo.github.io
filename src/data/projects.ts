@@ -284,12 +284,28 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       {
         title: "SHAP·LLM 기반 예측 설명 및 이상거래 탐지",
         body: "LightGBM 예측 기여도를 SHAP으로 분석하고, AWS Bedrock(Claude 3)으로 예측 근거와 이상거래 의심 사유를 자연어로 생성했습니다. 규칙 기반 탐지와 IsolationForest·PyOD ECOD를 결합해 이상거래를 식별하고, 담당자가 근거를 확인한 뒤 선택적으로 제거할 수 있게 했습니다.",
-        shortBody: [
-          "예측 기여도 분석 기법(SHAP)으로 **근거 산출**",
-          "AI(AWS Bedrock)가 예측 근거를 **자연어로 설명**",
-          "이상거래 탐지 알고리즘으로 **의심 거래 자동 식별**",
-          "담당자가 근거 확인 후 **선택적으로 제거** 가능",
-        ],
+        comparison: {
+          before: [
+            {
+              title: "예측값만 있고 근거 설명이 없음",
+              detail: "숫자만 제공되고 왜 이런 결과가 나왔는지 설명이 없어 담당자가 신뢰하기 어려움",
+            },
+            {
+              title: "이상거래가 예측에 그대로 반영",
+              detail: "비정상 거래가 걸러지지 않고 반영되어 예측값 신뢰도가 떨어짐",
+            },
+          ],
+          after: [
+            {
+              title: "예측 근거를 항목별로 시각화",
+              detail: "예측에 영향을 준 항목을 순위별로 시각화해 담당자가 근거를 확인하고 판단",
+            },
+            {
+              title: "이상거래를 식별해 선택적으로 제거",
+              detail: "규칙과 ML 기반으로 비정상 거래를 색출해 사용자가 직접 제거 가능",
+            },
+          ],
+        },
         icon: "sparkle",
         image: fintagSolutionExplainUi,
       },
