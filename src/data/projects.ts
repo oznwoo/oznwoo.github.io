@@ -171,10 +171,10 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
     overviewHeadline:
       "재무 전문가가 부재한 중소기업을 위한 AI 자금 관리 에이전트",
     overviewBody:
-      "재무 전문가가 없는 중소기업은 유휴자금을 방치한 채 매년 손실을 보면서도 이를 알아채지 못합니다. Fintag는 유휴자금을 기반으로 현금흐름을 예측하고, 상황에 맞는 금융 상품을 제안합니다.",
+      "재무 전문가가 없는 중소기업은 **유휴자금**을 방치한 채 매년 손실을 보면서도 이를 알아채지 못합니다. Fintag는 유휴자금을 기반으로 **현금흐름을 예측**하고, 상황에 맞는 **금융 상품을 제안**합니다.",
     roleHeadline: "현금흐름 예측 모델 고도화",
     roleBody:
-      "핵심 엔진인 현금흐름 예측 모델을 하이브리드 구조로 고도화했습니다. Prophet의 추세·계절성 예측에 LightGBM 잔차 보정을 더해 예측 오차를 76% 줄였습니다. SHAP·LLM 기반으로 예측 근거를 자연어로 설명 가능하게 만들었습니다.",
+      "핵심 엔진인 현금흐름 예측 모델을 **하이브리드 구조**로 고도화했습니다. Prophet의 추세·계절성 예측에 LightGBM 잔차 보정을 더해 **예측 오차를 76% 줄였습니다**. SHAP·LLM 기반으로 **예측 근거를 자연어로 설명** 가능하게 만들었습니다.",
     logoSrc: fintagLogo,
     aboutImage: fintagAboutHero,
     roleImage: fintagAboutRole,

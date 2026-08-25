@@ -28,6 +28,20 @@ function splitSentences(text: string): string[] {
   return text.split(/(?<=[.!?])\s+/).filter(Boolean)
 }
 
+// PROBLEM/SOLUTION 카드와 동일한 규칙 — 텍스트 안의 **강조** 구간만
+// 굵게 렌더링해, 옅은 본문 톤 안에서도 핵심 단어가 눈에 들어오게 한다.
+function renderWithEmphasis(text: string) {
+  return text.split(/\*\*(.+?)\*\*/g).map((part, i) =>
+    i % 2 === 1 ? (
+      <strong key={i} className="font-semibold text-[#0C0F1A]">
+        {part}
+      </strong>
+    ) : (
+      part
+    ),
+  )
+}
+
 // 소개 — Overview 히어로 다음, 프로젝트를 실제로 설명하는 전용 화면.
 // roleImage가 있는 프로젝트는 SOLUTION 쇼케이스와 같은 탭+화살표 패턴으로
 // "무엇을 만들었나"/"내가 맡은 역할" 두 스텝을 한 번에 하나씩 보여주고,
@@ -247,14 +261,16 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
             </p>
             {/* 마크다운 h2/본문 느낌 — 구체적인 과정·성과는 작고 옅게 보조 설명으로.
                 문장 중간에서 줄바꿈되면 가독성이 떨어져서, 문장 경계에서만
-                줄바꿈되도록 문장 단위로 나눠 각각 한 줄로 보여준다 */}
+                줄바꿈되도록 문장 단위로 나눠 각각 한 줄로 보여준다. 크기·명도를
+                올리는 대신, 핵심 단어만 **강조**로 굵게 표시해 옅은 텍스트
+                안에서도 눈에 잘 들어오는 지점을 만든다 */}
             <p
               style={{ fontFamily: "var(--font-body)" }}
               className="text-sm sm:text-base text-[#0C0F1A]/55 leading-relaxed font-normal"
             >
               {splitSentences(current.body).map((sentence, i) => (
                 <span key={i} className="block sm:whitespace-nowrap">
-                  {sentence}
+                  {renderWithEmphasis(sentence)}
                 </span>
               ))}
             </p>
