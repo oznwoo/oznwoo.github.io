@@ -191,7 +191,11 @@ export function SolutionShowcase({
                 >
                   <ul className="flex flex-col gap-4">
                     {solution.comparison.before.map((item, i) => (
-                      <li key={i}>
+                      <li
+                        key={i}
+                        className="pl-3"
+                        style={{ borderLeft: `2px solid ${hexToRgba(accentColor, 0.25)}` }}
+                      >
                         <p
                           style={{ fontFamily: "var(--font-body)" }}
                           className="text-sm font-semibold text-[#0C0F1A] leading-snug"
@@ -202,7 +206,7 @@ export function SolutionShowcase({
                           style={{ fontFamily: "var(--font-body)" }}
                           className="text-xs text-[#0C0F1A]/60 leading-relaxed font-normal mt-1"
                         >
-                          → {item.detail}
+                          {item.detail}
                         </p>
                       </li>
                     ))}
@@ -232,7 +236,11 @@ export function SolutionShowcase({
                 >
                   <ul className="flex flex-col gap-4">
                     {solution.comparison.after.map((item, i) => (
-                      <li key={i}>
+                      <li
+                        key={i}
+                        className="pl-3"
+                        style={{ borderLeft: `2px solid ${hexToRgba(accentColor, 0.25)}` }}
+                      >
                         <p
                           style={{ fontFamily: "var(--font-body)" }}
                           className="text-sm font-semibold text-[#0C0F1A] leading-snug"
@@ -243,7 +251,7 @@ export function SolutionShowcase({
                           style={{ fontFamily: "var(--font-body)" }}
                           className="text-xs text-[#0C0F1A]/60 leading-relaxed font-normal mt-1"
                         >
-                          → {item.detail}
+                          {item.detail}
                         </p>
                       </li>
                     ))}
