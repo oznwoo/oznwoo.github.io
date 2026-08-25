@@ -105,10 +105,8 @@ export function SolutionShowcase({
           style={{
             animation: "step-in 0.5s cubic-bezier(0.16,1,0.3,1) both",
             // 탭 아래 콘텐츠 영역 크기를 스텝마다 고정해, 이미지 비율이나
-            // 설명 길이가 달라져도 탭 위치가 위아래로 밀리지 않게 한다.
-            // flowSteps가 있는 스텝(전처리 파이프라인)이 가장 길어서 그
-            // 기준으로 잡는다.
-            minHeight: isMobile ? undefined : "640px",
+            // 설명 길이가 달라져도 탭 위치가 위아래로 밀리지 않게 한다
+            minHeight: isMobile ? undefined : "480px",
           }}
           className="flex flex-col gap-3"
         >
@@ -182,71 +180,105 @@ export function SolutionShowcase({
                 "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
             }}
           >
-            <div
-              className="rounded-2xl p-4 backdrop-blur-sm"
-              style={{
-                background: hexToRgba(mixWithWhite(accentColor, 0.93), 0.62),
-                border: "1px solid rgba(12,15,26,0.06)",
-              }}
-            >
-              {solution.flowSteps ? (
-                // 단계가 순서대로 이어지는 항목(전처리 파이프라인)은 점
-                // 불릿 대신 번호 배지가 붙은 카드형 그리드로 보여준다. 세로
-                // 한 줄로 쌓으면 오른쪽이 텅 비어서, 2열로 채워 넓은 설명
-                // 카드 폭을 실제로 활용한다 — 순서는 배지 숫자로 충분히
-                // 읽히므로 화살표 커넥터는 두지 않는다.
-                <ol className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
-                  {solution.flowSteps.map((s, i) => (
-                    <li key={i} className="flex gap-3">
-                      <div
-                        className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
-                        style={{ background: hexToRgba(accentColor, 0.14), color: accentColor }}
-                      >
-                        {i + 1}
-                      </div>
-                      <div>
-                        <p
-                          style={{ fontFamily: "var(--font-body)" }}
-                          className="text-sm font-semibold text-[#0C0F1A]"
-                        >
-                          {s.title}
-                        </p>
-                        <p
-                          style={{ fontFamily: "var(--font-body)" }}
-                          className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal"
-                        >
-                          {s.detail}
-                        </p>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-              ) : solution.shortBody ? (
-                <ul className="flex flex-col gap-1.5">
-                  {solution.shortBody.map((line, i) => (
-                    <li
-                      key={i}
-                      style={{ fontFamily: "var(--font-body)" }}
-                      className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal flex items-start gap-2"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className="w-1 h-1 rounded-full shrink-0 mt-2"
-                        style={{ background: accentColor }}
-                      />
-                      <span>{renderWithEmphasis(line)}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p
-                  style={{ fontFamily: "var(--font-body)" }}
-                  className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal"
+            {solution.comparison ? (
+              // 기존 상태를 개선한 항목(전처리 파이프라인)은 점 불릿 목록
+              // 대신 AS-IS/TO-BE 두 영역을 화살표로 잇는 비교 구조로
+              // 보여준다 — 어려운 용어 없이 상태 변화 자체가 한눈에 읽히게
+              <div
+                className={isMobile ? "flex flex-col gap-3" : "grid gap-4 items-stretch"}
+                style={!isMobile ? { gridTemplateColumns: "1fr auto 1fr" } : undefined}
+              >
+                <div
+                  className="rounded-2xl p-4"
+                  style={{
+                    background: "rgba(12,15,26,0.035)",
+                    border: "1px solid rgba(12,15,26,0.08)",
+                  }}
                 >
-                  {solution.body}
-                </p>
-              )}
-            </div>
+                  <ul className="flex flex-col gap-1.5">
+                    {solution.comparison.before.map((line, i) => (
+                      <li
+                        key={i}
+                        style={{ fontFamily: "var(--font-body)" }}
+                        className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal flex items-start gap-2"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="w-1 h-1 rounded-full shrink-0 mt-2"
+                          style={{ background: "rgba(12,15,26,0.3)" }}
+                        />
+                        <span>{renderWithEmphasis(line)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div
+                  aria-hidden="true"
+                  className="flex items-center justify-center text-2xl shrink-0"
+                  style={{ color: accentColor }}
+                >
+                  {isMobile ? "↓" : "→"}
+                </div>
+                <div
+                  className="rounded-2xl p-4 backdrop-blur-sm"
+                  style={{
+                    background: hexToRgba(mixWithWhite(accentColor, 0.93), 0.62),
+                    border: "1px solid rgba(12,15,26,0.06)",
+                  }}
+                >
+                  <ul className="flex flex-col gap-1.5">
+                    {solution.comparison.after.map((line, i) => (
+                      <li
+                        key={i}
+                        style={{ fontFamily: "var(--font-body)" }}
+                        className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal flex items-start gap-2"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="w-1 h-1 rounded-full shrink-0 mt-2"
+                          style={{ background: accentColor }}
+                        />
+                        <span>{renderWithEmphasis(line)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ) : (
+              <div
+                className="rounded-2xl p-4 backdrop-blur-sm"
+                style={{
+                  background: hexToRgba(mixWithWhite(accentColor, 0.93), 0.62),
+                  border: "1px solid rgba(12,15,26,0.06)",
+                }}
+              >
+                {solution.shortBody ? (
+                  <ul className="flex flex-col gap-1.5">
+                    {solution.shortBody.map((line, i) => (
+                      <li
+                        key={i}
+                        style={{ fontFamily: "var(--font-body)" }}
+                        className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal flex items-start gap-2"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="w-1 h-1 rounded-full shrink-0 mt-2"
+                          style={{ background: accentColor }}
+                        />
+                        <span>{renderWithEmphasis(line)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p
+                    style={{ fontFamily: "var(--font-body)" }}
+                    className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal"
+                  >
+                    {solution.body}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

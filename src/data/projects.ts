@@ -124,10 +124,10 @@ export interface ProjectDetailCardItem {
   // 하나씩, 문장이 아니라 키워드 위주 짧은 구로 스캔하기 쉽게 쓴다. 각
   // 줄 안에서 **강조**로 핵심 단어만 진하게 표시할 수 있다.
   shortBody?: string[];
-  // 처리 과정이 여러 단계로 이어지는 항목에 한해, shortBody 대신 이걸
-  // 쓰면 SOLUTION 쇼케이스가 번호+화살표로 이어지는 순서도 형태로
-  // 렌더링한다 — 단계별로 제목(짧게)과 설명(한 문장, 더 상세하게)을 나눈다
-  flowSteps?: { title: string; detail: string }[];
+  // 기존 상태(before)를 개선된 상태(after)로 바꾼 항목에 한해, shortBody
+  // 대신 이걸 쓰면 SOLUTION 쇼케이스가 AS-IS/TO-BE 두 영역을 화살표로
+  // 잇는 비교 구조로 렌더링한다. 각 배열 원소가 해당 영역의 불릿 한 줄.
+  comparison?: { before: string[]; after: string[] };
   icon?: DetailIconKey;
   tags?: string[];
   image?: string;
@@ -224,29 +224,16 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       {
         title: "은행 거래 기반 전처리 파이프라인",
         body: "카드·보험 등 별도 집계 대신 은행 계좌 입출금 단일 기준으로 데이터를 수집하고 Tag로 지출 성격을 분류했습니다. 내부 계좌 간 이동은 Tag로 자동 식별해 학습 데이터에서 제외하고, 순수 현금흐름만 예측에 반영되도록 정제했습니다.",
-        flowSteps: [
-          {
-            title: "은행 거래만 선별",
-            detail:
-              "카드·보험 등 다른 채널은 제외하고, 은행 계좌 입출금 내역만 데이터 수집 대상으로 선별합니다.",
-          },
-          {
-            title: "거래 내역 Tag 분류",
-            detail: "선별된 거래마다 Tag를 붙여 지출 성격을 자동으로 분류합니다.",
-          },
-          {
-            title: "내부 이체 제거",
-            detail: "회사 명의 계좌 간 자금 이동은 Tag로 자동 식별해 학습 데이터에서 제외합니다.",
-          },
-          {
-            title: "시계열 변환",
-            detail: "정제된 거래 내역을 일별 현금흐름 시계열 데이터로 변환합니다.",
-          },
-          {
-            title: "정제된 시계열 확보",
-            detail: "순수 현금흐름만 남은 시계열 데이터를 예측 모델에 그대로 반영합니다.",
-          },
-        ],
+        comparison: {
+          before: [
+            "예금·카드·보험 등 **모든 금융 상품 거래**가 구분 없이 예측에 반영됨",
+            "**내부 계좌 간 이동**도 걸러지지 않고 지출로 잡힘",
+          ],
+          after: [
+            "결국 모든 거래는 **계좌를 거쳐가므로**, 계좌 거래만 기준으로 삼음",
+            "거래 내용을 읽어 **Tag로 자동 분류**하고 불필요한 내역은 정제",
+          ],
+        },
         icon: "filter",
         image: fintagSolutionPipeline,
       },
