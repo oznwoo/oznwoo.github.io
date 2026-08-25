@@ -76,14 +76,11 @@ export function SolutionShowcase({
       <div className="max-w-4xl w-full">
         <span
           style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-5 block"
+          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-6 block"
         >
           Solution
         </span>
-        <div
-          className="flex flex-wrap items-center gap-6 mb-8"
-          style={{ borderBottom: "1px solid rgba(12,15,26,0.08)" }}
-        >
+        <div className="flex flex-wrap items-center gap-6 mb-10">
           {problems.map((p, i) => (
             <button
               key={p.title}
@@ -108,7 +105,7 @@ export function SolutionShowcase({
             // 설명 길이가 달라져도 탭 위치가 위아래로 밀리지 않게 한다
             minHeight: isMobile ? undefined : "480px",
           }}
-          className="flex flex-col gap-3"
+          className="flex flex-col gap-6"
         >
           <h3
             style={{ fontFamily: "var(--font-body)" }}
@@ -185,17 +182,17 @@ export function SolutionShowcase({
               // 대신 AS-IS/TO-BE 두 영역을 화살표로 잇는 비교 구조로
               // 보여준다 — 어려운 용어 없이 상태 변화 자체가 한눈에 읽히게
               <div
-                className={isMobile ? "flex flex-col gap-3" : "grid gap-4 items-stretch"}
+                className={isMobile ? "flex flex-col gap-5" : "grid gap-6 items-stretch"}
                 style={!isMobile ? { gridTemplateColumns: "1fr auto 1fr" } : undefined}
               >
                 <div
-                  className="rounded-2xl p-4"
+                  className="rounded-2xl p-5"
                   style={{
                     background: "rgba(12,15,26,0.035)",
                     border: "1px solid rgba(12,15,26,0.08)",
                   }}
                 >
-                  <ul className="flex flex-col gap-1.5">
+                  <ul className="flex flex-col gap-2">
                     {solution.comparison.before.map((line, i) => (
                       <li
                         key={i}
@@ -220,13 +217,13 @@ export function SolutionShowcase({
                   {isMobile ? "↓" : "→"}
                 </div>
                 <div
-                  className="rounded-2xl p-4 backdrop-blur-sm"
+                  className="rounded-2xl p-5 backdrop-blur-sm"
                   style={{
                     background: hexToRgba(mixWithWhite(accentColor, 0.93), 0.62),
                     border: "1px solid rgba(12,15,26,0.06)",
                   }}
                 >
-                  <ul className="flex flex-col gap-1.5">
+                  <ul className="flex flex-col gap-2">
                     {solution.comparison.after.map((line, i) => (
                       <li
                         key={i}
@@ -246,14 +243,14 @@ export function SolutionShowcase({
               </div>
             ) : (
               <div
-                className="rounded-2xl p-4 backdrop-blur-sm"
+                className="rounded-2xl p-5 backdrop-blur-sm"
                 style={{
                   background: hexToRgba(mixWithWhite(accentColor, 0.93), 0.62),
                   border: "1px solid rgba(12,15,26,0.06)",
                 }}
               >
                 {solution.shortBody ? (
-                  <ul className="flex flex-col gap-1.5">
+                  <ul className="flex flex-col gap-2">
                     {solution.shortBody.map((line, i) => (
                       <li
                         key={i}
