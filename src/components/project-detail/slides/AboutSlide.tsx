@@ -115,9 +115,8 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
                 style={{
                   fontFamily: "var(--font-body)",
                   color: i === step ? "#0C0F1A" : "rgba(12,15,26,0.4)",
-                  borderBottomColor: i === step ? accentColor : "transparent",
                 }}
-                className="text-sm font-medium pb-3 border-b-2 transition-colors duration-300"
+                className="text-sm font-medium pb-3 transition-colors duration-300"
               >
                 {s.tabLabel}
               </button>
