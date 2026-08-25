@@ -130,7 +130,12 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
 
         <div
           key={step}
-          style={{ animation: hasRole ? "step-in 0.5s cubic-bezier(0.16,1,0.3,1) both" : undefined }}
+          style={{
+            animation: hasRole ? "step-in 0.5s cubic-bezier(0.16,1,0.3,1) both" : undefined,
+            // 스텝마다 이미지 비율·본문 길이가 달라 전환 시 이미지·텍스트
+            // 위치가 위아래로 밀리지 않도록, 콘텐츠 영역 높이를 고정한다
+            minHeight: hasRole && !isMobile ? "600px" : undefined,
+          }}
           className="flex flex-col items-center gap-8 w-full"
         >
           {current.image && (
