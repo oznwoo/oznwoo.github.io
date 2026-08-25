@@ -247,17 +247,24 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
             </p>
             {/* 마크다운 h2/본문 느낌 — 구체적인 과정·성과는 작고 옅게 보조 설명으로.
                 문장 중간에서 줄바꿈되면 가독성이 떨어져서, 문장 경계에서만
-                줄바꿈되도록 문장 단위로 나눠 각각 한 줄로 보여준다 */}
-            <p
-              style={{ fontFamily: "var(--font-body)" }}
-              className="text-sm sm:text-base text-[#0C0F1A]/55 leading-relaxed font-normal"
-            >
+                줄바꿈되도록 문장 단위로 나눠 각각 글머리 dot과 함께 한 줄씩
+                보여준다 */}
+            <ul className="flex flex-col gap-1.5">
               {splitSentences(current.body).map((sentence, i) => (
-                <span key={i} className="block sm:whitespace-nowrap">
-                  {sentence}
-                </span>
+                <li
+                  key={i}
+                  style={{ fontFamily: "var(--font-body)" }}
+                  className="text-sm sm:text-base text-[#0C0F1A]/55 leading-relaxed font-normal flex items-start gap-2"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="w-1 h-1 rounded-full shrink-0 mt-2"
+                    style={{ background: accentColor }}
+                  />
+                  <span className="sm:whitespace-nowrap">{sentence}</span>
+                </li>
               ))}
-            </p>
+            </ul>
           </div>
         </div>
       </div>
