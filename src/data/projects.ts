@@ -5,8 +5,11 @@ import fintagProblemPreprocessing from "@/imports/fintag/fintag-problem-preproce
 import fintagProblemAccuracy from "@/imports/fintag/fintag-problem-accuracy.webp";
 import fintagProblemExplain from "@/imports/fintag/fintag-problem-explain.webp";
 import fintagSolutionPipeline from "@/imports/fintag/fintag-solution-pipeline.webp";
-import fintagSolutionSteps from "@/imports/fintag/fintag-solution-steps.webp";
-import fintagSolutionExplainUi from "@/imports/fintag/fintag-solution-explain-ui.webp";
+import fintagSolutionAccuracyStep1 from "@/imports/fintag/fintag-solution-accuracy-step1.webp";
+import fintagSolutionAccuracyStep2 from "@/imports/fintag/fintag-solution-accuracy-step2.webp";
+import fintagSolutionAccuracyStep3 from "@/imports/fintag/fintag-solution-accuracy-step3.webp";
+import fintagSolutionExplainShap from "@/imports/fintag/fintag-solution-explain-shap.webp";
+import fintagSolutionExplainAnomaly from "@/imports/fintag/fintag-solution-explain-anomaly.webp";
 import fintagOutcomeChart from "@/imports/fintag/fintag-outcome-chart.webp";
 import fintagOutcomePreprocessing from "@/imports/fintag/fintag-outcome-preprocessing.webp";
 import fintagOutcomeAccuracy from "@/imports/fintag/fintag-outcome-accuracy.webp";
@@ -135,6 +138,13 @@ export interface ProjectDetailCardItem {
   icon?: DetailIconKey;
   tags?: string[];
   image?: string;
+  // 하나의 합성 스크린샷 대신 개별 스텝 이미지 여러 장을 나란히 보여주고
+  // 싶을 때 image 대신 이걸 쓴다 — 이미지 사이 화살표는 이미지에 미리
+  // 박아 넣지 않고, SolutionShowcase가 직접 그린다.
+  images?: string[];
+  // images가 순차적인 파이프라인 스텝이 아니라(예: 서로 독립된 다이어그램
+  // 여러 장) 화살표로 잇는 게 부적절할 때 false로 끈다. 기본값은 true.
+  imagesShowArrows?: boolean;
 }
 
 export interface ProjectDetail {
@@ -279,7 +289,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
           ],
         },
         icon: "layers",
-        image: fintagSolutionSteps,
+        images: [fintagSolutionAccuracyStep1, fintagSolutionAccuracyStep2, fintagSolutionAccuracyStep3],
       },
       {
         title: "SHAP·LLM 기반 예측 설명 및 이상거래 탐지",
@@ -307,7 +317,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
           ],
         },
         icon: "sparkle",
-        image: fintagSolutionExplainUi,
+        images: [fintagSolutionExplainShap, fintagSolutionExplainAnomaly],
+        // 두 이미지 모두 이미 자체 흐름 화살표가 그려진 독립된 다이어그램
+        // (예측 설명 vs 이상거래 탐지)이라, 우리 쪽에서 그 사이에 인과
+        // 관계를 암시하는 화살표를 추가로 그리지 않는다
+        imagesShowArrows: false,
       },
     ],
     outcome: [
