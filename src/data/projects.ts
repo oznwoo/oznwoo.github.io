@@ -1,5 +1,6 @@
 import fintagLogo from "@/imports/fintag-logo.png";
 import fintagAboutHero from "@/imports/fintag/fintag-about-hero.webp";
+import fintagAboutRole from "@/imports/fintag/fintag-about-role.webp";
 import fintagProblemPreprocessing from "@/imports/fintag/fintag-problem-preprocessing.webp";
 import fintagProblemAccuracy from "@/imports/fintag/fintag-problem-accuracy.webp";
 import fintagProblemExplain from "@/imports/fintag/fintag-problem-explain.webp";
@@ -141,6 +142,13 @@ export interface ProjectDetail {
   logoSrc?: string;
   // About 슬라이드에서 소개 문단과 함께 보여줄 실제 서비스 화면 스크린샷(선택)
   aboutImage?: string;
+  // 담당 역할을 구체적으로 보여줄 헤드라인/본문/스크린샷(선택). 셋 중
+  // roleImage가 있으면 About 슬라이드가 "무엇을 만들었나"(overview) /
+  // "내가 맡은 역할"(role) 2컬럼으로 나뉜다. 없는 프로젝트는 기존처럼
+  // 단일 컬럼 레이아웃을 그대로 쓴다.
+  roleHeadline?: string;
+  roleBody?: string;
+  roleImage?: string;
   problem: ProjectDetailCardItem[];
   solution: ProjectDetailCardItem[];
   outcome: { stat: string; label: string; icon?: DetailIconKey }[];
@@ -163,9 +171,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
     overviewHeadline:
       "재무 전문가가 부재한 중소기업을 위한 AI 자금 관리 에이전트",
     overviewBody:
-      "Fintag 내부의 핵심 기능인 현금흐름 예측 기능 고도화를 담당했습니다.",
+      "은행·카드·보험 데이터를 기반으로 기업의 만기·현금 부족을 미리 감지해 챗봇으로 알려주는 서비스입니다.",
+    roleHeadline: "현금흐름 예측 모델 고도화",
+    roleBody:
+      "핵심 엔진인 현금흐름 예측 모델을 Prophet(추세·계절성)과 LightGBM(잔차 보정)을 결합한 하이브리드 구조로 고도화해 예측 오차를 76% 줄였고, SHAP·LLM 기반으로 예측 근거를 자연어로 설명 가능하게 만들었습니다.",
     logoSrc: fintagLogo,
     aboutImage: fintagAboutHero,
+    roleImage: fintagAboutRole,
     problem: [
       {
         title: "데이터 전처리 부재",
