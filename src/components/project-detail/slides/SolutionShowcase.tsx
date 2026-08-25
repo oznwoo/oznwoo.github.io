@@ -191,48 +191,35 @@ export function SolutionShowcase({
             >
               {solution.flowSteps ? (
                 // 단계가 순서대로 이어지는 항목(전처리 파이프라인)은 점
-                // 불릿 대신 번호 + 화살표로 흐름을 따라가는 순서도 형태로
-                // 보여주고, 각 단계는 짧은 제목과 한 문장짜리 상세 설명을
-                // 함께 둔다.
-                <ol className="flex flex-col">
-                  {solution.flowSteps.map((s, i) => {
-                    const isLast = i === solution.flowSteps!.length - 1
-                    return (
-                      <li key={i} className="flex gap-3">
-                        <div className="flex flex-col items-center shrink-0">
-                          <div
-                            className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
-                            style={{ background: accentColor, color: "#fff" }}
-                          >
-                            {i + 1}
-                          </div>
-                          {!isLast && (
-                            <span
-                              aria-hidden="true"
-                              className="text-sm leading-none flex-1 flex items-center"
-                              style={{ color: hexToRgba(accentColor, 0.4) }}
-                            >
-                              ↓
-                            </span>
-                          )}
-                        </div>
-                        <div className={isLast ? "" : "pb-3"}>
-                          <p
-                            style={{ fontFamily: "var(--font-body)" }}
-                            className="text-sm font-semibold text-[#0C0F1A]"
-                          >
-                            {s.title}
-                          </p>
-                          <p
-                            style={{ fontFamily: "var(--font-body)" }}
-                            className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal"
-                          >
-                            {s.detail}
-                          </p>
-                        </div>
-                      </li>
-                    )
-                  })}
+                // 불릿 대신 번호 배지가 붙은 카드형 그리드로 보여준다. 세로
+                // 한 줄로 쌓으면 오른쪽이 텅 비어서, 2열로 채워 넓은 설명
+                // 카드 폭을 실제로 활용한다 — 순서는 배지 숫자로 충분히
+                // 읽히므로 화살표 커넥터는 두지 않는다.
+                <ol className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
+                  {solution.flowSteps.map((s, i) => (
+                    <li key={i} className="flex gap-3">
+                      <div
+                        className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
+                        style={{ background: hexToRgba(accentColor, 0.14), color: accentColor }}
+                      >
+                        {i + 1}
+                      </div>
+                      <div>
+                        <p
+                          style={{ fontFamily: "var(--font-body)" }}
+                          className="text-sm font-semibold text-[#0C0F1A]"
+                        >
+                          {s.title}
+                        </p>
+                        <p
+                          style={{ fontFamily: "var(--font-body)" }}
+                          className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal"
+                        >
+                          {s.detail}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
                 </ol>
               ) : solution.shortBody ? (
                 <ul className="flex flex-col gap-1.5">
