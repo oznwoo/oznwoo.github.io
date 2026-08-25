@@ -126,8 +126,12 @@ export interface ProjectDetailCardItem {
   shortBody?: string[];
   // 기존 상태(before)를 개선된 상태(after)로 바꾼 항목에 한해, shortBody
   // 대신 이걸 쓰면 SOLUTION 쇼케이스가 AS-IS/TO-BE 두 영역을 화살표로
-  // 잇는 비교 구조로 렌더링한다. 각 배열 원소가 해당 영역의 불릿 한 줄.
-  comparison?: { before: string[]; after: string[] };
+  // 잇는 비교 구조로 렌더링한다. 각 항목은 짧은 제목(title)과, 그 제목을
+  // 왜/어떻게 그렇게 됐는지 풀어주는 한 줄 설명(detail)의 쌍이다.
+  comparison?: {
+    before: { title: string; detail: string }[];
+    after: { title: string; detail: string }[];
+  };
   icon?: DetailIconKey;
   tags?: string[];
   image?: string;
@@ -226,14 +230,24 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
         body: "카드·보험 등 별도 집계 대신 은행 계좌 입출금 단일 기준으로 데이터를 수집하고 Tag로 지출 성격을 분류했습니다. 내부 계좌 간 이동은 Tag로 자동 식별해 학습 데이터에서 제외하고, 순수 현금흐름만 예측에 반영되도록 정제했습니다.",
         comparison: {
           before: [
-            "예금·카드·보험 등 **모든 금융 상품 거래**가 구분 없이 예측에 반영됨",
-            "은행·카드·보험이 **각각 따로 집계**돼 같은 지출이 중복으로 잡힘",
-            "**내부 계좌 간 이동**도 걸러지지 않고 지출로 잡힘",
+            {
+              title: "은행·카드·보험 동일 지출 중복 집계",
+              detail: "각각 따로 집계된 거래가 겹쳐서 학습 데이터가 왜곡되고 오차가 커짐",
+            },
+            {
+              title: "내부 계좌 간 이동이 지출로 잘못 분류",
+              detail: "내부이체가 실제 지출로 잡혀 현금흐름이 과대 집계됨",
+            },
           ],
           after: [
-            "결국 모든 거래는 **계좌를 거쳐가므로**, 계좌 거래만 기준으로 삼음",
-            "거래 내용을 읽어 **Tag로 자동 분류**하고 불필요한 내역은 정제",
-            "**정제된 시계열 데이터**만 예측 모델에 반영",
+            {
+              title: "중복 없는 단일 계좌 기반 수집",
+              detail: "카드·보험 등 별도 집계 대신 계좌 입출금 단일 기준으로 전환하고 Tag로 지출 성격 분류",
+            },
+            {
+              title: "내부이체 자동 식별 후 제외",
+              detail: "계좌 간 이동을 Tag로 식별해 학습 데이터에서 자동 제외, 순수 현금흐름만 예측에 반영",
+            },
           ],
         },
         icon: "filter",
@@ -242,12 +256,28 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       {
         title: "Prophet + LightGBM 잔차 보정 + 고정지출 등록",
         body: "Prophet으로 추세·계절성을 1차 예측한 뒤 LightGBM으로 Prophet이 설명하지 못한 잔차를 추가 학습시켜 오차를 줄였습니다. 급여일·카드결제일 같은 반복 패턴을 모델에 직접 등록해 예측 안정성과 정밀도를 더 끌어올렸습니다.",
-        shortBody: [
-          "시계열 예측 모델(Prophet)로 **추세·계절성 1차 예측**",
-          "**LightGBM으로 잔차를 추가 학습**시켜 오차 보정",
-          "급여일·카드결제일 패턴을 모델에 **직접 등록**",
-          "3단계 파이프라인으로 **예측 안정성·정밀도 향상**",
-        ],
+        comparison: {
+          before: [
+            {
+              title: "Prophet 단독 모델의 한계",
+              detail: "Prophet 단독 예측 시 평균 오차(MAPE) 9.6%(30일)~23.5%(365일)",
+            },
+            {
+              title: "트렌드만 학습, 세밀한 패턴 반영 불가",
+              detail: "고정지출·반복 패턴을 노이즈로 처리해 예측 정밀도에 구조적 한계",
+            },
+          ],
+          after: [
+            {
+              title: "LightGBM 잔차 보정 모델 추가",
+              detail: "Prophet 1차 예측 위에 LightGBM으로 잔차를 학습시켜 평균 오차 7.4%(30일)~22.8%(365일)로 개선",
+            },
+            {
+              title: "고정지출 패턴 명시 등록",
+              detail: "급여일·카드결제일 같은 반복 패턴을 모델에 직접 등록해 트렌드 외 세밀한 패턴까지 반영",
+            },
+          ],
+        },
         icon: "layers",
         image: fintagSolutionSteps,
       },

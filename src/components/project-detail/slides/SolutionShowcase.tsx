@@ -189,19 +189,21 @@ export function SolutionShowcase({
                     border: "1px solid rgba(12,15,26,0.06)",
                   }}
                 >
-                  <ul className="flex flex-col gap-2">
-                    {solution.comparison.before.map((line, i) => (
-                      <li
-                        key={i}
-                        style={{ fontFamily: "var(--font-body)" }}
-                        className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal flex items-start gap-2"
-                      >
-                        <span
-                          aria-hidden="true"
-                          className="w-1 h-1 rounded-full shrink-0 mt-2"
-                          style={{ background: accentColor }}
-                        />
-                        <span>{renderWithEmphasis(line)}</span>
+                  <ul className="flex flex-col gap-4">
+                    {solution.comparison.before.map((item, i) => (
+                      <li key={i}>
+                        <p
+                          style={{ fontFamily: "var(--font-body)" }}
+                          className="text-sm font-semibold text-[#0C0F1A] leading-snug"
+                        >
+                          {item.title}
+                        </p>
+                        <p
+                          style={{ fontFamily: "var(--font-body)" }}
+                          className="text-xs text-[#0C0F1A]/60 leading-relaxed font-normal mt-1"
+                        >
+                          → {item.detail}
+                        </p>
                       </li>
                     ))}
                   </ul>
@@ -228,19 +230,21 @@ export function SolutionShowcase({
                     border: "1px solid rgba(12,15,26,0.06)",
                   }}
                 >
-                  <ul className="flex flex-col gap-2">
-                    {solution.comparison.after.map((line, i) => (
-                      <li
-                        key={i}
-                        style={{ fontFamily: "var(--font-body)" }}
-                        className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal flex items-start gap-2"
-                      >
-                        <span
-                          aria-hidden="true"
-                          className="w-1 h-1 rounded-full shrink-0 mt-2"
-                          style={{ background: accentColor }}
-                        />
-                        <span>{renderWithEmphasis(line)}</span>
+                  <ul className="flex flex-col gap-4">
+                    {solution.comparison.after.map((item, i) => (
+                      <li key={i}>
+                        <p
+                          style={{ fontFamily: "var(--font-body)" }}
+                          className="text-sm font-semibold text-[#0C0F1A] leading-snug"
+                        >
+                          {item.title}
+                        </p>
+                        <p
+                          style={{ fontFamily: "var(--font-body)" }}
+                          className="text-xs text-[#0C0F1A]/60 leading-relaxed font-normal mt-1"
+                        >
+                          → {item.detail}
+                        </p>
                       </li>
                     ))}
                   </ul>
