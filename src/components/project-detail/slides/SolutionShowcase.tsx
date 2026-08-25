@@ -105,8 +105,10 @@ export function SolutionShowcase({
           style={{
             animation: "step-in 0.5s cubic-bezier(0.16,1,0.3,1) both",
             // 탭 아래 콘텐츠 영역 크기를 스텝마다 고정해, 이미지 비율이나
-            // 설명 길이가 달라져도 탭 위치가 위아래로 밀리지 않게 한다
-            minHeight: isMobile ? undefined : "480px",
+            // 설명 길이가 달라져도 탭 위치가 위아래로 밀리지 않게 한다.
+            // flowSteps가 있는 스텝(전처리 파이프라인)이 가장 길어서 그
+            // 기준으로 잡는다.
+            minHeight: isMobile ? undefined : "640px",
           }}
           className="flex flex-col gap-3"
         >
@@ -187,7 +189,52 @@ export function SolutionShowcase({
                 border: "1px solid rgba(12,15,26,0.06)",
               }}
             >
-              {solution.shortBody ? (
+              {solution.flowSteps ? (
+                // 단계가 순서대로 이어지는 항목(전처리 파이프라인)은 점
+                // 불릿 대신 번호 + 화살표로 흐름을 따라가는 순서도 형태로
+                // 보여주고, 각 단계는 짧은 제목과 한 문장짜리 상세 설명을
+                // 함께 둔다.
+                <ol className="flex flex-col">
+                  {solution.flowSteps.map((s, i) => {
+                    const isLast = i === solution.flowSteps!.length - 1
+                    return (
+                      <li key={i} className="flex gap-3">
+                        <div className="flex flex-col items-center shrink-0">
+                          <div
+                            className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
+                            style={{ background: accentColor, color: "#fff" }}
+                          >
+                            {i + 1}
+                          </div>
+                          {!isLast && (
+                            <span
+                              aria-hidden="true"
+                              className="text-sm leading-none flex-1 flex items-center"
+                              style={{ color: hexToRgba(accentColor, 0.4) }}
+                            >
+                              ↓
+                            </span>
+                          )}
+                        </div>
+                        <div className={isLast ? "" : "pb-3"}>
+                          <p
+                            style={{ fontFamily: "var(--font-body)" }}
+                            className="text-sm font-semibold text-[#0C0F1A]"
+                          >
+                            {s.title}
+                          </p>
+                          <p
+                            style={{ fontFamily: "var(--font-body)" }}
+                            className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal"
+                          >
+                            {s.detail}
+                          </p>
+                        </div>
+                      </li>
+                    )
+                  })}
+                </ol>
+              ) : solution.shortBody ? (
                 <ul className="flex flex-col gap-1.5">
                   {solution.shortBody.map((line, i) => (
                     <li

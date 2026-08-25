@@ -124,6 +124,10 @@ export interface ProjectDetailCardItem {
   // 하나씩, 문장이 아니라 키워드 위주 짧은 구로 스캔하기 쉽게 쓴다. 각
   // 줄 안에서 **강조**로 핵심 단어만 진하게 표시할 수 있다.
   shortBody?: string[];
+  // 처리 과정이 여러 단계로 이어지는 항목에 한해, shortBody 대신 이걸
+  // 쓰면 SOLUTION 쇼케이스가 번호+화살표로 이어지는 순서도 형태로
+  // 렌더링한다 — 단계별로 제목(짧게)과 설명(한 문장, 더 상세하게)을 나눈다
+  flowSteps?: { title: string; detail: string }[];
   icon?: DetailIconKey;
   tags?: string[];
   image?: string;
@@ -220,11 +224,28 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       {
         title: "은행 거래 기반 전처리 파이프라인",
         body: "카드·보험 등 별도 집계 대신 은행 계좌 입출금 단일 기준으로 데이터를 수집하고 Tag로 지출 성격을 분류했습니다. 내부 계좌 간 이동은 Tag로 자동 식별해 학습 데이터에서 제외하고, 순수 현금흐름만 예측에 반영되도록 정제했습니다.",
-        shortBody: [
-          "**은행 계좌 입출금 단일 기준**으로 데이터 수집",
-          "Tag로 지출 성격을 자동 분류",
-          "**내부 계좌 이동**은 학습 데이터에서 자동 제외",
-          "정제된 시계열 데이터만 예측에 반영",
+        flowSteps: [
+          {
+            title: "은행 거래만 선별",
+            detail:
+              "카드·보험 등 다른 채널은 제외하고, 은행 계좌 입출금 내역만 데이터 수집 대상으로 선별합니다.",
+          },
+          {
+            title: "거래 내역 Tag 분류",
+            detail: "선별된 거래마다 Tag를 붙여 지출 성격을 자동으로 분류합니다.",
+          },
+          {
+            title: "내부 이체 제거",
+            detail: "회사 명의 계좌 간 자금 이동은 Tag로 자동 식별해 학습 데이터에서 제외합니다.",
+          },
+          {
+            title: "시계열 변환",
+            detail: "정제된 거래 내역을 일별 현금흐름 시계열 데이터로 변환합니다.",
+          },
+          {
+            title: "정제된 시계열 확보",
+            detail: "순수 현금흐름만 남은 시계열 데이터를 예측 모델에 그대로 반영합니다.",
+          },
         ],
         icon: "filter",
         image: fintagSolutionPipeline,
@@ -277,7 +298,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
           "중복 집계·내부 계좌 이동 **자동 필터링** 완료",
           "정제된 시계열 데이터로 변환 완료",
         ],
-        tags: ["#단일계좌기준", "#Tag분류"],
+        tags: ["단일계좌기준", "Tag분류"],
         image: fintagOutcomePreprocessing,
       },
       {
@@ -288,7 +309,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
           "잔차 보정으로 **안정적인 예측** 추세 확보",
           "평균 예측 오차율(MAPE) **76% 감소**",
         ],
-        tags: ["#잔차보정", "#고정지출등록"],
+        tags: ["잔차보정", "고정지출등록"],
         image: fintagOutcomeAccuracy,
       },
       {
@@ -299,7 +320,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
           "매출·지출 변동 요인을 **순위별로 제시**",
           "담당자가 근거를 확인한 뒤 신뢰 가능",
         ],
-        tags: ["#SHAP", "#Bedrock"],
+        tags: ["SHAP", "Bedrock"],
         image: fintagOutcomeExplain,
       },
     ],
