@@ -74,10 +74,15 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
 
   useEffect(() => {
     if (!isActive) {
+      // step은 여기서 리셋하지 않는다 — 즉시 리셋하면 key={step} 때문에
+      // 지금 보고 있던 스텝(예: 담당 역할)이 사라지는 애니메이션 없이
+      // 바로 첫 스텝으로 바뀌어 버린다. 대신 revealed만 꺼서 지금 보이는
+      // 자리에서 화살표·텍스트가 페이드아웃되게 하고, step은 다음에 다시
+      // 들어올 때(아래 else 분기)에만 0으로 되돌린다.
       setRevealed(false)
-      setStep(0)
       return
     }
+    setStep(0)
     const timer = setTimeout(() => setRevealed(true), SLIDE_TRANSITION_MS)
     return () => clearTimeout(timer)
   }, [isActive])
@@ -141,14 +146,28 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
           {current.image && (
             <div className="relative flex items-center justify-center w-full">
               {hasRole && !isMobile && step > 0 && (
-                <button
-                  aria-label="이전"
-                  onClick={() => goStep(step - 1)}
-                  className="absolute -left-10 top-1/2 -translate-y-1/2 z-10 text-3xl leading-none opacity-30 hover:opacity-80 transition-opacity duration-300"
-                  style={{ color: "#0C0F1A" }}
+                <div
+                  className="absolute -left-10 top-1/2 z-10"
+                  style={{
+                    // 진입 시 왼쪽에서 오른쪽으로 나타나고, 슬라이드를 벗어날 때는
+                    // (revealed가 다시 false가 되며) 같은 값을 거꾸로 통과해
+                    // 나타난 방향과 반대로(오른쪽에서 왼쪽으로) 사라진다
+                    transform: `translateY(-50%) translateX(${revealed ? 0 : -10}px)`,
+                    opacity: revealed ? 1 : 0,
+                    transition:
+                      "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
+                    pointerEvents: revealed ? "auto" : "none",
+                  }}
                 >
-                  ‹
-                </button>
+                  <button
+                    aria-label="이전"
+                    onClick={() => goStep(step - 1)}
+                    className="text-3xl leading-none opacity-30 hover:opacity-80 transition-opacity duration-300"
+                    style={{ color: "#0C0F1A" }}
+                  >
+                    ‹
+                  </button>
+                </div>
               )}
               <div
                 onMouseEnter={() => setShotHovered(true)}
@@ -184,14 +203,28 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
                 />
               </div>
               {hasRole && !isMobile && step < steps.length - 1 && (
-                <button
-                  aria-label="다음"
-                  onClick={() => goStep(step + 1)}
-                  className="absolute -right-10 top-1/2 -translate-y-1/2 z-10 text-3xl leading-none opacity-30 hover:opacity-80 transition-opacity duration-300"
-                  style={{ color: "#0C0F1A" }}
+                <div
+                  className="absolute -right-10 top-1/2 z-10"
+                  style={{
+                    // 진입 시 왼쪽에서 오른쪽으로 나타나고, 슬라이드를 벗어날 때는
+                    // (revealed가 다시 false가 되며) 같은 값을 거꾸로 통과해
+                    // 나타난 방향과 반대로(오른쪽에서 왼쪽으로) 사라진다
+                    transform: `translateY(-50%) translateX(${revealed ? 0 : -10}px)`,
+                    opacity: revealed ? 1 : 0,
+                    transition:
+                      "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
+                    pointerEvents: revealed ? "auto" : "none",
+                  }}
                 >
-                  ›
-                </button>
+                  <button
+                    aria-label="다음"
+                    onClick={() => goStep(step + 1)}
+                    className="text-3xl leading-none opacity-30 hover:opacity-80 transition-opacity duration-300"
+                    style={{ color: "#0C0F1A" }}
+                  >
+                    ›
+                  </button>
+                </div>
               )}
             </div>
           )}
