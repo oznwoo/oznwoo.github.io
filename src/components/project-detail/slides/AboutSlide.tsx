@@ -186,7 +186,10 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
               <div
                 onMouseEnter={() => setShotHovered(true)}
                 onMouseLeave={() => setShotHovered(false)}
-                className="w-full rounded-2xl overflow-hidden border cursor-default"
+                className={
+                  "w-full rounded-2xl overflow-hidden border cursor-default" +
+                  (hasRole ? " bg-white" : "")
+                }
                 style={{
                   borderColor: shotHovered
                     ? hexToRgba(accentColor, 0.35)
@@ -201,6 +204,11 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
                     : "translateY(0) scale(1)",
                   transition:
                     "transform 0.45s cubic-bezier(0.16,1,0.3,1), box-shadow 0.45s ease-out, border-color 0.45s ease-out",
+                  // 스텝마다 이미지 원본 비율이 달라 w-full h-auto로 두면 스텝
+                  // 전환 시 이미지 크기가 눈에 띄게 달라진다. 두 스텝 중 더
+                  // 작게 보이는 담당 업무 이미지 비율로 박스를 고정하고,
+                  // object-contain으로 잘리지 않게 넣어 항상 같은 크기로 보이게 한다
+                  aspectRatio: hasRole ? "1830 / 1014" : undefined,
                 }}
               >
                 <img
@@ -213,7 +221,11 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
                   loading="eager"
                   width={current.imageWidth}
                   height={current.imageHeight}
-                  className="w-full h-auto block"
+                  className={
+                    hasRole
+                      ? "w-full h-full block object-contain"
+                      : "w-full h-auto block"
+                  }
                 />
               </div>
               {hasRole && !isMobile && step < steps.length - 1 && (
