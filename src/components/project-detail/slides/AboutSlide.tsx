@@ -107,10 +107,7 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
         </span>
 
         {hasRole && (
-          <div
-            className="flex flex-wrap items-center justify-center gap-6"
-            style={{ borderBottom: "1px solid rgba(12,15,26,0.08)" }}
-          >
+          <div className="flex flex-wrap items-center justify-center gap-6">
             {steps.map((s, i) => (
               <button
                 key={s.tabLabel}
