@@ -22,6 +22,12 @@ interface AboutStep {
   imageHeight: number
 }
 
+// 본문을 문장 단위로 쪼갠다 — 문장 중간이 아니라 문장 경계에서만
+// 줄바꿈되게 하려고, 마침표(.!?) 뒤 공백을 기준으로 나눈다.
+function splitSentences(text: string): string[] {
+  return text.split(/(?<=[.!?])\s+/).filter(Boolean)
+}
+
 // 소개 — Overview 히어로 다음, 프로젝트를 실제로 설명하는 전용 화면.
 // roleImage가 있는 프로젝트는 SOLUTION 쇼케이스와 같은 탭+화살표 패턴으로
 // "무엇을 만들었나"/"내가 맡은 역할" 두 스텝을 한 번에 하나씩 보여주고,
@@ -185,7 +191,7 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
             </div>
           )}
           <div
-            className={(current.image ? "max-w-xl" : "") + " flex flex-col gap-3"}
+            className="flex flex-col gap-3 w-full"
             style={{
               transform: revealed ? "translateY(0)" : "translateY(-10px)",
               opacity: revealed ? 1 : 0,
@@ -201,12 +207,18 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
             >
               {current.headline}
             </p>
-            {/* 마크다운 h2/본문 느낌 — 구체적인 과정·성과는 작고 옅게 보조 설명으로 */}
+            {/* 마크다운 h2/본문 느낌 — 구체적인 과정·성과는 작고 옅게 보조 설명으로.
+                문장 중간에서 줄바꿈되면 가독성이 떨어져서, 문장 경계에서만
+                줄바꿈되도록 문장 단위로 나눠 각각 한 줄로 보여준다 */}
             <p
               style={{ fontFamily: "var(--font-body)" }}
               className="text-sm sm:text-base text-[#0C0F1A]/55 leading-relaxed font-normal"
             >
-              {current.body}
+              {splitSentences(current.body).map((sentence, i) => (
+                <span key={i} className="block sm:whitespace-nowrap">
+                  {sentence}
+                </span>
+              ))}
             </p>
           </div>
         </div>
