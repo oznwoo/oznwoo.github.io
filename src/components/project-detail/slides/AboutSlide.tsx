@@ -36,9 +36,9 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
           headline: detail.overviewHeadline,
           body: detail.overviewBody,
           image: detail.aboutImage,
-          imageAlt: `${project.title} 홈페이지 히어로 화면`,
-          imageWidth: 1590,
-          imageHeight: 956,
+          imageAlt: `${project.title} 대시보드 화면`,
+          imageWidth: 2048,
+          imageHeight: 1337,
         },
         {
           tabLabel: "담당 역할",
@@ -56,9 +56,9 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
           headline: detail.overviewHeadline,
           body: detail.overviewBody,
           image: detail.aboutImage,
-          imageAlt: `${project.title} 홈페이지 히어로 화면`,
-          imageWidth: 1590,
-          imageHeight: 956,
+          imageAlt: `${project.title} 대시보드 화면`,
+          imageWidth: 2048,
+          imageHeight: 1337,
         },
       ]
 
