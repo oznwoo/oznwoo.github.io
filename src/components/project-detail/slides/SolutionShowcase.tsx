@@ -80,7 +80,10 @@ export function SolutionShowcase({
         >
           Solution
         </span>
-        <div className="flex flex-wrap items-center gap-6 mb-10">
+        <div
+          className="flex flex-wrap items-center gap-6 mb-10"
+          style={{ borderBottom: "1px solid rgba(12,15,26,0.08)" }}
+        >
           {problems.map((p, i) => (
             <button
               key={p.title}
@@ -107,12 +110,6 @@ export function SolutionShowcase({
           }}
           className="flex flex-col gap-6"
         >
-          <h3
-            style={{ fontFamily: "var(--font-body)" }}
-            className="text-xl font-semibold text-[#0C0F1A]"
-          >
-            {solution.title}
-          </h3>
           {solution.image && (
             <div
               className="relative flex items-center justify-center"
@@ -186,10 +183,10 @@ export function SolutionShowcase({
                 style={!isMobile ? { gridTemplateColumns: "1fr auto 1fr" } : undefined}
               >
                 <div
-                  className="rounded-2xl p-5"
+                  className="rounded-2xl p-5 backdrop-blur-sm"
                   style={{
-                    background: "rgba(12,15,26,0.035)",
-                    border: "1px solid rgba(12,15,26,0.08)",
+                    background: hexToRgba(mixWithWhite(accentColor, 0.93), 0.62),
+                    border: "1px solid rgba(12,15,26,0.06)",
                   }}
                 >
                   <ul className="flex flex-col gap-2">
@@ -202,7 +199,7 @@ export function SolutionShowcase({
                         <span
                           aria-hidden="true"
                           className="w-1 h-1 rounded-full shrink-0 mt-2"
-                          style={{ background: "rgba(12,15,26,0.3)" }}
+                          style={{ background: accentColor }}
                         />
                         <span>{renderWithEmphasis(line)}</span>
                       </li>
@@ -211,10 +208,18 @@ export function SolutionShowcase({
                 </div>
                 <div
                   aria-hidden="true"
-                  className="flex items-center justify-center text-2xl shrink-0"
+                  className="flex items-center justify-center shrink-0"
                   style={{ color: accentColor }}
                 >
-                  {isMobile ? "↓" : "→"}
+                  <svg
+                    width="34"
+                    height="24"
+                    viewBox="0 0 36 24"
+                    fill="currentColor"
+                    style={{ transform: isMobile ? "rotate(90deg)" : undefined }}
+                  >
+                    <polygon points="0,8 18,8 18,0 36,12 18,24 18,16 0,16" />
+                  </svg>
                 </div>
                 <div
                   className="rounded-2xl p-5 backdrop-blur-sm"
