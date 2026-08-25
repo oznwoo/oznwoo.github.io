@@ -196,7 +196,7 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
             {/* 마크다운 h1 느낌 — 무엇을 만들었고 무슨 역할을 맡았는지 한 줄로
                 크고 진하게 먼저 보여준다 */}
             <p
-              style={{ fontFamily: "var(--font-display)", lineHeight: 1.35 }}
+              style={{ fontFamily: "var(--font-body)", lineHeight: 1.35 }}
               className="text-lg sm:text-xl font-medium text-[#0C0F1A]"
             >
               {current.headline}
