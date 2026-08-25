@@ -32,7 +32,7 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
   const steps: AboutStep[] = hasRole
     ? [
         {
-          tabLabel: "무엇을 만들었나",
+          tabLabel: "프로젝트 소개",
           headline: detail.overviewHeadline,
           body: detail.overviewBody,
           image: detail.aboutImage,
@@ -41,7 +41,7 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
           imageHeight: 956,
         },
         {
-          tabLabel: "내가 맡은 역할",
+          tabLabel: "담당 역할",
           headline: detail.roleHeadline ?? "",
           body: detail.roleBody ?? "",
           image: detail.roleImage,
