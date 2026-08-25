@@ -171,7 +171,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
     overviewHeadline:
       "재무 전문가가 부재한 중소기업을 위한 AI 자금 관리 에이전트",
     overviewBody:
-      "은행·카드·보험 데이터를 기반으로 기업의 만기·현금 부족을 미리 감지해 챗봇으로 알려주는 서비스입니다.",
+      "재무 전문가가 없는 중소기업은 유휴자금을 방치한 채 매년 손실을 보면서도 이를 알아채지 못합니다. Fintag는 유휴자금을 기반으로 현금흐름을 예측하고, 상황에 맞는 금융 상품을 제안합니다.",
     roleHeadline: "현금흐름 예측 모델 고도화",
     roleBody:
       "핵심 엔진인 현금흐름 예측 모델을 Prophet(추세·계절성)과 LightGBM(잔차 보정)을 결합한 하이브리드 구조로 고도화해 예측 오차를 76% 줄였고, SHAP·LLM 기반으로 예측 근거를 자연어로 설명 가능하게 만들었습니다.",
