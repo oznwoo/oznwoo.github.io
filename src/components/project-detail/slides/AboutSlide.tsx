@@ -111,7 +111,7 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
             style={{
               fontFamily: "var(--font-body)",
               color: "#0C0F1A",
-              transform: revealed ? "translateY(0)" : "translateY(-10px)",
+              transform: revealed ? "translateY(0)" : "translateY(10px)",
               opacity: revealed ? 1 : 0,
               transition:
                 "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
