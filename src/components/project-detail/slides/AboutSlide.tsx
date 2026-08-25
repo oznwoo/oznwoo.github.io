@@ -107,21 +107,12 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
         </span>
 
         {hasRole && (
-          <div className="flex flex-wrap items-center justify-center gap-6">
-            {steps.map((s, i) => (
-              <button
-                key={s.tabLabel}
-                onClick={() => goStep(i)}
-                style={{
-                  fontFamily: "var(--font-body)",
-                  color: i === step ? "#0C0F1A" : "rgba(12,15,26,0.4)",
-                }}
-                className="text-sm font-medium pb-3 transition-colors duration-300"
-              >
-                {s.tabLabel}
-              </button>
-            ))}
-          </div>
+          <span
+            style={{ fontFamily: "var(--font-body)", color: "#0C0F1A" }}
+            className="text-sm font-medium"
+          >
+            {current.tabLabel}
+          </span>
         )}
 
         <div
