@@ -61,7 +61,7 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
           imageHeight: 956,
         },
         {
-          tabLabel: "담당 역할",
+          tabLabel: "담당 업무",
           headline: detail.roleHeadline ?? "",
           body: detail.roleBody ?? "",
           image: detail.roleImage,
@@ -89,7 +89,7 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
   useEffect(() => {
     if (!isActive) {
       // step은 여기서 리셋하지 않는다 — 즉시 리셋하면 key={step} 때문에
-      // 지금 보고 있던 스텝(예: 담당 역할)이 사라지는 애니메이션 없이
+      // 지금 보고 있던 스텝(예: 담당 업무)이 사라지는 애니메이션 없이
       // 바로 첫 스텝으로 바뀌어 버린다. 대신 revealed만 꺼서 지금 보이는
       // 자리에서 화살표·텍스트가 페이드아웃되게 하고, step은 다음에 다시
       // 들어올 때(아래 else 분기)에만 0으로 되돌린다.
