@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import type { ProjectDetailCardItem } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
 import { hexToRgba, mixWithWhite } from "@/lib/color"
-import { AccentPill } from "../AccentPill"
 
 const SLIDE_TRANSITION_MS = 750
 
@@ -215,19 +214,6 @@ export function SolutionShowcase({
               )}
             </div>
           </div>
-          {solution.tags && (
-            <div className="flex flex-wrap gap-2">
-              {solution.tags.map((t) => (
-                <AccentPill
-                  key={t}
-                  label={t}
-                  accent={accent}
-                  accentColor={accentColor}
-                  projectId={projectId}
-                />
-              ))}
-            </div>
-          )}
         </div>
       </div>
     </div>
