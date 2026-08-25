@@ -66,8 +66,8 @@ export function AboutSlide({ project, detail, accentColor, isMobile, isActive }:
           body: detail.roleBody ?? "",
           image: detail.roleImage,
           imageAlt: `${project.title} 담당 기능 화면`,
-          imageWidth: 1818,
-          imageHeight: 1016,
+          imageWidth: 1830,
+          imageHeight: 1014,
         },
       ]
     : [

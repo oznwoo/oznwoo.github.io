@@ -174,7 +174,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       "재무 전문가가 없는 중소기업은 **유휴자금**을 방치한 채 매년 손실을 보면서도 이를 알아채지 못합니다. Fintag는 유휴자금을 기반으로 **현금흐름을 예측**하고, 상황에 맞는 **금융 상품을 제안**합니다.",
     roleHeadline: "현금흐름 예측 모델 고도화",
     roleBody:
-      "핵심 엔진인 현금흐름 예측 모델을 **하이브리드 구조**로 고도화했습니다. Prophet의 추세·계절성 예측에 LightGBM 잔차 보정을 더해 **예측 오차를 76% 줄였습니다**. SHAP·LLM 기반으로 **예측 근거를 자연어로 설명** 가능하게 만들었습니다.",
+      "처음 맡은 업무는 **유저 플로우·와이어프레임 설계**였습니다. 이후 백엔드·ML은 제가, 프론트엔드는 다른 팀원이 맡아 개발했습니다. **백엔드 API와 DB 구조**를 설계했고, 대부분의 시간은 **현금흐름 예측 모델 성능 고도화**에 투입했습니다. 추가로 **SHAP과 PyOD**를 도입해 예측 설명과 이상거래 탐지 기능도 구현했습니다.",
     logoSrc: fintagLogo,
     aboutImage: fintagAboutHero,
     roleImage: fintagAboutRole,
