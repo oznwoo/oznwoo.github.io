@@ -1,11 +1,15 @@
 import fintagLogo from "@/imports/fintag-logo.png";
 import fintagAboutHero from "@/imports/fintag/fintag-about-hero.webp";
+import fintagAboutRole from "@/imports/fintag/fintag-about-role.webp";
 import fintagProblemPreprocessing from "@/imports/fintag/fintag-problem-preprocessing.webp";
 import fintagProblemAccuracy from "@/imports/fintag/fintag-problem-accuracy.webp";
 import fintagProblemExplain from "@/imports/fintag/fintag-problem-explain.webp";
 import fintagSolutionPipeline from "@/imports/fintag/fintag-solution-pipeline.webp";
-import fintagSolutionSteps from "@/imports/fintag/fintag-solution-steps.webp";
-import fintagSolutionExplainUi from "@/imports/fintag/fintag-solution-explain-ui.webp";
+import fintagSolutionAccuracyStep1 from "@/imports/fintag/fintag-solution-accuracy-step1.webp";
+import fintagSolutionAccuracyStep2 from "@/imports/fintag/fintag-solution-accuracy-step2.webp";
+import fintagSolutionAccuracyStep3 from "@/imports/fintag/fintag-solution-accuracy-step3.webp";
+import fintagSolutionExplainShap from "@/imports/fintag/fintag-solution-explain-shap.webp";
+import fintagSolutionExplainAnomaly from "@/imports/fintag/fintag-solution-explain-anomaly.webp";
 import fintagOutcomeChart from "@/imports/fintag/fintag-outcome-chart.webp";
 import fintagOutcomePreprocessing from "@/imports/fintag/fintag-outcome-preprocessing.webp";
 import fintagOutcomeAccuracy from "@/imports/fintag/fintag-outcome-accuracy.webp";
@@ -123,9 +127,24 @@ export interface ProjectDetailCardItem {
   // 하나씩, 문장이 아니라 키워드 위주 짧은 구로 스캔하기 쉽게 쓴다. 각
   // 줄 안에서 **강조**로 핵심 단어만 진하게 표시할 수 있다.
   shortBody?: string[];
+  // 기존 상태(before)를 개선된 상태(after)로 바꾼 항목에 한해, shortBody
+  // 대신 이걸 쓰면 SOLUTION 쇼케이스가 AS-IS/TO-BE 두 영역을 화살표로
+  // 잇는 비교 구조로 렌더링한다. 각 항목은 짧은 제목(title)과, 그 제목을
+  // 왜/어떻게 그렇게 됐는지 풀어주는 한 줄 설명(detail)의 쌍이다.
+  comparison?: {
+    before: { title: string; detail: string }[];
+    after: { title: string; detail: string }[];
+  };
   icon?: DetailIconKey;
   tags?: string[];
   image?: string;
+  // 하나의 합성 스크린샷 대신 개별 스텝 이미지 여러 장을 나란히 보여주고
+  // 싶을 때 image 대신 이걸 쓴다 — 이미지 사이 화살표는 이미지에 미리
+  // 박아 넣지 않고, SolutionShowcase가 직접 그린다.
+  images?: string[];
+  // images가 순차적인 파이프라인 스텝이 아니라(예: 서로 독립된 다이어그램
+  // 여러 장) 화살표로 잇는 게 부적절할 때 false로 끈다. 기본값은 true.
+  imagesShowArrows?: boolean;
 }
 
 export interface ProjectDetail {
@@ -141,6 +160,13 @@ export interface ProjectDetail {
   logoSrc?: string;
   // About 슬라이드에서 소개 문단과 함께 보여줄 실제 서비스 화면 스크린샷(선택)
   aboutImage?: string;
+  // 담당 역할을 구체적으로 보여줄 헤드라인/본문/스크린샷(선택). 셋 중
+  // roleImage가 있으면 About 슬라이드가 "무엇을 만들었나"(overview) /
+  // "내가 맡은 역할"(role) 2컬럼으로 나뉜다. 없는 프로젝트는 기존처럼
+  // 단일 컬럼 레이아웃을 그대로 쓴다.
+  roleHeadline?: string;
+  roleBody?: string;
+  roleImage?: string;
   problem: ProjectDetailCardItem[];
   solution: ProjectDetailCardItem[];
   outcome: { stat: string; label: string; icon?: DetailIconKey }[];
@@ -163,9 +189,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
     overviewHeadline:
       "재무 전문가가 부재한 중소기업을 위한 AI 자금 관리 에이전트",
     overviewBody:
-      "Fintag 내부의 핵심 기능인 현금흐름 예측 기능 고도화를 담당했습니다.",
+      "재무 전문지식이 없는 중소기업은 **유휴자금**을 방치해 매년 손실을 보면서도 알아채지 못합니다. Fintag는 유휴자금을 바탕으로 **현금흐름**을 예측해 **맞춤 금융 상품**을 제안합니다.",
+    roleHeadline: "현금흐름 예측 모델 고도화",
+    roleBody:
+      "기존 예측 모델은 오차가 크고, 예측 근거도 알 수 없었습니다. 저는 이 문제를 해결할 **백엔드 개발과 예측 모델 고도화**를 맡았습니다.",
     logoSrc: fintagLogo,
     aboutImage: fintagAboutHero,
+    roleImage: fintagAboutRole,
     problem: [
       {
         title: "데이터 전처리 부재",
@@ -208,38 +238,90 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
       {
         title: "은행 거래 기반 전처리 파이프라인",
         body: "카드·보험 등 별도 집계 대신 은행 계좌 입출금 단일 기준으로 데이터를 수집하고 Tag로 지출 성격을 분류했습니다. 내부 계좌 간 이동은 Tag로 자동 식별해 학습 데이터에서 제외하고, 순수 현금흐름만 예측에 반영되도록 정제했습니다.",
-        shortBody: [
-          "**은행 계좌 입출금 단일 기준**으로 데이터 수집",
-          "Tag로 지출 성격을 자동 분류",
-          "**내부 계좌 이동**은 학습 데이터에서 자동 제외",
-        ],
+        comparison: {
+          before: [
+            {
+              title: "은행·카드·보험 동일 지출 중복 집계",
+              detail: "각각 따로 집계된 거래가 겹쳐서 학습 데이터가 왜곡되고 오차가 커짐",
+            },
+            {
+              title: "내부 계좌 간 이동이 지출로 잘못 분류",
+              detail: "내부이체가 실제 지출로 잡혀 현금흐름이 과대 집계됨",
+            },
+          ],
+          after: [
+            {
+              title: "중복 없는 단일 계좌 기반 수집",
+              detail: "카드·보험 등 별도 집계 대신 계좌 입출금 단일 기준으로 전환하고 Tag로 지출 성격 분류",
+            },
+            {
+              title: "내부이체 자동 식별 후 제외",
+              detail: "계좌 간 이동을 Tag로 식별해 학습 데이터에서 자동 제외, 순수 현금흐름만 예측에 반영",
+            },
+          ],
+        },
         icon: "filter",
-        tags: ["#단일계좌기준", "#Tag분류"],
         image: fintagSolutionPipeline,
       },
       {
         title: "Prophet + LightGBM 잔차 보정 + 고정지출 등록",
         body: "Prophet으로 추세·계절성을 1차 예측한 뒤 LightGBM으로 Prophet이 설명하지 못한 잔차를 추가 학습시켜 오차를 줄였습니다. 급여일·카드결제일 같은 반복 패턴을 모델에 직접 등록해 예측 안정성과 정밀도를 더 끌어올렸습니다.",
-        shortBody: [
-          "시계열 예측 모델(Prophet)로 **추세·계절성 1차 예측**",
-          "**LightGBM으로 잔차를 추가 학습**시켜 오차 보정",
-          "급여일·카드결제일 패턴을 모델에 **직접 등록**",
-        ],
+        comparison: {
+          before: [
+            {
+              title: "Prophet 단독 모델의 한계",
+              detail: "Prophet 단독 예측 시 평균 오차(MAPE) 9.6%(30일)~23.5%(365일)",
+            },
+            {
+              title: "트렌드만 학습, 세밀한 패턴 반영 불가",
+              detail: "고정지출·반복 패턴을 노이즈로 처리해 예측 정밀도에 구조적 한계",
+            },
+          ],
+          after: [
+            {
+              title: "LightGBM 잔차 보정 모델 추가",
+              detail: "Prophet 1차 예측 위에 LightGBM으로 잔차를 학습시켜 평균 오차 7.4%(30일)~22.8%(365일)로 개선",
+            },
+            {
+              title: "고정지출 패턴 명시 등록",
+              detail: "급여일·카드결제일 같은 반복 패턴을 모델에 직접 등록해 트렌드 외 세밀한 패턴까지 반영",
+            },
+          ],
+        },
         icon: "layers",
-        tags: ["#잔차보정", "#고정지출등록"],
-        image: fintagSolutionSteps,
+        images: [fintagSolutionAccuracyStep1, fintagSolutionAccuracyStep2, fintagSolutionAccuracyStep3],
       },
       {
         title: "SHAP·LLM 기반 예측 설명 및 이상거래 탐지",
         body: "LightGBM 예측 기여도를 SHAP으로 분석하고, AWS Bedrock(Claude 3)으로 예측 근거와 이상거래 의심 사유를 자연어로 생성했습니다. 규칙 기반 탐지와 IsolationForest·PyOD ECOD를 결합해 이상거래를 식별하고, 담당자가 근거를 확인한 뒤 선택적으로 제거할 수 있게 했습니다.",
-        shortBody: [
-          "예측 기여도 분석 기법(SHAP)으로 **근거 산출**",
-          "AI(AWS Bedrock)가 예측 근거를 **자연어로 설명**",
-          "이상거래 탐지 알고리즘으로 **의심 거래 자동 식별**",
-        ],
+        comparison: {
+          before: [
+            {
+              title: "예측값만 있고 근거 설명이 없음",
+              detail: "숫자만 제공되고 왜 이런 결과가 나왔는지 설명이 없어 담당자가 신뢰하기 어려움",
+            },
+            {
+              title: "이상거래가 예측에 그대로 반영",
+              detail: "비정상 거래가 걸러지지 않고 반영되어 예측값 신뢰도가 떨어짐",
+            },
+          ],
+          after: [
+            {
+              title: "예측 근거를 항목별로 시각화",
+              detail: "예측에 영향을 준 항목을 순위별로 시각화해 담당자가 근거를 확인하고 판단",
+            },
+            {
+              title: "이상거래를 식별해 선택적으로 제거",
+              detail: "규칙과 ML 기반으로 비정상 거래를 색출해 사용자가 직접 제거 가능",
+            },
+          ],
+        },
         icon: "sparkle",
-        tags: ["#SHAP", "#Bedrock"],
-        image: fintagSolutionExplainUi,
+        images: [fintagSolutionExplainShap, fintagSolutionExplainAnomaly],
+        // 두 이미지 모두 이미 자체 흐름 화살표가 그려진 독립된 다이어그램
+        // (예측 설명 vs 이상거래 탐지)이라, 우리 쪽에서 그 사이에 인과
+        // 관계를 암시하는 화살표를 추가로 그리지 않는다
+        imagesShowArrows: false,
       },
     ],
     outcome: [
@@ -265,7 +347,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
           "중복 집계·내부 계좌 이동 **자동 필터링** 완료",
           "정제된 시계열 데이터로 변환 완료",
         ],
-        tags: ["#단일계좌기준", "#Tag분류"],
+        tags: ["단일계좌기준", "Tag분류"],
         image: fintagOutcomePreprocessing,
       },
       {
@@ -276,7 +358,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
           "잔차 보정으로 **안정적인 예측** 추세 확보",
           "평균 예측 오차율(MAPE) **76% 감소**",
         ],
-        tags: ["#잔차보정", "#고정지출등록"],
+        tags: ["잔차보정", "고정지출등록"],
         image: fintagOutcomeAccuracy,
       },
       {
@@ -287,7 +369,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
           "매출·지출 변동 요인을 **순위별로 제시**",
           "담당자가 근거를 확인한 뒤 신뢰 가능",
         ],
-        tags: ["#SHAP", "#Bedrock"],
+        tags: ["SHAP", "Bedrock"],
         image: fintagOutcomeExplain,
       },
     ],
