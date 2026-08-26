@@ -66,7 +66,7 @@ export function OverviewSlide({
       )}
       <div className="relative z-10 flex flex-col items-center gap-6">
         {detail.logoSrc ? (
-          <div className="flex flex-col items-center gap-3">
+          <div className="flex flex-col items-center gap-1.5">
             <img
               src={detail.logoSrc}
               alt={project.title}

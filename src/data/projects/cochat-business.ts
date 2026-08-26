@@ -7,7 +7,7 @@ export const cochatBusinessDetail: ProjectDetail = {
   logoSrc: cochatBusinessLogo,
   // 정사각형 심볼 로고라 Fintag 워드마크와 같은 높이(h-20/h-24)를 주면
   // 체감상 훨씬 작아 보여 더 크게 지정한다
-  logoClassName: "h-32 sm:h-40 w-auto",
+  logoClassName: "h-24 sm:h-28 w-auto",
   // 심볼에 서비스명이 포함되어 있지 않아 로고 아래에 별도로 표시한다
   logoShowName: true,
   overviewHeadline:
