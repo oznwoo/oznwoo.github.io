@@ -5,7 +5,12 @@ import { MobileNav } from "@/components/nav/MobileNav"
 import { ProjectDetailView } from "@/components/project-detail/ProjectDetailView"
 import { useIsMobile } from "@/hooks/useIsMobile"
 import { SECTIONS } from "@/data/navigation"
-import { PROJECTS, PROJECT_ACCENT, PROJECT_PULL, DEFAULT_ACCENT } from "@/data/projects"
+import {
+  PROJECTS,
+  PROJECT_ACCENT,
+  PROJECT_PULL,
+  DEFAULT_ACCENT,
+} from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
 import { PageHome } from "@/pages/PageHome"
 import { PageAbout } from "@/pages/PageAbout"
@@ -209,7 +214,11 @@ export default function App() {
       touchStart.current = e.touches[0].clientY
     }
     const onEnd = (e: TouchEvent) => {
-      if (isDetailRef.current || isMobileRef.current || touchStart.current === null)
+      if (
+        isDetailRef.current ||
+        isMobileRef.current ||
+        touchStart.current === null
+      )
         return
       const delta = touchStart.current - e.changedTouches[0].clientY
       if (Math.abs(delta) > 50) delta > 0 ? next() : prev()
@@ -252,7 +261,10 @@ export default function App() {
     const onStart = (e: TouchEvent) => {
       if (isDetailRef.current) return
       const t = e.touches[0]
-      if (t.clientX < EDGE_GUARD || t.clientX > window.innerWidth - EDGE_GUARD) {
+      if (
+        t.clientX < EDGE_GUARD ||
+        t.clientX > window.innerWidth - EDGE_GUARD
+      ) {
         mobileTouchStart.current = null
         return
       }

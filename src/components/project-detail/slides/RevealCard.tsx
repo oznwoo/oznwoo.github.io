@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import type { ProjectDetailCardItem } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
 import { hexToRgba, mixWithWhite } from "@/lib/color"
+import { renderWithEmphasis } from "@/lib/emphasis"
 import { AccentPill } from "../AccentPill"
 
 // 세로 슬라이드 트랙 전환(ProjectDetailView, 0.75s)이 끝난 뒤에야 설명이
@@ -18,20 +19,6 @@ interface RevealCardProps {
   // 이 카드가 속한 슬라이드(Problem/Solution)가 지금 화면에 보이는지 —
   // true가 되고 슬라이드 전환이 끝나면 설명이 이미지 아래에서 내려오며 나타난다.
   isActive: boolean
-}
-
-// "**강조**" 구간만 진하게 렌더링한다 — 짧은 요약 문장에서 핵심 어구만
-// 도드라지게 하기 위한 아주 가벼운 마크업이라, 전용 파서 없이 split으로 충분하다.
-function renderWithEmphasis(text: string) {
-  return text.split(/\*\*(.+?)\*\*/g).map((part, i) =>
-    i % 2 === 1 ? (
-      <strong key={i} className="font-semibold text-[#0C0F1A]">
-        {part}
-      </strong>
-    ) : (
-      part
-    ),
-  )
 }
 
 // Problem/Solution 카드 — 번호는 없애고 타이틀을 이미지 위로 올린다. 태그는

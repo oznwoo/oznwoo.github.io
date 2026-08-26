@@ -39,7 +39,13 @@ export function DetailIcon({ name }: { name: DetailIconKey }) {
           <rect x="16" y="14" width="3" height="6" opacity="0.4" />
           <circle cx="17.5" cy="4.5" r="2.6" />
           <path d="M17.5 3.2 V4.9" />
-          <circle cx="17.5" cy="6.1" r="0.15" fill="currentColor" stroke="none" />
+          <circle
+            cx="17.5"
+            cy="6.1"
+            r="0.15"
+            fill="currentColor"
+            stroke="none"
+          />
         </svg>
       )
     case "filter":
