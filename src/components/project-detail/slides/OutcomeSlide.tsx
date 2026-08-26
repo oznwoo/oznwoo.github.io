@@ -71,7 +71,10 @@ export function OutcomeSlide({
               {item.icon && (
                 <div
                   className="w-11 h-11 rounded-xl flex items-center justify-center p-2.5"
-                  style={{ background: hexToRgba(accentColor, 0.1), color: accentColor }}
+                  style={{
+                    background: hexToRgba(accentColor, 0.1),
+                    color: accentColor,
+                  }}
                 >
                   <DetailIcon name={item.icon} />
                 </div>

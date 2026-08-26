@@ -33,11 +33,11 @@ function buildHeights() {
 export function HeroBarChart({
   color,
   visible,
-}: {
-  color: string
   // 왼쪽부터 순차적으로 솟아오르며 나타나고(true), 오른쪽부터 순차적으로
   // 가라앉으며 사라진다(false). 처음 나타나기 전(아직 한 번도 true였던
   // 적이 없을 때)에는 애니메이션 없이 그냥 접힌 상태로 대기한다.
+}: {
+  color: string
   visible: boolean
 }) {
   // 높이 패턴은 마운트 시 한 번만 뽑고, visible이 토글돼도 다시 뽑지 않는다

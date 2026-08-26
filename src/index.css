@@ -13,6 +13,13 @@ html {
   scroll-behavior: smooth;
 }
 
+/* 이미지를 클릭한 채 드래그하면 브라우저 기본 고스트 미리보기가 커서를
+   따라오는 게 카드 UI에서는 어색해 전역으로 막는다 */
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
 @keyframes blob-a {
   0%, 100% { transform: translate(0%, 0%) scale(1); }
   18%       { transform: translate(9%, -11%) scale(1.12); }

@@ -12,7 +12,12 @@ interface StackSlideProps {
 // 기술 — stackDiagram이 있으면(Fintag) 카테고리 텍스트 목록 대신 아키텍처
 // 다이어그램 이미지 하나만, 다른 이미지 카드와 동일한 border/hover 컨벤션으로
 // 보여준다.
-export function StackSlide({ tech, stackDiagram, accentColor, isMobile }: StackSlideProps) {
+export function StackSlide({
+  tech,
+  stackDiagram,
+  accentColor,
+  isMobile,
+}: StackSlideProps) {
   const [imgHovered, setImgHovered] = useState(false)
   const wrapClass = isMobile
     ? "min-h-screen w-full flex items-center justify-center px-6 pl-16 py-20"

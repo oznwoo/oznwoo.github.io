@@ -10,7 +10,7 @@ export function MobileProjectPage({
   total,
   onOpen,
 }: {
-  project: (typeof PROJECTS)[number]
+  project: typeof PROJECTS[number]
   index: number
   total: number
   onOpen: (id: string) => void

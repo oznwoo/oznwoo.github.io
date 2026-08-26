@@ -2,7 +2,10 @@
 // 등록되어 있고, 없는 프로젝트는 호버해도 색이 바뀌지 않는다.
 // - primary: DotNav dot, 캔버스 톤, 태그 pill처럼 단색이 필요한 곳
 // - blobs: 배경 blob a/b/c 각각에 입힐 색 — 그라디언트 브랜드는 여러 색을 넣어 재현
-export type ProjectAccent = { primary: string; blobs: [string, string, string] }
+export type ProjectAccent = {
+  primary: string
+  blobs: [string, string, string]
+}
 
 export function hexToRgba(hex: string, alpha: number): string {
   const h = hex.replace("#", "")
