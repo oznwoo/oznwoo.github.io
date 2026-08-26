@@ -4,6 +4,7 @@ import type { ProjectAccent } from "@/lib/color"
 import { hexToRgba, mixWithWhite } from "@/lib/color"
 import { renderWithEmphasis } from "@/lib/emphasis"
 import { AccentPill } from "../AccentPill"
+import { MediaPlaceholder } from "../MediaPlaceholder"
 
 // 세로 슬라이드 트랙 전환(ProjectDetailView, 0.75s)이 끝난 뒤에야 설명이
 // 내려오며 나타난다.
@@ -58,7 +59,7 @@ export function RevealCard({
       >
         {item.title}
       </h3>
-      {item.image && (
+      {item.image ? (
         <div
           onMouseEnter={() => setImgHovered(true)}
           onMouseLeave={() => setImgHovered(false)}
@@ -87,6 +88,14 @@ export function RevealCard({
             className="w-full h-auto block"
           />
         </div>
+      ) : (
+        // 아직 실제 스크린샷을 받지 못한 카드 — 영역을 접지 않고 같은
+        // 비율의 자리표시자를 보여줘 이후 이미지만 채워 넣으면 되게 한다
+        <MediaPlaceholder
+          kind="image"
+          accentColor={accentColor}
+          style={{ aspectRatio: `${imageWidth} / ${imageHeight}` }}
+        />
       )}
       {/* 설명 문단 — 바깥 grid-template-rows(0fr<->1fr)로 아래 태그가 밀려날
           공간을 부드럽게 확보하고, 안쪽 translateY+opacity로 실제로 이미지

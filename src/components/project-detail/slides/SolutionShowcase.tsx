@@ -5,6 +5,7 @@ import type { ProjectDetailCardItem } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
 import { hexToRgba, mixWithWhite } from "@/lib/color"
 import { renderWithEmphasis } from "@/lib/emphasis"
+import { MediaPlaceholder } from "@/components/project-detail/MediaPlaceholder"
 import { ComparisonGroupCard } from "./solution-showcase/ComparisonGroupCard"
 import { FlowArrow } from "./solution-showcase/FlowArrow"
 import { ImageLightbox } from "./solution-showcase/ImageLightbox"
@@ -121,9 +122,12 @@ export function SolutionShowcase({
             style={{ borderBottom: "1px solid rgba(12,15,26,0.08)" }}
           >
             <div className="flex flex-wrap items-center gap-6">
-              {problems.map((p, i) => (
+              {/* 탭 개수는 항상 solutions 기준 — problems와 1:1로 맞는 경우
+                  (Fintag) PROBLEM 쪽 표현으로 어떤 문제를 해결하는 스텝인지
+                  보여주고, 짝이 안 맞는 항목은 solution 자신의 제목으로 대체한다 */}
+              {solutions.map((s, i) => (
                 <button
-                  key={p.title}
+                  key={s.title}
                   onClick={() => goStep(i)}
                   style={{
                     fontFamily: "var(--font-body)",
@@ -132,7 +136,7 @@ export function SolutionShowcase({
                   }}
                   className="text-sm font-medium pb-3 border-b-2 transition-colors duration-300"
                 >
-                  {p.title}
+                  {problems[i]?.title ?? s.title}
                 </button>
               ))}
             </div>
@@ -158,13 +162,13 @@ export function SolutionShowcase({
             }}
             className="flex flex-col gap-6"
           >
-            {(solution.image || solution.images) && (
+            {
               <div
                 ref={imageRowRef}
                 className="relative flex items-center justify-center"
-                // 스텝 종류(단일 이미지/멀티 이미지/비교 카드)와 무관하게 항상
-                // 같은 높이를 써야 탭을 전환해도 아래 콘텐츠·페이지 위치가
-                // 흔들리지 않는다 — 스텝별로 값을 다르게 주면 안 된다
+                // 스텝 종류(단일 이미지/멀티 이미지/비교 카드/미디어 없음)와
+                // 무관하게 항상 같은 높이를 써야 탭을 전환해도 아래 콘텐츠·
+                // 페이지 위치가 흔들리지 않는다 — 스텝별로 값을 다르게 주면 안 된다
                 style={{ height: isMobile ? undefined : "300px" }}
               >
                 {!isMobile && step > 0 && (
@@ -251,7 +255,7 @@ export function SolutionShowcase({
                       </div>
                     ))}
                   </div>
-                ) : (
+                ) : solution.image ? (
                   <div
                     onMouseEnter={() => setImgHovered(true)}
                     onMouseLeave={() => setImgHovered(false)}
@@ -281,6 +285,18 @@ export function SolutionShowcase({
                       style={{ maxHeight: isMobile ? "38vh" : "260px" }}
                     />
                   </div>
+                ) : (
+                  // 아직 스텝 이미지가 없는 solution — 자리와 카드 톤은
+                  // 그대로 두고 자리표시자만 보여준다
+                  <MediaPlaceholder
+                    kind="image"
+                    accentColor={accentColor}
+                    style={{
+                      aspectRatio: `${imageWidth} / ${imageHeight}`,
+                      maxWidth: "100%",
+                      height: isMobile ? "28vh" : "260px",
+                    }}
+                  />
                 )}
                 {!isMobile && step < solutions.length - 1 && (
                   <TabArrowButton
@@ -296,7 +312,7 @@ export function SolutionShowcase({
                   />
                 )}
               </div>
-            )}
+            }
             <div
               style={{
                 transform: revealed ? "translateY(0)" : "translateY(-10px)",
