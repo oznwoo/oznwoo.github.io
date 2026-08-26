@@ -46,6 +46,13 @@ export interface ProjectDetail {
   // Overview 히어로에서 타이틀 텍스트 대신 보여줄 실제 로고. 있으면 텍스트
   // 타이틀을 대체한다 (Fintag처럼 워드마크 자체가 브랜드를 대변하는 경우)
   logoSrc?: string
+  // 로고 크기(Tailwind height 클래스). 가로로 넓은 워드마크 로고는 기본값
+  // (h-20 sm:h-24)으로 충분하지만, 정사각형 심볼 로고는 같은 높이에서
+  // 체감 크기가 작아 보여 프로젝트별로 더 큰 값을 지정할 수 있다.
+  logoClassName?: string
+  // 로고가 워드마크가 아니라 심볼만 있어 서비스명이 로고 안에 없는
+  // 경우(true) 로고 아래에 프로젝트명을 별도 텍스트로 보여준다.
+  logoShowName?: boolean
   // About 슬라이드에서 소개 문단과 함께 보여줄 실제 서비스 화면 스크린샷(선택)
   aboutImage?: string
   // 담당 역할을 구체적으로 보여줄 헤드라인/본문/스크린샷(선택). roleHeadline이

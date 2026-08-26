@@ -1,8 +1,15 @@
+import cochatBusinessLogo from "@/imports/cochat-business-logo.png"
 import type { ProjectDetail } from "./types"
 
 export const cochatBusinessDetail: ProjectDetail = {
   period: "2026.03 – 2026.04",
   role: "서비스 기획 총괄 · 풀스택 개발 · 팀 리더",
+  logoSrc: cochatBusinessLogo,
+  // 정사각형 심볼 로고라 Fintag 워드마크와 같은 높이(h-20/h-24)를 주면
+  // 체감상 훨씬 작아 보여 더 크게 지정한다
+  logoClassName: "h-32 sm:h-40 w-auto",
+  // 심볼에 서비스명이 포함되어 있지 않아 로고 아래에 별도로 표시한다
+  logoShowName: true,
   overviewHeadline:
     "Slack, Discord, 카카오톡 등 여러 메신저에 흩어진 업무 알림을 하나의 대시보드로 통합하고, AI가 메시지 긴급도를 자동 분류해주는 B2B SaaS.",
   overviewBody:
