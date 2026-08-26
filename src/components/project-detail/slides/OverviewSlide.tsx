@@ -66,11 +66,26 @@ export function OverviewSlide({
       )}
       <div className="relative z-10 flex flex-col items-center gap-6">
         {detail.logoSrc ? (
-          <img
-            src={detail.logoSrc}
-            alt={project.title}
-            className="h-20 sm:h-24 w-auto"
-          />
+          <div className="flex flex-col items-center gap-1.5">
+            <img
+              src={detail.logoSrc}
+              alt={project.title}
+              // 로고마다 원본 형태가 달라(가로로 넓은 워드마크 vs 정사각형
+              // 심볼) 같은 높이를 줘도 체감 크기가 다르다 — 기본값은 워드마크
+              // 기준이고, 심볼형 로고는 프로젝트별로 더 큰 값을 지정한다
+              className={detail.logoClassName ?? "h-20 sm:h-24 w-auto"}
+            />
+            {/* 심볼만 있고 서비스명이 로고 안에 없는 경우(예: CoChat for
+                Business) 아래에 이름을 별도로 적어준다 */}
+            {detail.logoShowName && (
+              <span
+                style={{ fontFamily: "var(--font-mono)" }}
+                className="text-xs text-[#0C0F1A]/40 tracking-[0.04em] uppercase"
+              >
+                {project.title}
+              </span>
+            )}
+          </div>
         ) : (
           <span
             style={{ fontFamily: "var(--font-mono)" }}
