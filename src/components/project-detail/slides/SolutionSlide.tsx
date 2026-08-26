@@ -13,8 +13,9 @@ interface SolutionSlideProps {
   isActive: boolean
 }
 
-// Fintag만 PROBLEM과 1:1로 짝지은 3단계 쇼케이스를 쓰고, 나머지 프로젝트는
-// Problem과 동일한 카드 그리드를 그대로 쓴다.
+// solution 항목이 AS-IS/TO-BE 비교 구조(comparison)를 갖는 프로젝트는
+// PROBLEM 탭 + 화살표로 스텝을 넘기는 쇼케이스를 쓰고, 그렇지 않은
+// 프로젝트는 Problem과 동일한 카드 그리드를 그대로 쓴다.
 export function SolutionSlide({
   problemItems,
   items,
@@ -24,7 +25,8 @@ export function SolutionSlide({
   isMobile,
   isActive,
 }: SolutionSlideProps) {
-  if (projectId === "01") {
+  const useShowcase = items.some((item) => item.comparison)
+  if (useShowcase) {
     return (
       <SolutionShowcase
         problems={problemItems}

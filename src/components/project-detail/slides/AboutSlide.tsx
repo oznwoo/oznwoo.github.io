@@ -4,6 +4,7 @@ import type { Project, ProjectDetail } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
 import { hexToRgba } from "@/lib/color"
 import { renderWithEmphasis } from "@/lib/emphasis"
+import { MediaPlaceholder } from "@/components/project-detail/MediaPlaceholder"
 
 const SLIDE_TRANSITION_MS = 750
 
@@ -21,6 +22,9 @@ interface AboutStep {
   tabLabel: string
   headline: string
   body: string
+  // 이 스텝의 미디어 종류 — 실제 image/video 값이 아직 없어도 이 값으로
+  // 어떤 종류의 자리표시자를 보여줄지 정한다
+  kind: "image" | "video"
   image?: string
   imageAlt?: string
   imageWidth?: number
@@ -50,36 +54,41 @@ export function AboutSlide({
   isMobile,
   isActive,
 }: AboutSlideProps) {
-  // 프로젝트 소개는 항상 있고, roleImage·demoVideo가 있는 프로젝트만 그만큼
-  // 스텝이 늘어난다. 탭+화살표 UI는 스텝이 2개 이상일 때만 켠다(hasTabs) —
-  // roleImage 유무만 보던 이전의 단일 분기를 일반화한 것.
+  // 프로젝트 소개는 항상 있고, roleHeadline·demoHeadline이 있는 프로젝트만
+  // 그만큼 스텝이 늘어난다. 실제 이미지/영상은 나중에 채워질 수 있으므로
+  // 스텝 존재 여부는 텍스트(headline) 기준으로 판단하고, 미디어가 아직
+  // 없으면 자리표시자를 보여준다. 탭+화살표 UI는 스텝이 2개 이상일 때만
+  // 켠다(hasTabs).
   const steps: AboutStep[] = [
     {
       tabLabel: "프로젝트 소개",
       headline: detail.overviewHeadline,
       body: detail.overviewBody,
+      kind: "image",
       image: detail.aboutImage,
       imageAlt: `${project.title} 홈페이지 히어로 화면`,
       imageWidth: 1590,
       imageHeight: 956,
     },
   ]
-  if (detail.roleImage) {
+  if (detail.roleHeadline) {
     steps.push({
       tabLabel: "담당 업무",
-      headline: detail.roleHeadline ?? "",
+      headline: detail.roleHeadline,
       body: detail.roleBody ?? "",
+      kind: "image",
       image: detail.roleImage,
       imageAlt: `${project.title} 담당 기능 화면`,
       imageWidth: 1830,
       imageHeight: 1014,
     })
   }
-  if (detail.demoVideo) {
+  if (detail.demoHeadline) {
     steps.push({
       tabLabel: "시연 영상",
-      headline: detail.demoHeadline ?? "",
+      headline: detail.demoHeadline,
       body: detail.demoBody ?? "",
+      kind: "video",
       video: detail.demoVideo,
       videoPoster: detail.demoPoster,
     })
@@ -170,7 +179,7 @@ export function AboutSlide({
           }}
           className="flex flex-col items-center gap-8 w-full"
         >
-          {(current.image || current.video) && (
+          {(hasTabs || current.image || current.video) && (
             <div className="relative flex items-center justify-center w-full">
               {hasTabs && !isMobile && step > 0 && (
                 <TabArrowButton
@@ -213,19 +222,27 @@ export function AboutSlide({
                   aspectRatio: hasTabs ? "1830 / 1014" : undefined,
                 }}
               >
-                {current.video ? (
-                  // 시연 영상 — 포스터 프레임만 먼저 보여주고, 실제로 재생
-                  // 버튼을 눌러야 영상 바이트를 받아오게 해 초기 로드에
-                  // 영향을 주지 않는다(preload="none")
-                  <video
-                    key={current.video}
-                    src={current.video}
-                    poster={current.videoPoster}
-                    controls
-                    preload="none"
-                    className="w-full h-full block object-contain"
-                  />
-                ) : (
+                {current.kind === "video" ? (
+                  current.video ? (
+                    // 시연 영상 — 포스터 프레임만 먼저 보여주고, 실제로 재생
+                    // 버튼을 눌러야 영상 바이트를 받아오게 해 초기 로드에
+                    // 영향을 주지 않는다(preload="none")
+                    <video
+                      key={current.video}
+                      src={current.video}
+                      poster={current.videoPoster}
+                      controls
+                      preload="none"
+                      className="w-full h-full block object-contain"
+                    />
+                  ) : (
+                    <MediaPlaceholder
+                      kind="video"
+                      accentColor={accentColor}
+                      className="w-full h-full"
+                    />
+                  )
+                ) : current.image ? (
                   <img
                     src={current.image}
                     alt={current.imageAlt}
@@ -241,6 +258,12 @@ export function AboutSlide({
                         ? "w-full h-full block object-contain"
                         : "w-full h-auto block"
                     }
+                  />
+                ) : (
+                  <MediaPlaceholder
+                    kind="image"
+                    accentColor={accentColor}
+                    className="w-full h-full"
                   />
                 )}
               </div>
