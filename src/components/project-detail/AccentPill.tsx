@@ -14,7 +14,12 @@ interface AccentPillProps {
 // 상세 페이지 곳곳(Overview 태그, Problem/Solution 카드 태그)에서 공유한다.
 // 상세 페이지는 이미 프로젝트 색으로 테마돼 있어 hover의 "활성" 상태를
 // 항상 켜둔 형태로 쓴다.
-export function AccentPill({ label, accent, accentColor, projectId }: AccentPillProps) {
+export function AccentPill({
+  label,
+  accent,
+  accentColor,
+  projectId,
+}: AccentPillProps) {
   const pillAccent = accent ?? DEFAULT_ACCENT
   // CoChat for Business(id "02")는 배경과 마찬가지로 흰색 혼합 비율을 덜 써서
   // 다른 프로젝트보다 톤을 진하게 유지한다

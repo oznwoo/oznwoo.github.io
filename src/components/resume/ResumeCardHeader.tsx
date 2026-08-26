@@ -1,4 +1,10 @@
-export function ResumeCardHeader({ label, color }: { label: string; color: string }) {
+export function ResumeCardHeader({
+  label,
+  color,
+}: {
+  label: string
+  color: string
+}) {
   return (
     <div
       style={{ fontFamily: "var(--font-mono)", color }}

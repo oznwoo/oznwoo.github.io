@@ -242,11 +242,12 @@ export function GradientBackground({
               background: detailMode
                 ? `radial-gradient(circle at 28% 32%, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[0], 0.55), 0.9)} 0%, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[0], 0.55), 0.25)} 42%, transparent 70%)`
                 : "radial-gradient(circle at 28% 32%, rgba(79,110,247,0.9) 0%, rgba(79,110,247,0.25) 42%, transparent 70%)",
-              opacity: warping && (!detailMode || detailSectionWarp)
-                ? detailMode
-                  ? 0.14
-                  : 0.65
-                : 0,
+              opacity:
+                warping && (!detailMode || detailSectionWarp)
+                  ? detailMode
+                    ? 0.14
+                    : 0.65
+                  : 0,
               transition: warping
                 ? "opacity 0.16s ease-out"
                 : "opacity 0.55s ease-in",
@@ -298,11 +299,12 @@ export function GradientBackground({
               background: detailMode
                 ? `radial-gradient(circle at 72% 30%, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[1], 0.55), 0.85)} 0%, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[1], 0.55), 0.22)} 42%, transparent 70%)`
                 : "radial-gradient(circle at 72% 30%, rgba(67,93,235,0.85) 0%, rgba(67,93,235,0.22) 42%, transparent 70%)",
-              opacity: warping && (!detailMode || detailSectionWarp)
-                ? detailMode
-                  ? 0.12
-                  : 0.6
-                : 0,
+              opacity:
+                warping && (!detailMode || detailSectionWarp)
+                  ? detailMode
+                    ? 0.12
+                    : 0.6
+                  : 0,
               transition: warping
                 ? "opacity 0.2s ease-out"
                 : "opacity 0.6s ease-in",
@@ -350,11 +352,12 @@ export function GradientBackground({
               background: detailMode
                 ? `radial-gradient(ellipse at center, ${hexToRgba(mixWithWhite(accentSlots[activeSlot].blobs[2], 0.55), 0.6)} 0%, transparent 65%)`
                 : "radial-gradient(ellipse at center, rgba(124,95,212,0.6) 0%, transparent 65%)",
-              opacity: warping && (!detailMode || detailSectionWarp)
-                ? detailMode
-                  ? 0.1
-                  : 0.55
-                : 0,
+              opacity:
+                warping && (!detailMode || detailSectionWarp)
+                  ? detailMode
+                    ? 0.1
+                    : 0.55
+                  : 0,
               transition: warping
                 ? "opacity 0.24s ease-out"
                 : "opacity 0.65s ease-in",

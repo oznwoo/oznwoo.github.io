@@ -134,7 +134,9 @@ export function ProjectDetailView({
     <AboutSlide
       project={project}
       detail={detail}
+      accent={accent}
       accentColor={accentColor}
+      projectId={projectId}
       isMobile={isMobile}
       isActive={displaySlide === 1}
     />,
