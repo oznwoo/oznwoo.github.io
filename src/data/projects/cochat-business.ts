@@ -1,5 +1,6 @@
 import cochatBusinessLogo from "@/imports/cochat-business-logo.png"
 import cochatBusinessAboutHero from "@/imports/cochat-business/cochat-business-about-hero.webp"
+import cochatBusinessAboutRole from "@/imports/cochat-business/cochat-business-about-role.webp"
 import type { ProjectDetail } from "./types"
 
 export const cochatBusinessDetail: ProjectDetail = {
@@ -21,6 +22,7 @@ export const cochatBusinessDetail: ProjectDetail = {
     "6인 팀 리더로서 서비스 기획을 총괄하고 프론트엔드·백엔드 개발에 직접 참여",
   roleBody:
     "해커톤 당일 아이디어 제안부터 팀 구성, 기능 우선순위 결정까지 총괄했고 **Next.js 프론트엔드**와 **FastAPI 백엔드** 개발에 직접 참여했습니다.",
+  roleImage: cochatBusinessAboutRole,
   demoHeadline: "메신저 알림 통합부터 AI 긴급도 분류까지 이어지는 흐름",
   demoBody:
     "Slack·Discord 알림이 통합 대시보드에 모이고, AI가 긴급도를 분류해 집중모드로 필터링되는 과정을 시연 영상으로 담을 예정입니다.",
