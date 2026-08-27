@@ -22,6 +22,7 @@ import type { ProjectDetail } from "./types"
 export const fintagDetail: ProjectDetail = {
   period: "2026.04 – 2026.06",
   role: "백엔드 개발 | ML 엔지니어링 (인턴십)",
+  heroEffect: "bars",
   overviewHeadline:
     "재무 전문가가 부재한 중소기업을 위한 AI 자금 관리 에이전트",
   overviewBody:

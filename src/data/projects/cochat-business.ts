@@ -4,6 +4,8 @@ import type { ProjectDetail } from "./types"
 export const cochatBusinessDetail: ProjectDetail = {
   period: "2026.03 – 2026.04",
   role: "서비스 기획 총괄 · 풀스택 개발 · 팀 리더",
+  // 여러 메신저 알림에 파묻히는 문제의식을 히어로 배경에 은은하게 암시
+  heroEffect: "falling-messages",
   logoSrc: cochatBusinessLogo,
   // 정사각형 심볼 로고라 Fintag 워드마크와 같은 높이(h-20/h-24)를 주면
   // 체감상 훨씬 작아 보여 더 크게 지정한다

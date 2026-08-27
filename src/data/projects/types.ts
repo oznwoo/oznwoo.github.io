@@ -82,6 +82,10 @@ export interface ProjectDetail {
   demoBody?: string
   demoVideo?: string
   demoPoster?: string
+  // Overview 히어로 뒤에 까는 장식 배경 효과(선택). "bars"는 하단 이퀄라이저
+  // 막대(HeroBarChart), "falling-messages"는 메신저 말풍선이 위에서 아래로
+  // 흘러내리는 레이어(FallingMessages). 없으면 정적인 히어로.
+  heroEffect?: "bars" | "falling-messages"
   problem: ProjectDetailCardItem[]
   solution: ProjectDetailCardItem[]
   outcome: ProjectOutcomeStat[]
