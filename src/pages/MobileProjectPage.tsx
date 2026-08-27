@@ -58,7 +58,7 @@ export function MobileProjectPage({
         </div>
         <div>
           <h2
-            style={{ fontFamily: "var(--font-nanum)", fontWeight: 800 }}
+            style={{ fontFamily: "var(--font-display)", fontWeight: 800 }}
             className="text-2xl text-[#0C0F1A] leading-snug"
           >
             {project.title}

@@ -1,3 +1,11 @@
+// EXP_COLS 각 컬럼의 항목 하나 — 이력/활동/수상 타임라인에서 공통으로 쓴다
+export type TimelineEntry = {
+  name: string
+  sub: string
+  date: string
+  link?: string
+}
+
 export const CORE_SKILLS = [
   "Python",
   "TypeScript",

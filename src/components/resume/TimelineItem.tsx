@@ -1,8 +1,6 @@
-export function TimelineItem({
-  item,
-}: {
-  item: { name: string; sub: string; date: string; link?: string }
-}) {
+import type { TimelineEntry } from "@/data/resume"
+
+export function TimelineItem({ item }: { item: TimelineEntry }) {
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3">
@@ -31,7 +29,7 @@ export function TimelineItem({
             </a>
           )}
           <div
-            style={{ fontFamily: "var(--font-nanum)", fontWeight: 700 }}
+            style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
             className="text-[11px] leading-snug text-[#0C0F1A] sm:text-[12px] md:text-[13px]"
           >
             {item.name}

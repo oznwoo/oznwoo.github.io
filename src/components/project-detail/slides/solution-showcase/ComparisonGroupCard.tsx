@@ -1,9 +1,10 @@
 import { renderWithEmphasis } from "@/lib/emphasis"
 import { hexToRgba, mixWithWhite } from "@/lib/color"
+import type { ComparisonEntry } from "@/data/projects/types"
 
 interface ComparisonGroupCardProps {
   label: string
-  items: { title: string; detail: string[] }[]
+  items: ComparisonEntry[]
   accentColor: string
 }
 

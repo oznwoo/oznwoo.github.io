@@ -3,6 +3,7 @@ import type { Project, ProjectDetail } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
 import { AccentPill } from "../AccentPill"
 import { HeroBarChart } from "../HeroBarChart"
+import { FallingMessages } from "../FallingMessages"
 
 // 상세 패널이 메인에서 슬라이드-인하는 가로 전환(App.tsx, 0.75s)과 맞춘
 // 지연 시간 — 그 전환이 끝난 뒤에야 차트가 올라오며 나타난다.
@@ -24,11 +25,11 @@ interface OverviewSlideProps {
 
 // 개요 — 로고 → 큰 타이틀 → 태그 pill → 기간/역할이 중앙 정렬로 쌓이는
 // Hero. 소개 문단만 바로 다음 "소개" 슬라이드로 넘긴다.
-// 화면 맨 아래에는 장식 막대 차트가 깔린다(레퍼런스 레이아웃 참고).
-// 정보 그래픽이 아니라 마우스가 지나가는 막대만 즉시 솟아올랐다가
-// 커서가 빠지면 가라앉는 히어로 장식이라, 순수 CSS :hover로만
-// 반응하게 하고 텍스트와 겹치지 않도록 하단 전용 밴드에 둔다.
-// 기존 공유 GradientBackground는 그대로 유지하고 그 위에 얹기만 한다.
+// 프로젝트별로 배경 장식(detail.heroEffect)이 다르다 — Fintag는 하단 전용
+// 밴드의 이퀄라이저 막대(HeroBarChart), CoChat for Business는 텍스트 뒤로
+// 흘러내리는 메신저 말풍선(FallingMessages). 둘 다 정보가 아니라 분위기라
+// 히어로 텍스트(z-10) 뒤(z-0)에 낮은 불투명도로 깔고, 기존 공유
+// GradientBackground는 그대로 두고 그 위에 얹기만 한다.
 export function OverviewSlide({
   project,
   projectId,
@@ -48,7 +49,9 @@ export function OverviewSlide({
     return () => clearTimeout(timer)
   }, [projectId])
 
-  const showChart = entered && isActive && !isClosing
+  // 패널 전환(0.75s)이 끝난 뒤 등장하고, 다른 슬라이드로 넘어가거나 패널을
+  // 닫는 중이면 다시 사라진다
+  const showHeroEffect = entered && isActive && !isClosing
 
   return (
     <div
@@ -59,10 +62,13 @@ export function OverviewSlide({
         " relative overflow-hidden"
       }
     >
-      {detail.outcomeImage && (
+      {detail.heroEffect === "bars" && (
         <div className="absolute inset-x-0 bottom-0 h-[30vh] sm:h-[36vh]">
-          <HeroBarChart color={accentColor} visible={showChart} />
+          <HeroBarChart color={accentColor} visible={showHeroEffect} />
         </div>
+      )}
+      {detail.heroEffect === "falling-messages" && accent && (
+        <FallingMessages accent={accent} visible={showHeroEffect} />
       )}
       <div className="relative z-10 flex flex-col items-center gap-6">
         {detail.logoSrc ? (
