@@ -45,4 +45,4 @@ export const PROJECTS = [
   },
 ]
 
-export type Project = (typeof PROJECTS)[number]
+export type Project = typeof PROJECTS[number]

@@ -1,8 +1,6 @@
-export function TimelineItem({
-  item,
-}: {
-  item: { name: string; sub: string; date: string; link?: string }
-}) {
+import type { TimelineEntry } from "@/data/resume"
+
+export function TimelineItem({ item }: { item: TimelineEntry }) {
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3">

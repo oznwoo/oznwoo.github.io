@@ -1,5 +1,6 @@
 import type { ProjectAccent } from "@/lib/color"
 import { hexToRgba, mixWithWhite } from "@/lib/color"
+import type { Vec2 } from "@/lib/vec2"
 
 export function GradientBackground({
   progress,
@@ -46,8 +47,8 @@ export function GradientBackground({
   accentOn: boolean
   flashNonce: number
   flashColor: string
-  burstOffset: { x: number; y: number }
-  pull: { x: number; y: number }
+  burstOffset: Vec2
+  pull: Vec2
   pulseActive: boolean
   detailMode: boolean
   detailSectionWarp: boolean

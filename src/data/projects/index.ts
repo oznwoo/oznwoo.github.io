@@ -7,7 +7,11 @@ import type { ProjectDetail } from "./types"
 export { PROJECT_ACCENT, PROJECT_PULL, DEFAULT_ACCENT } from "./accent"
 export { PROJECTS } from "./list"
 export type { Project } from "./list"
-export type { DetailIconKey, ProjectDetailCardItem, ProjectDetail } from "./types"
+export type {
+  DetailIconKey,
+  ProjectDetailCardItem,
+  ProjectDetail,
+} from "./types"
 
 export const PROJECT_DETAILS: Record<string, ProjectDetail> = {
   "01": fintagDetail,

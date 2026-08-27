@@ -22,7 +22,8 @@ import type { ProjectDetail } from "./types"
 export const fintagDetail: ProjectDetail = {
   period: "2026.04 – 2026.06",
   role: "백엔드 개발 | ML 엔지니어링 (인턴십)",
-  overviewHeadline: "재무 전문가가 부재한 중소기업을 위한 AI 자금 관리 에이전트",
+  overviewHeadline:
+    "재무 전문가가 부재한 중소기업을 위한 AI 자금 관리 에이전트",
   overviewBody:
     "재무 전문지식이 없는 중소기업은 **유휴자금**을 방치해 매년 손실을 보면서도 알아채지 못합니다. Fintag는 유휴자금을 바탕으로 **현금흐름**을 예측해 **맞춤 금융 상품**을 제안합니다.",
   roleHeadline: "현금흐름 예측 모델 고도화",

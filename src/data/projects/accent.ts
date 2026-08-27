@@ -1,4 +1,5 @@
 import type { ProjectAccent } from "@/lib/color"
+import type { Vec2 } from "@/lib/vec2"
 
 // 프로젝트 카드 호버 시 반영할 브랜드 컬러 (로고/배너 기반). 로고를 받은 프로젝트만
 // 등록되어 있고, 없는 프로젝트는 호버해도 색이 바뀌지 않는다.
@@ -32,7 +33,7 @@ export const PROJECT_ACCENT: Record<string, ProjectAccent> = {
 
 // 카드 그리드(2열)에서 프로젝트가 위치한 사분면 방향으로 blob이 살짝 쏠리게 해
 // 호버할 때마다 그라디언트가 실제로 "반응"하는 느낌을 준다. x/y는 -1~1.
-export const PROJECT_PULL: Record<string, { x: number; y: number }> = {
+export const PROJECT_PULL: Record<string, Vec2> = {
   "01": { x: -1, y: -1 },
   "02": { x: 1, y: -1 },
   "03": { x: -1, y: 1 },
