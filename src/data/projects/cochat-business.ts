@@ -1,6 +1,9 @@
 import cochatBusinessLogo from "@/imports/cochat-business-logo.png"
 import cochatBusinessAboutHero from "@/imports/cochat-business/cochat-business-about-hero.webp"
 import cochatBusinessAboutRole from "@/imports/cochat-business/cochat-business-about-role.webp"
+import cochatBusinessProblemScattered from "@/imports/cochat-business/cochat-business-problem-scattered.webp"
+import cochatBusinessProblemPriority from "@/imports/cochat-business/cochat-business-problem-priority.webp"
+import cochatBusinessProblemFocus from "@/imports/cochat-business/cochat-business-problem-focus.webp"
 import cochatBusinessStackArchitecture from "@/imports/cochat-business/cochat-business-stack-architecture.webp"
 import type { ProjectDetail } from "./types"
 
@@ -38,6 +41,7 @@ export const cochatBusinessDetail: ProjectDetail = {
       ],
       icon: "duplicate",
       tags: ["여러메신저", "흩어진알림"],
+      image: cochatBusinessProblemScattered,
     },
     {
       title: "급한 알림과 안 급한 알림이 뒤섞임",
@@ -49,6 +53,7 @@ export const cochatBusinessDetail: ProjectDetail = {
       ],
       icon: "alert",
       tags: ["우선순위없음", "알림과다"],
+      image: cochatBusinessProblemPriority,
     },
     {
       title: "중요한 알림 때문에 집중할 수 없음",
@@ -60,6 +65,7 @@ export const cochatBusinessDetail: ProjectDetail = {
       ],
       icon: "target",
       tags: ["집중불가", "알림피로"],
+      image: cochatBusinessProblemFocus,
     },
   ],
   solution: [
