@@ -13,9 +13,9 @@ export const cochatBusinessDetail: ProjectDetail = {
   // 심볼에 서비스명이 포함되어 있지 않아 로고 아래에 별도로 표시한다
   logoShowName: true,
   overviewHeadline:
-    "Slack, Discord, 카카오톡 등 여러 메신저에 흩어진 업무 알림을 하나의 대시보드로 통합하고, AI가 메시지 긴급도를 자동 분류해주는 B2B SaaS.",
+    "흩어진 메신저 알림을 통합하고 AI가 긴급도를 분류하는 B2B SaaS",
   overviewBody:
-    "구름 DEEP DIVE 해커톤에서 아이디어를 제안하고 6인 팀을 리드하며 당일 풀스택 개발에 참여했습니다.",
+    "구름 DEEP DIVE 해커톤에서 아이디어 제안부터 6인 팀 리드, 당일 풀스택 개발까지 맡았습니다.",
   roleHeadline:
     "6인 팀 리더로서 서비스 기획을 총괄하고 프론트엔드·백엔드 개발에 직접 참여",
   roleBody:
