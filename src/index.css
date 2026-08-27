@@ -68,22 +68,6 @@ img {
   to { transform: scaleY(1); }
 }
 
-/* CoChat for Business Overview 히어로 배경 — 메신저 말풍선 아이콘이 화면
-   위쪽 밖에서 아래쪽 밖으로 천천히 흘러내린다. 가로 드리프트·회전 폭은
-   아이콘별 CSS 변수로 조절하고, transform/opacity만 움직여 컴포지터에 맡긴다 */
-@keyframes message-fall {
-  0% { transform: translate3d(0, -20vh, 0) rotate(0deg); opacity: 0; }
-  12% { opacity: 1; }
-  88% { opacity: 1; }
-  100% {
-    transform: translate3d(var(--fall-drift, 0), 120vh, 0) rotate(var(--fall-rot, 0deg));
-    opacity: 0;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .falling-messages-layer { display: none; }
-}
-
 /* 마우스가 지나가는 막대는 크게, 양옆 1~2개는 그보다 작게 함께 솟아올라
    "물결"처럼 번지는 느낌을 준다. 뒤 형제는 인접 결합자(+)로, 앞 형제는
    :has()로 "바로 다음이 hover 중인 막대"를 찾아 대칭으로 반응시킨다. */
