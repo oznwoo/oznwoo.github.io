@@ -1,11 +1,24 @@
-export type DetailIconKey =
-  | "duplicate"
-  | "target"
-  | "alert"
-  | "filter"
-  | "layers"
-  | "sparkle"
-  | "trend-down"
+export type DetailIconKey = "duplicate" | "target" | "alert" | "filter" | "layers" | "sparkle" | "trend-down"
+
+// AS-IS/TO-BE 비교 항목 하나 — 짧은 제목(title)과, 그 제목이 왜/어떻게
+// 그렇게 됐는지 풀어주는 글머리 기호 설명(detail) 목록의 쌍
+export interface ComparisonEntry {
+  title: string
+  detail: string[]
+}
+
+// Outcome 슬라이드/Overview 히어로에서 쓰는 성과 지표 하나
+export interface ProjectOutcomeStat {
+  stat: string
+  label: string
+  icon?: DetailIconKey
+}
+
+// STACK 슬라이드의 카테고리별 기술 목록 한 묶음
+export interface ProjectTechGroup {
+  category: string
+  items: string[]
+}
 
 // Problem/Solution 카드 슬라이드에서 쓰는 항목 하나
 export interface ProjectDetailCardItem {
@@ -20,8 +33,8 @@ export interface ProjectDetailCardItem {
   // 잇는 비교 구조로 렌더링한다. 각 항목은 짧은 제목(title)과, 그 제목을
   // 왜/어떻게 그렇게 됐는지 풀어주는 글머리 기호 설명(detail) 목록의 쌍이다.
   comparison?: {
-    before: { title: string; detail: string[] }[]
-    after: { title: string; detail: string[] }[]
+    before: ComparisonEntry[]
+    after: ComparisonEntry[]
   }
   icon?: DetailIconKey
   tags?: string[]
@@ -69,16 +82,20 @@ export interface ProjectDetail {
   demoBody?: string
   demoVideo?: string
   demoPoster?: string
+  // Overview 히어로 뒤에 까는 장식 배경 효과(선택). "bars"는 하단 이퀄라이저
+  // 막대(HeroBarChart), "falling-messages"는 메신저 말풍선이 위에서 아래로
+  // 흘러내리는 레이어(FallingMessages). 없으면 정적인 히어로.
+  heroEffect?: "bars" | "falling-messages"
   problem: ProjectDetailCardItem[]
   solution: ProjectDetailCardItem[]
-  outcome: { stat: string; label: string; icon?: DetailIconKey }[]
+  outcome: ProjectOutcomeStat[]
   // 성과 증빙 차트(선택) — Overview 히어로에서 쓴다
   outcomeImage?: string
   // PROBLEM 이미지와 같은 순서로 짝지은 '해결된 버전' 스크린샷 갤러리(선택).
   // 있으면 Outcome 슬라이드 전체가 PROBLEM/SOLUTION과 동일한 CardGridSlide
   // 구조(타이틀+이미지 카드 그리드)로 렌더링된다.
   outcomeGallery?: ProjectDetailCardItem[]
-  tech: { category: string; items: string[] }[]
+  tech: ProjectTechGroup[]
   // 시스템 아키텍처 다이어그램(선택) — 있으면 STACK 슬라이드가 카테고리별
   // 텍스트 목록 대신 이 이미지 하나만 보여준다.
   stackDiagram?: string

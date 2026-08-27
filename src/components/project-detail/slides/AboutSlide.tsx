@@ -161,7 +161,7 @@ export function AboutSlide({
               transition:
                 "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
             }}
-            className="text-sm font-medium"
+            className="text-base font-semibold"
           >
             {current.tabLabel}
           </span>
@@ -295,7 +295,7 @@ export function AboutSlide({
                 크고 진하게 먼저 보여준다 */}
             <p
               style={{ fontFamily: "var(--font-body)", lineHeight: 1.35 }}
-              className="text-lg sm:text-xl font-medium text-[#0C0F1A]"
+              className="text-lg sm:text-xl font-semibold text-[#0C0F1A]"
             >
               {current.headline}
             </p>

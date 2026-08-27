@@ -221,8 +221,8 @@ export function ProjectDetailView({
       </div>
 
       {/* 하단 카운터 — DetailNav와 같은 이유로 데스크톱에서는 absolute를 써야
-          translateX 래퍼와 함께 슬라이드-인 된다. Overview 슬라이드는 하단에
-          장식 막대 차트가 깔려 카운터가 묻히므로, 그 슬라이드에서만 뒤에
+          translateX 래퍼와 함께 슬라이드-인 된다. Overview 슬라이드에 배경
+          장식(heroEffect)이 있으면 카운터가 묻히므로, 그 슬라이드에서만 뒤에
           은은한 배경을 페이드 인/아웃시켜 대비를 보정한다 — 배경은 절대
           위치로 텍스트 뒤에 깔아 패딩이 텍스트 위치 자체를 밀지 않게 한다. */}
       <div
@@ -236,7 +236,7 @@ export function ProjectDetailView({
           aria-hidden
           className="absolute -inset-x-2 -inset-y-1 rounded-full bg-white/35 backdrop-blur-sm transition-opacity duration-500 pointer-events-none"
           style={{
-            opacity: displaySlide === 0 && detail.outcomeImage ? 1 : 0,
+            opacity: displaySlide === 0 && detail.heroEffect != null ? 1 : 0,
           }}
         />
         <span className="relative">

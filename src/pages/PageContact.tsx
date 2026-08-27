@@ -80,7 +80,7 @@ export function PageContact() {
               }}
             >
               <div
-                style={{ fontFamily: "var(--font-nanum)", fontWeight: 700 }}
+                style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
                 className="text-lg text-[#0C0F1A]"
               >
                 메시지가 전송됐습니다.
@@ -152,7 +152,7 @@ export function PageContact() {
               <button
                 type="submit"
                 style={{
-                  fontFamily: "var(--font-nanum)",
+                  fontFamily: "var(--font-display)",
                   fontWeight: 700,
                   background: "#0C0F1A",
                 }}

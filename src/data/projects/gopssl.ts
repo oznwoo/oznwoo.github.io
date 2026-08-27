@@ -3,7 +3,8 @@ import type { ProjectDetail } from "./types"
 export const gopsslDetail: ProjectDetail = {
   period: "2025.06 – 진행 중",
   role: "기획 · 디자인 · 풀스택 개발 (개인 프로젝트)",
-  overviewHeadline: "예약제 없이 운영되는 소규모 미용실을 위한 고객·매출 관리 앱.",
+  overviewHeadline:
+    "예약제 없이 운영되는 소규모 미용실을 위한 고객·매출 관리 앱.",
   overviewBody:
     "어머니의 미용실이 수기로 장부를 관리하는 것을 보고 직접 기획했습니다. UI/UX 설계부터 React Native 앱 개발, 백엔드 서버 배포까지 전 과정을 혼자 진행했습니다.",
   roleHeadline:

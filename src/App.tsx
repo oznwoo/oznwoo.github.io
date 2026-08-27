@@ -12,6 +12,7 @@ import {
   DEFAULT_ACCENT,
 } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
+import type { Vec2 } from "@/lib/vec2"
 import { PageHome } from "@/pages/PageHome"
 import { PageAbout } from "@/pages/PageAbout"
 import { PageResume } from "@/pages/PageResume"
@@ -253,7 +254,7 @@ export default function App() {
     },
     [MOBILE_TOTAL, mobilePage, triggerWarp],
   )
-  const mobileTouchStart = useRef<{ x: number; y: number } | null>(null)
+  const mobileTouchStart = useRef<Vec2 | null>(null)
 
   useEffect(() => {
     if (!isMobile) return

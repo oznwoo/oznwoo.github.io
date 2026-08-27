@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Hahmlet:wght@300;400;500;600&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css');
+@import url('https://cdn.jsdelivr.net/gh/moonspam/NanumSquareNeo@1.0/nanumsquareneo.css');
 @import 'tailwindcss';
 
 @theme {
-  --font-display: 'Hahmlet', 'Noto Serif KR', Georgia, serif;
+  /* 헤딩용 디스플레이 페이스 — 나눔스퀘어 네오. Variable 우선(가변 weight), 미지원 시 정적 굵기로 폴백 */
+  --font-display: 'NanumSquareNeoVariable', 'NanumSquareNeo', 'Pretendard Variable', 'Pretendard', system-ui, sans-serif;
   --font-body: 'Pretendard Variable', 'Pretendard', system-ui, sans-serif;
   --font-mono: 'Pretendard Variable', 'Pretendard', system-ui, sans-serif;
-  --font-nanum: 'Pretendard Variable', 'Pretendard', system-ui, sans-serif;
 }
 
 html {

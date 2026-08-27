@@ -51,8 +51,8 @@ export function RevealCard({
 
   return (
     <div className="flex flex-col gap-3">
-      {/* 타이틀은 Hahmlet(세리프) 대신 본문과 같은 Pretendard로 — 카드
-          맨 위에서 눈에 먼저 띄는 자리라 더 깔끔하고 또렷하게 보이게 한다 */}
+      {/* 타이틀은 디스플레이 폰트(--font-display) 대신 본문과 같은 Pretendard로 —
+          카드 맨 위에서 눈에 먼저 띄는 자리라 더 깔끔하고 또렷하게 보이게 한다 */}
       <h3
         style={{ fontFamily: "var(--font-body)" }}
         className="text-base font-semibold text-[#0C0F1A]"
