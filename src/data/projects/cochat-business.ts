@@ -3,7 +3,7 @@ import type { ProjectDetail } from "./types"
 
 export const cochatBusinessDetail: ProjectDetail = {
   period: "2026.03 – 2026.04",
-  role: "서비스 기획 총괄 · 풀스택 개발 · 팀 리더",
+  role: "서비스 기획 총괄 | 풀스택 개발 | 팀 리더",
   // 여러 메신저 알림에 파묻히는 문제의식을 히어로 배경에 은은하게 암시
   heroEffect: "falling-messages",
   logoSrc: cochatBusinessLogo,
@@ -12,10 +12,9 @@ export const cochatBusinessDetail: ProjectDetail = {
   logoClassName: "h-24 sm:h-28 w-auto",
   // 심볼에 서비스명이 포함되어 있지 않아 로고 아래에 별도로 표시한다
   logoShowName: true,
-  overviewHeadline:
-    "흩어진 메신저 알림을 통합하고 AI가 긴급도를 분류하는 B2B SaaS",
+  overviewHeadline: "Co(통합) + Chat(집중)",
   overviewBody:
-    "구름 DEEP DIVE 해커톤에서 아이디어 제안부터 6인 팀 리드, 당일 풀스택 개발까지 맡았습니다.",
+    "흩어진 메신저 알림을 통합하고 AI가 긴급도를 분류하는 업무용 메신저 통합 플랫폼",
   roleHeadline:
     "6인 팀 리더로서 서비스 기획을 총괄하고 프론트엔드·백엔드 개발에 직접 참여",
   roleBody:
