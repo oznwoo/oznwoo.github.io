@@ -1,4 +1,5 @@
 import cochatBusinessLogo from "@/imports/cochat-business-logo.png"
+import cochatBusinessAboutHero from "@/imports/cochat-business/cochat-business-about-hero.webp"
 import type { ProjectDetail } from "./types"
 
 export const cochatBusinessDetail: ProjectDetail = {
@@ -12,9 +13,10 @@ export const cochatBusinessDetail: ProjectDetail = {
   logoClassName: "h-24 sm:h-28 w-auto",
   // 심볼에 서비스명이 포함되어 있지 않아 로고 아래에 별도로 표시한다
   logoShowName: true,
-  overviewHeadline: "Co(통합) + Chat(집중)",
+  overviewHeadline: "Co(함께) + Chat(대화하자)",
   overviewBody:
-    "흩어진 메신저 알림을 통합하고 AI가 긴급도를 분류하는 업무용 메신저 통합 플랫폼",
+    "메신저의 다양화로 인해 흩어진 알림을 통합하고 AI가 긴급도를 분류하는 업무용 메신저 통합 플랫폼",
+  aboutImage: cochatBusinessAboutHero,
   roleHeadline:
     "6인 팀 리더로서 서비스 기획을 총괄하고 프론트엔드·백엔드 개발에 직접 참여",
   roleBody:
