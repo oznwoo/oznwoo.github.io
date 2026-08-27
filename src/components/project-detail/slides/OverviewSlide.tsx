@@ -95,7 +95,7 @@ export function OverviewSlide({
           </span>
         )}
         <h2
-          style={{ fontFamily: "var(--font-nanum-neo)", lineHeight: 1.1 }}
+          style={{ fontFamily: "var(--font-display)", lineHeight: 1.1 }}
           className="text-[clamp(1.8rem,5vw,3.25rem)] font-medium text-[#0C0F1A] max-w-3xl"
         >
           {project.subtitle}
