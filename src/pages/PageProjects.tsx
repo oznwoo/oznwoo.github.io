@@ -23,7 +23,7 @@ export function PageProjects({
               Projects
             </span>
             <h2
-              style={{ fontFamily: "var(--font-nanum)", fontWeight: 700 }}
+              style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
               className="text-[clamp(1.4rem,3vw,2.2rem)] text-[#0C0F1A] mt-1"
             >
               주요 프로젝트
@@ -153,7 +153,7 @@ export function PageProjects({
                   <div className="flex items-baseline gap-2 flex-wrap mb-2">
                     <h3
                       style={{
-                        fontFamily: "var(--font-nanum)",
+                        fontFamily: "var(--font-display)",
                         fontWeight: 800,
                       }}
                       className="text-xl text-[#0C0F1A] leading-snug"

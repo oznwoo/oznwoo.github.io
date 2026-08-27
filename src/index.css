@@ -7,8 +7,6 @@
   --font-display: 'NanumSquareNeoVariable', 'NanumSquareNeo', 'Pretendard Variable', 'Pretendard', system-ui, sans-serif;
   --font-body: 'Pretendard Variable', 'Pretendard', system-ui, sans-serif;
   --font-mono: 'Pretendard Variable', 'Pretendard', system-ui, sans-serif;
-  /* 이름과 달리 실제 나눔 폰트가 아니라 Pretendard 폴백 상태 — 별도 정리 예정 */
-  --font-nanum: 'Pretendard Variable', 'Pretendard', system-ui, sans-serif;
 }
 
 html {

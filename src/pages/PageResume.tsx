@@ -19,7 +19,7 @@ export function PageResume() {
           Resume
         </span>
         <h2
-          style={{ fontFamily: "var(--font-nanum)", fontWeight: 700 }}
+          style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
           className="text-[clamp(1.1rem,5vw,2.2rem)] text-[#0C0F1A] mt-1 mb-4 sm:mb-6 md:mb-8"
         >
           이력

@@ -29,7 +29,7 @@ export function TimelineItem({ item }: { item: TimelineEntry }) {
             </a>
           )}
           <div
-            style={{ fontFamily: "var(--font-nanum)", fontWeight: 700 }}
+            style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
             className="text-[11px] leading-snug text-[#0C0F1A] sm:text-[12px] md:text-[13px]"
           >
             {item.name}
