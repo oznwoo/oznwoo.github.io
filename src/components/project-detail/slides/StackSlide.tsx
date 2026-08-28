@@ -98,15 +98,6 @@ export function StackSlide({
             </div>
           ))}
         </div>
-        <a
-          href="https://github.com/oznwoo"
-          target="_blank"
-          rel="noreferrer"
-          style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/40 hover:text-[#0C0F1A] transition-colors uppercase tracking-[0.04em] border-b border-[#0C0F1A]/15 pb-0.5"
-        >
-          GitHub →
-        </a>
       </div>
     </div>
   )

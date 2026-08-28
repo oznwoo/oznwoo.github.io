@@ -46,6 +46,10 @@ export interface ProjectDetailCardItem {
   // images가 순차적인 파이프라인 스텝이 아니라(예: 서로 독립된 다이어그램
   // 여러 장) 화살표로 잇는 게 부적절할 때 false로 끈다. 기본값은 true.
   imagesShowArrows?: boolean
+  // 여러 장을 나란히 두기엔 폭이 부족할 때 true로 켜면, 데스크톱에서
+  // 카드를 서로 살짝 겹쳐 부채꼴로 펼쳐 보여준다(hover 시 앞으로 올라옴).
+  // 겹침 모드에서는 사이 화살표를 그리지 않는다.
+  imagesOverlap?: boolean
 }
 
 export interface ProjectDetail {
@@ -86,6 +90,9 @@ export interface ProjectDetail {
   // 막대(HeroBarChart), "falling-messages"는 메신저 말풍선이 위에서 아래로
   // 흘러내리는 레이어(FallingMessages). 없으면 정적인 히어로.
   heroEffect?: "bars" | "falling-messages"
+  // 이 프로젝트의 GitHub 저장소(프론트엔드 repo). 있으면 상세 우측 하단에
+  // 항상 GitHub로 가는 링크 버튼이 뜬다.
+  githubUrl?: string
   problem: ProjectDetailCardItem[]
   solution: ProjectDetailCardItem[]
   outcome: ProjectOutcomeStat[]
