@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 import type { RefObject } from "react"
 import type { ProjectDetailCardItem } from "@/data/projects"
@@ -27,8 +28,39 @@ export function ImageLightbox({
   arrowGradientStops,
   arrowShadowColor,
 }: ImageLightboxProps) {
+  const images = solution.images
+  // 겹쳐 보여주던 독립 스크린샷들은 크게 볼 때 나란히 두면 각 장이 너무
+  // 작아진다 — 한 장씩 꽉 차게 보여주고 좌우 화살표로 넘긴다.
+  const carousel =
+    solution.imagesOverlap === true && !!images && images.length > 1
+  const count = images?.length ?? 0
+  const [index, setIndex] = useState(0)
+
+  // 라이트박스를 닫거나 다른 스텝으로 넘어가면 항상 첫 장부터 다시 시작
+  useEffect(() => {
+    if (lightboxPhase === "closed") setIndex(0)
+  }, [lightboxPhase])
+  useEffect(() => {
+    setIndex(0)
+  }, [solution])
+
+  // 열려 있는 동안 좌우 방향키로도 전환 (Esc는 훅에서 이미 처리)
+  useEffect(() => {
+    if (!carousel || lightboxPhase === "closed") return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") setIndex((i) => (i + 1) % count)
+      else if (e.key === "ArrowLeft") setIndex((i) => (i - 1 + count) % count)
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [carousel, lightboxPhase, count])
+
   if (lightboxPhase === "closed" || !(solution.image || solution.images))
     return null
+
+  const goPrev = () => setIndex((i) => (i - 1 + count) % count)
+  const goNext = () => setIndex((i) => (i + 1) % count)
+  const navVisible = lightboxPhase === "open"
 
   return createPortal(
     <div
@@ -56,7 +88,66 @@ export function ImageLightbox({
           }
         }}
       >
-        {solution.images ? (
+        {carousel ? (
+          <div className="relative flex items-center justify-center">
+            <img
+              key={index}
+              src={images![index]}
+              alt=""
+              className="rounded-2xl"
+              style={{
+                maxHeight: isMobile ? "72vh" : "84vh",
+                maxWidth: isMobile ? "90vw" : "86vw",
+                width: "auto",
+                height: "auto",
+                boxShadow: "0 50px 100px -20px rgba(0,0,0,0.4)",
+                animation: "step-in 0.3s cubic-bezier(0.16,1,0.3,1) both",
+              }}
+            />
+            <button
+              type="button"
+              aria-label="이전 이미지"
+              onClick={goPrev}
+              className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12 rounded-full text-3xl leading-none transition-colors duration-200"
+              style={{
+                background: "rgba(12,15,26,0.55)",
+                color: "#fff",
+                backdropFilter: "blur(6px)",
+                WebkitBackdropFilter: "blur(6px)",
+                opacity: navVisible ? 1 : 0,
+              }}
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              aria-label="다음 이미지"
+              onClick={goNext}
+              className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12 rounded-full text-3xl leading-none transition-colors duration-200"
+              style={{
+                background: "rgba(12,15,26,0.55)",
+                color: "#fff",
+                backdropFilter: "blur(6px)",
+                WebkitBackdropFilter: "blur(6px)",
+                opacity: navVisible ? 1 : 0,
+              }}
+            >
+              ›
+            </button>
+            <div
+              aria-hidden="true"
+              className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs tracking-wide"
+              style={{
+                background: "rgba(12,15,26,0.55)",
+                color: "#fff",
+                fontFamily: "var(--font-mono)",
+                opacity: navVisible ? 1 : 0,
+              }}
+            >
+              {index + 1} / {count}
+            </div>
+          </div>
+        ) : solution.images ? (
           <div
             className={
               isMobile
