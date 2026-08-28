@@ -86,6 +86,12 @@ export function SolutionShowcase({
   }
 
   const solution = solutions[step]
+  // 여러 장을 나란히 두기엔 폭이 부족한 경우, 데스크톱에서만 카드를 서로
+  // 살짝 겹쳐 부채꼴로 펼친다 — 모바일은 세로 스택이라 겹침이 부자연스럽다
+  const overlapImages =
+    !isMobile &&
+    solution.imagesOverlap === true &&
+    (solution.images?.length ?? 0) > 1
   // 이미지를 hover하고 있다는 것만 따로 뽑아둔다 — "크게 보기" 버튼과
   // 이전/다음 화살표 모두 자기 자신을 hover할 때뿐 아니라 이미지를
   // hover할 때도 같이 강조되어야 하기 때문
@@ -187,73 +193,101 @@ export function SolutionShowcase({
                 {solution.images ? (
                   // 스텝별 스크린샷을 합성 이미지 한 장 대신 낱장으로 받아,
                   // 사이 화살표는 이미지에 미리 그려 넣지 않고 FlowArrow로
-                  // 직접 그린다 — 다른 화살표들과 색·모양이 항상 일치한다
+                  // 직접 그린다 — 다른 화살표들과 색·모양이 항상 일치한다.
+                  // imagesOverlap이면 화살표 없이 카드를 겹쳐 부채꼴로 편다.
                   <div
                     className={
                       isMobile
                         ? "flex flex-col items-center gap-3"
-                        : "flex items-center justify-center gap-3"
+                        : overlapImages
+                          ? "flex items-center justify-center"
+                          : "flex items-center justify-center gap-3"
                     }
                   >
-                    {solution.images.map((img, i) => (
-                      <div
-                        key={i}
-                        className={
-                          isMobile
-                            ? "flex flex-col items-center gap-3"
-                            : "flex items-center gap-3"
-                        }
-                      >
-                        {i > 0 && solution.imagesShowArrows !== false && (
-                          <FlowArrow
-                            gradientId={`solution-arrow-gradient-img-${i}`}
-                            gradientStops={arrowGradientStops}
-                            shadowColor={arrowShadowColor}
-                            size={26}
-                            rotate={isMobile}
-                          />
-                        )}
+                    {solution.images.map((img, i) => {
+                      const isHovered = hoveredImageIndex === i
+                      const mid = (solution.images!.length - 1) / 2
+                      const restTransform = overlapImages
+                        ? `translateY(${Math.abs(i - mid) * 7}px) rotate(${(i - mid) * 3}deg)`
+                        : "translateY(0) scale(1)"
+                      const hoverTransform = overlapImages
+                        ? "translateY(-10px) rotate(0deg) scale(1.04)"
+                        : "translateY(-3px) scale(1.012)"
+                      return (
                         <div
-                          onMouseEnter={() => setHoveredImageIndex(i)}
-                          onMouseLeave={() => setHoveredImageIndex(null)}
-                          className="rounded-2xl overflow-hidden border shrink-0 cursor-default"
-                          style={{
-                            borderColor:
-                              hoveredImageIndex === i
+                          key={i}
+                          className={
+                            isMobile
+                              ? "flex flex-col items-center gap-3"
+                              : "flex items-center gap-3"
+                          }
+                          style={
+                            overlapImages && i > 0
+                              ? { marginLeft: "-9%" }
+                              : undefined
+                          }
+                        >
+                          {i > 0 &&
+                            !overlapImages &&
+                            solution.imagesShowArrows !== false && (
+                              <FlowArrow
+                                gradientId={`solution-arrow-gradient-img-${i}`}
+                                gradientStops={arrowGradientStops}
+                                shadowColor={arrowShadowColor}
+                                size={26}
+                                rotate={isMobile}
+                              />
+                            )}
+                          <div
+                            onMouseEnter={() => setHoveredImageIndex(i)}
+                            onMouseLeave={() => setHoveredImageIndex(null)}
+                            className="rounded-2xl overflow-hidden border shrink-0 cursor-default"
+                            style={{
+                              position: overlapImages ? "relative" : undefined,
+                              zIndex: overlapImages
+                                ? isHovered
+                                  ? 40
+                                  : i + 1
+                                : undefined,
+                              transformOrigin: overlapImages
+                                ? "center bottom"
+                                : undefined,
+                              borderColor: isHovered
                                 ? hexToRgba(accentColor, 0.35)
                                 : "rgba(12,15,26,0.1)",
-                            boxShadow:
-                              hoveredImageIndex === i
+                              boxShadow: isHovered
                                 ? `0 20px 45px -14px ${hexToRgba(accentColor, 0.35)}, 0 8px 18px -8px rgba(12,15,26,0.28)`
                                 : "0 14px 34px -18px rgba(12,15,26,0.24), 0 4px 10px -6px rgba(12,15,26,0.12)",
-                            transform:
-                              hoveredImageIndex === i
-                                ? "translateY(-3px) scale(1.012)"
-                                : "translateY(0) scale(1)",
-                            transition:
-                              "transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease-out, border-color 0.4s ease-out",
-                          }}
-                        >
-                          <img
-                            src={img}
-                            alt=""
-                            aria-hidden="true"
-                            loading="eager"
-                            className="block w-auto"
-                            style={{
-                              height: isMobile
-                                ? "28vh"
-                                : // 가로로 넓은 다이어그램 2장을 260px 높이로 나란히
-                                  // 두면 폭 합이 컨테이너를 넘어간다 — 이미지가
-                                  // 3장 미만일 때는 낮춘 높이로 폭을 맞춘다
-                                  solution.images!.length >= 3
-                                  ? "260px"
-                                  : "220px",
+                              transform: isHovered
+                                ? hoverTransform
+                                : restTransform,
+                              transition:
+                                "transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease-out, border-color 0.4s ease-out",
                             }}
-                          />
+                          >
+                            <img
+                              src={img}
+                              alt=""
+                              aria-hidden="true"
+                              loading="eager"
+                              className="block w-auto"
+                              style={{
+                                height: isMobile
+                                  ? "28vh"
+                                  : overlapImages
+                                    ? "240px"
+                                    : // 가로로 넓은 다이어그램 2장을 260px 높이로
+                                      // 나란히 두면 폭 합이 컨테이너를 넘어간다 —
+                                      // 3장 미만일 때는 낮춘 높이로 폭을 맞춘다
+                                      solution.images!.length >= 3
+                                      ? "260px"
+                                      : "220px",
+                              }}
+                            />
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 ) : solution.image ? (
                   <div

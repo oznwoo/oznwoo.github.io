@@ -4,6 +4,14 @@ import cochatBusinessAboutRole from "@/imports/cochat-business/cochat-business-a
 import cochatBusinessProblemScattered from "@/imports/cochat-business/cochat-business-problem-scattered.webp"
 import cochatBusinessProblemPriority from "@/imports/cochat-business/cochat-business-problem-priority.webp"
 import cochatBusinessProblemFocus from "@/imports/cochat-business/cochat-business-problem-focus.webp"
+import cochatBusinessOutcomeScattered from "@/imports/cochat-business/cochat-business-outcome-scattered.webp"
+import cochatBusinessOutcomePriority from "@/imports/cochat-business/cochat-business-outcome-priority.webp"
+import cochatBusinessOutcomeFocus from "@/imports/cochat-business/cochat-business-outcome-focus.webp"
+import cochatBusinessSolutionIntegration from "@/imports/cochat-business/cochat-business-solution-integration.webp"
+import cochatBusinessSolutionPriorityDashboard from "@/imports/cochat-business/cochat-business-solution-priority-dashboard.webp"
+import cochatBusinessSolutionPriorityMessages from "@/imports/cochat-business/cochat-business-solution-priority-messages.webp"
+import cochatBusinessSolutionPriorityBriefing from "@/imports/cochat-business/cochat-business-solution-priority-briefing.webp"
+import cochatBusinessSolutionFocusMode from "@/imports/cochat-business/cochat-business-solution-focusmode.webp"
 import cochatBusinessStackArchitecture from "@/imports/cochat-business/cochat-business-stack-architecture.webp"
 import type { ProjectDetail } from "./types"
 
@@ -22,17 +30,17 @@ export const cochatBusinessDetail: ProjectDetail = {
   overviewBody:
     "여러 메신저에 흩어진 알림을 한 곳에 모으고, AI가 급한 정도를 가려 알려주는 업무용 메신저 통합 플랫폼",
   aboutImage: cochatBusinessAboutHero,
-  roleHeadline:
-    "6인 팀 리더로서 서비스 기획을 총괄하고 프론트엔드·백엔드 개발에 직접 참여",
+  roleHeadline: "[2026 구름 해커톤]에서 팀 리더를 맡고 풀스택 개발에 직접 참여",
   roleBody:
-    "해커톤 당일 아이디어 제안부터 팀 구성, 기능 우선순위 결정까지 총괄했고 **Next.js 프론트엔드**와 **FastAPI 백엔드** 개발에 직접 참여했습니다.",
+    "아이디어 제안부터 팀 구성, 기능 우선순위 결정까지 팀을 이끌었고 프론트엔드와 백엔드 개발에 함께 참여했습니다.",
   roleImage: cochatBusinessAboutRole,
   demoHeadline: "메신저 알림을 모으고 AI가 급한 순서대로 정리하기까지",
   demoBody:
     "여러 메신저 알림이 하나의 대시보드에 모이고, AI가 급한 정도를 가려 집중모드에서 걸러 주는 과정을 시연 영상으로 담을 예정입니다.",
+  githubUrl: "https://github.com/oznwoo/cochat-for-business-frontend",
   problem: [
     {
-      title: "알림이 여러 메신저에 흩어져 있음",
+      title: "메신저의 다양화",
       body: "업무 알림이 여러 메신저와 앱에 흩어져 있어서, 하루에도 수십 번 이 앱 저 앱을 오가야 했습니다. 여기저기 흩어진 내용을 하나로 이어 맞추는 것도 사람 몫이었습니다.",
       shortBody: [
         "업무 알림이 **여러 메신저에 흩어짐**",
@@ -44,7 +52,7 @@ export const cochatBusinessDetail: ProjectDetail = {
       image: cochatBusinessProblemScattered,
     },
     {
-      title: "급한 알림과 안 급한 알림이 뒤섞임",
+      title: "우선순위 부재",
       body: "서버가 멈춘 것 같은 급한 알림과 단순 공지가 똑같은 무게로 왔습니다. 무엇부터 봐야 할지 매번 사람이 판단해야 해서, 훑어보는 데만 시간이 많이 들었습니다.",
       shortBody: [
         "**급한 알림**과 **단순 공지**가 같은 무게",
@@ -56,7 +64,7 @@ export const cochatBusinessDetail: ProjectDetail = {
       image: cochatBusinessProblemPriority,
     },
     {
-      title: "중요한 알림 때문에 집중할 수 없음",
+      title: "업무 집중 불가",
       body: "중요한 문제를 놓칠까 봐 방해금지 모드조차 켜지 못했습니다. 결국 집중해서 일하는 중에도 모든 알림이 다 들어와서 집중이 계속 끊겼습니다.",
       shortBody: [
         "놓칠까 봐 **방해금지 모드도 못 켬**",
@@ -106,6 +114,7 @@ export const cochatBusinessDetail: ProjectDetail = {
           },
         ],
       },
+      image: cochatBusinessSolutionIntegration,
       icon: "filter",
     },
     {
@@ -142,11 +151,18 @@ export const cochatBusinessDetail: ProjectDetail = {
           },
         ],
       },
+      images: [
+        cochatBusinessSolutionPriorityDashboard,
+        cochatBusinessSolutionPriorityMessages,
+        cochatBusinessSolutionPriorityBriefing,
+      ],
+      imagesShowArrows: false,
+      imagesOverlap: true,
       icon: "sparkle",
     },
     {
-      title: "집중모드 + 카메라로 몰입 상태 파악",
-      body: "집중모드에서는 가장 급한 알림만 통과시키고 나머지는 조용히 모아둡니다. 카메라로 사용자의 시선·자세를 살펴 실제로 몰입하고 있는지 파악해 알림을 언제 보낼지 자동으로 조절하고, 집중이 끝나거나 퇴근하기 전에 안 본 알림을 중요한 순서대로 정리해 줍니다.",
+      title: "집중모드로 알림을 걸러내고 원할 때 브리핑",
+      body: "집중모드에서는 가장 급한 알림만 통과시키고 나머지는 조용히 모아둡니다. 집중하는 중에도 원하면 언제든 직접 브리핑을 받아 그동안 쌓인 알림을 중요한 순서대로 확인할 수 있고, 집중이 끝나거나 퇴근하기 전에도 안 본 알림을 정리해 줍니다.",
       comparison: {
         before: [
           {
@@ -166,10 +182,10 @@ export const cochatBusinessDetail: ProjectDetail = {
         ],
         after: [
           {
-            title: "집중모드 + 카메라로 알림 시점 조절",
+            title: "집중모드로 급한 알림만 통과",
             detail: [
-              "**가장 급한 알림만 통과**, 나머지는 모아둠",
-              "카메라로 몰입 상태를 보고 **보낼 타이밍 조절**",
+              "**가장 급한 알림만 통과**, 나머지는 조용히 모아둠",
+              "집중 중에도 원하면 **직접 브리핑**으로 확인",
             ],
           },
           {
@@ -181,6 +197,7 @@ export const cochatBusinessDetail: ProjectDetail = {
           },
         ],
       },
+      image: cochatBusinessSolutionFocusMode,
       icon: "target",
     },
   ],
@@ -203,7 +220,7 @@ export const cochatBusinessDetail: ProjectDetail = {
   ],
   outcomeGallery: [
     {
-      title: "알림이 여러 메신저에 흩어져 있음 → 해결",
+      title: "메신저의 다양화 → 해결",
       body: "",
       shortBody: [
         "여러 메신저 알림을 **하나의 대시보드로 통합**",
@@ -211,9 +228,10 @@ export const cochatBusinessDetail: ProjectDetail = {
         "메신저를 오갈 필요 없이 한눈에 확인",
       ],
       tags: ["알림통합", "맥락파악"],
+      image: cochatBusinessOutcomeScattered,
     },
     {
-      title: "급한 알림과 안 급한 알림이 뒤섞임 → 해결",
+      title: "우선순위 부재 → 해결",
       body: "",
       shortBody: [
         "대화 맥락을 읽어 **4단계로 자동 구분**",
@@ -221,16 +239,18 @@ export const cochatBusinessDetail: ProjectDetail = {
         "색으로 급한 정도를 한눈에",
       ],
       tags: ["AI구분", "한줄요약"],
+      image: cochatBusinessOutcomePriority,
     },
     {
-      title: "중요한 알림 때문에 집중할 수 없음 → 해결",
+      title: "업무 집중 불가 → 해결",
       body: "",
       shortBody: [
         "**집중모드**로 가장 급한 알림만 통과",
-        "카메라로 몰입 상태를 보고 **알림 타이밍 조절**",
+        "집중 중에도 **원할 때 직접 브리핑**으로 확인",
         "집중 후·퇴근 전 **중요한 순서로 정리**",
       ],
-      tags: ["집중모드", "몰입감지"],
+      tags: ["집중모드", "직접브리핑"],
+      image: cochatBusinessOutcomeFocus,
     },
   ],
   tech: [

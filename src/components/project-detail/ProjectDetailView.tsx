@@ -4,6 +4,7 @@ import { useSectionObserver } from "@/hooks/useSectionObserver"
 import { DETAIL_PAGE_LABELS } from "@/data/navigation"
 import { PROJECTS, PROJECT_DETAILS, PROJECT_ACCENT } from "@/data/projects"
 import { DetailNav } from "./DetailNav"
+import { DetailGithubLink } from "./DetailGithubLink"
 import { OverviewSlide } from "./slides/OverviewSlide"
 import { AboutSlide } from "./slides/AboutSlide"
 import { ProblemSlide } from "./slides/ProblemSlide"
@@ -244,6 +245,16 @@ export function ProjectDetailView({
           {String(TOTAL_D).padStart(2, "0")}
         </span>
       </div>
+
+      {/* 우측 하단 — 이 프로젝트의 GitHub로 (프론트엔드 repo). 슬라이드와
+          무관하게 항상 떠 있어 어느 페이지에서든 바로 이동할 수 있다. */}
+      {detail.githubUrl && (
+        <DetailGithubLink
+          href={detail.githubUrl}
+          accentColor={accentColor}
+          isMobile={isMobile}
+        />
+      )}
     </div>
   )
 }
