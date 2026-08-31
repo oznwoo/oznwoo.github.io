@@ -445,6 +445,7 @@ export function SolutionShowcase({
         zoomContentRef={zoomContentRef}
         closeZoom={closeZoom}
         resetZoomImmediately={resetZoomImmediately}
+        accentColor={accentColor}
         arrowGradientStops={arrowGradientStops}
         arrowShadowColor={arrowShadowColor}
       />
