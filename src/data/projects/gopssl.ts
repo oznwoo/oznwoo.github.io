@@ -13,7 +13,7 @@ import gopsslSolutionFigmaDesign from "@/imports/gopssl/gopssl-solution-figma-de
 import gopsslSolutionCustomerList from "@/imports/gopssl/gopssl-solution-customer-list.webp"
 import gopsslSolutionSaleAdd from "@/imports/gopssl/gopssl-solution-sale-add.webp"
 import gopsslSolutionCustomerCard from "@/imports/gopssl/gopssl-solution-customer-card.webp"
-import gopsslSolutionRevenue from "@/imports/gopssl/gopssl-solution-revenue.webp"
+import gopsslSolutionRevenueAnalysis from "@/imports/gopssl/gopssl-solution-revenue-analysis.webp"
 import gopsslStackArchitecture from "@/imports/gopssl/gopssl-stack-architecture.webp"
 import type { ProjectDetail } from "./types"
 
@@ -122,11 +122,7 @@ export const gopsslDetail: ProjectDetail = {
     {
       title: "고객 카드로 정보 통합",
       body: "고객별 방문 이력과 시술·결제 내역을 카드 한 장에 모아 저장하고, 이름 검색이나 초성 정렬로 빠르게 찾습니다. 방문 횟수도 함께 표시돼 단골을 한눈에 알 수 있습니다.",
-      images: [
-        gopsslSolutionCustomerList,
-        gopsslSolutionSaleAdd,
-        gopsslSolutionCustomerCard,
-      ],
+      images: [gopsslSolutionCustomerList, gopsslSolutionCustomerCard],
       imagesShowArrows: false,
       imagesOverlap: true,
       comparison: {
@@ -165,7 +161,9 @@ export const gopsslDetail: ProjectDetail = {
     {
       title: "매출 자동 집계와 월별 대시보드",
       body: "시술 항목을 미리 등록해두고 탭 몇 번으로 매출을 기록하면, 일별·월별 매출과 현금·카드 비율, 전월 대비 증감이 자동으로 대시보드에 집계됩니다. 실사용자 피드백을 반영해 입력 흐름을 여러 차례 다듬었습니다.",
-      image: gopsslSolutionRevenue,
+      images: [gopsslSolutionSaleAdd, gopsslSolutionRevenueAnalysis],
+      imagesShowArrows: false,
+      imagesOverlap: true,
       comparison: {
         before: [
           {
