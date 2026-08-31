@@ -92,18 +92,33 @@ img {
    · 상시: 도구마다 다른 주기로 천천히 떠다니고(.salon-tool-drift) 그 위에
      제자리 흔들림·미세진동(.salon-tool-idle)
    · 호버: drift·idle을 함께 멈춰 자리를 고정하고 svg 안쪽 그룹이 크게 반응
-   · 퇴장: data-shown이 false가 되면 전부 함께 천천히 페이드아웃 */
+   · 퇴장: data-shown이 false가 되면 컨테이너(.salon-tools) opacity가 0으로
+     바뀌며 자식 전부가 한 몸처럼 0.6s 페이드아웃한다. 자식 opacity는 tool-pop
+     애니메이션이 그리는 값이라 애니메이션이 제거돼도 transition이 안정적으로
+     발동하지 않아, 퇴장 페이드는 컨테이너 레벨에서 처리한다 */
+.salon-tools {
+  opacity: 1;
+}
+.salon-tools[data-shown="false"] {
+  opacity: 0;
+  /* transition을 이 규칙에만 둬서 퇴장(→false)만 0.6s 페이드하고,
+     재등장(→true)은 즉시 복귀해 스태거 팝인을 가리지 않는다 */
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
 .salon-tool,
 .salon-sparkle {
   position: absolute;
   z-index: 0;
   color: inherit;
-  opacity: 0;
-  transition: opacity 0.6s ease;
 }
 .salon-tool {
   /* 텍스트 선택 등 다른 곳은 막지 않고 도구 위에서만 hover가 잡히게 */
   pointer-events: auto;
+}
+/* 퇴장 페이드 동안에는 도구 호버를 받지 않는다 */
+.salon-tools[data-shown="false"] .salon-tool {
+  pointer-events: none;
 }
 .salon-tool-drift,
 .salon-tool-rot,
