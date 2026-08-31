@@ -108,12 +108,13 @@ export function ImageLightbox({
     setIndex(0)
   }, [solution])
 
-  // 열려 있는 동안 좌우 방향키로도 전환 (Esc는 훅에서 이미 처리)
+  // 열려 있는 동안 좌우 방향키로도 전환 (Esc는 훅에서 이미 처리).
+  // 양 끝에서는 더 넘어가지 않는다(순환 X) — 경계 화살표도 함께 숨긴다.
   useEffect(() => {
     if (!carousel || lightboxPhase === "closed") return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") setIndex((i) => (i + 1) % count)
-      else if (e.key === "ArrowLeft") setIndex((i) => (i - 1 + count) % count)
+      if (e.key === "ArrowRight") setIndex((i) => Math.min(count - 1, i + 1))
+      else if (e.key === "ArrowLeft") setIndex((i) => Math.max(0, i - 1))
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
@@ -122,8 +123,8 @@ export function ImageLightbox({
   if (lightboxPhase === "closed" || !(solution.image || solution.images))
     return null
 
-  const goPrev = () => setIndex((i) => (i - 1 + count) % count)
-  const goNext = () => setIndex((i) => (i + 1) % count)
+  const goPrev = () => setIndex((i) => Math.max(0, i - 1))
+  const goNext = () => setIndex((i) => Math.min(count - 1, i + 1))
   const navVisible = lightboxPhase === "open"
 
   return createPortal(
@@ -246,13 +247,13 @@ export function ImageLightbox({
         <>
           <LightboxNav
             side="prev"
-            visible={navVisible}
+            visible={navVisible && index > 0}
             accentColor={accentColor}
             onClick={goPrev}
           />
           <LightboxNav
             side="next"
-            visible={navVisible}
+            visible={navVisible && index < count - 1}
             accentColor={accentColor}
             onClick={goNext}
           />
