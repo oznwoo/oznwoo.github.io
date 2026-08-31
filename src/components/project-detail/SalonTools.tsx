@@ -1,17 +1,18 @@
-// Gopssl Overview 히어로 배경. 히어로 텍스트 주변 고정 위치에 미용실 도구
+// Gopssl Overview 히어로 배경. 히어로 텍스트 주변 대략적인 위치에 미용실 도구
 // 라인아트(가위·바리깡·손거울·스프레이·드라이기·고데기)와 반짝임을 흩어
-// 두고, 평상시에도 도구마다 은은하게 움직이며(흔들·미세진동), 커서를
-// 올리면 도구 특성대로 크게 반응한다 — 가위는 자르고, 바리깡은 진동하고,
-// 손거울은 반짝이고, 스프레이는 뿌리고, 드라이기는 바람을 내고, 고데기는
-// 집게가 여닫힌다.
+// 두고, 등장한 뒤에도 도구마다 다른 주기로 천천히 떠다닌다(표류·흔들·미세
+// 진동). 커서를 올리면 그 자리에 멈춰 고정된 채로 도구 특성대로 크게
+// 반응한다 — 가위는 자르고, 바리깡은 진동하고, 손거울은 반짝이고,
+// 스프레이는 뿌리고, 드라이기는 바람을 내고, 고데기는 집게가 여닫힌다.
 //
 // 처음 등장할 때는 전부 한 번에 뜨지 않고, seeded shuffle로 정한 --pop-delay
 // 만큼 뒤죽박죽 순서로 하나씩 팝인한다. 정보가 아니라 분위기라 히어로
 // 텍스트(z-10) 뒤(z-0)에 낮은 불투명도로 깔고, 순수 CSS(index.css의
 // .salon-tool* / .salon-sparkle)로만 반응한다.
 //
-// 계층: .salon-tool(팝인) > .salon-tool-rot(각도) > .salon-tool-idle(상시
-// 움직임) > svg.salon-tool-svg(호버 반응). transform이 겹치지 않게 나눴다.
+// 계층: .salon-tool(팝인) > .salon-tool-drift(느린 표류) > .salon-tool-rot
+// (각도) > .salon-tool-idle(제자리 흔들림) > svg.salon-tool-svg(호버 반응).
+// transform이 겹치지 않게 층마다 나눴고, 호버 시 drift·idle을 함께 멈춘다.
 //
 // 가위·바리깡·스프레이는 Tabler Icons(MIT)의 아웃라인 path를 그대로 인라인으로
 // 쓰고, 손거울·드라이기·고데기는 같은 24그리드·stroke 규격으로 직접 그렸다.
@@ -197,11 +198,13 @@ export function SalonTools({ visible, color }: SalonToolsProps) {
           className={`salon-tool ${toolClass}`}
           style={{ ...style, ["--pop-delay" as string]: `${popDelays[i]}ms` }}
         >
-          <div
-            className="salon-tool-rot"
-            style={{ transform: `rotate(${rotate}deg)` }}
-          >
-            <div className="salon-tool-idle">{render()}</div>
+          <div className="salon-tool-drift">
+            <div
+              className="salon-tool-rot"
+              style={{ transform: `rotate(${rotate}deg)` }}
+            >
+              <div className="salon-tool-idle">{render()}</div>
+            </div>
           </div>
         </div>
       ))}

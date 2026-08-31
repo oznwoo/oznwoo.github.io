@@ -86,11 +86,12 @@ img {
   scale: 1 1.28;
 }
 
-/* Gopssl Overview 히어로 — 텍스트 주변 고정 위치에 흩어 둔 미용실 도구
+/* Gopssl Overview 히어로 — 텍스트 주변에 흩어 둔 미용실 도구
    라인아트(SalonTools).
    · 등장: --pop-delay(seeded shuffle)만큼 늦게 하나씩 뒤죽박죽 팝인
-   · 상시: 도구마다 은은하게 움직임(.salon-tool-idle: 흔들/미세진동)
-   · 호버: 도구 특성대로 크게 반응(svg 안쪽 그룹)
+   · 상시: 도구마다 다른 주기로 천천히 떠다니고(.salon-tool-drift) 그 위에
+     제자리 흔들림·미세진동(.salon-tool-idle)
+   · 호버: drift·idle을 함께 멈춰 자리를 고정하고 svg 안쪽 그룹이 크게 반응
    · 퇴장: data-shown이 false가 되면 전부 함께 천천히 페이드아웃 */
 .salon-tool,
 .salon-sparkle {
@@ -104,6 +105,7 @@ img {
   /* 텍스트 선택 등 다른 곳은 막지 않고 도구 위에서만 hover가 잡히게 */
   pointer-events: auto;
 }
+.salon-tool-drift,
 .salon-tool-rot,
 .salon-tool-idle { display: block; }
 
@@ -131,6 +133,34 @@ img {
   stroke-linejoin: round;
 }
 
+/* ── 느린 표류(drift) — 등장 후 각자 다른 경로·주기로 떠다닌다 ── */
+@keyframes drift-a {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(6px, -5px); }
+  50%  { transform: translate(-3px, 5px); }
+  75%  { transform: translate(-6px, -3px); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes drift-b {
+  0%   { transform: translate(0, 0); }
+  33%  { transform: translate(-7px, 3px); }
+  66%  { transform: translate(4px, 6px); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes drift-c {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(4px, 4px); }
+  50%  { transform: translate(7px, -3px); }
+  80%  { transform: translate(-4px, 2px); }
+  100% { transform: translate(0, 0); }
+}
+.tool-scissors .salon-tool-drift { animation: drift-a 13s ease-in-out infinite; animation-delay: -3s; }
+.tool-dryer .salon-tool-drift { animation: drift-b 15s ease-in-out infinite; animation-delay: -6s; }
+.tool-clipper .salon-tool-drift { animation: drift-c 11s ease-in-out infinite; animation-delay: -1s; }
+.tool-mirror .salon-tool-drift { animation: drift-b 14s ease-in-out infinite reverse; animation-delay: -9s; }
+.tool-spray .salon-tool-drift { animation: drift-a 12s ease-in-out infinite reverse; animation-delay: -4s; }
+.tool-curling .salon-tool-drift { animation: drift-c 16s ease-in-out infinite; animation-delay: -11s; }
+
 /* ── 상시 움직임(idle) — 도구마다 다른 결·주기 ── */
 @keyframes idle-sway {
   0%, 100% { transform: rotate(-3deg); }
@@ -154,6 +184,12 @@ img {
 .tool-clipper .salon-tool-idle { animation: idle-buzz 0.45s linear infinite; }
 
 /* ── 호버 반응 ── */
+/* 호버하면 표류·흔들림을 그 자리에서 멈춰 위치를 고정하고, 안쪽 svg만 반응 */
+.salon-tool:hover .salon-tool-drift,
+.salon-tool:hover .salon-tool-idle {
+  animation-play-state: paused;
+}
+
 /* 가위 — 양날이 교차점(12,12) 기준으로 벌어졌다 닫히길 3번(싹둑싹둑) */
 .sc-a, .sc-b { transform-box: view-box; transform-origin: 12px 12px; }
 @keyframes snip-a {
@@ -242,6 +278,7 @@ img {
     animation: none;
     opacity: 1;
   }
+  .salon-tool-drift,
   .salon-tool-idle,
   .tool-scissors:hover .sc-a,
   .tool-scissors:hover .sc-b,
