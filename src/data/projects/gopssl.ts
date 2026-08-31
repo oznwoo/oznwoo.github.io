@@ -7,6 +7,7 @@ import gopsslProblemInsight from "@/imports/gopssl/gopssl-problem-insight.webp"
 import gopsslOutcomeFit from "@/imports/gopssl/gopssl-outcome-fit.webp"
 import gopsslOutcomeLedger from "@/imports/gopssl/gopssl-outcome-ledger.webp"
 import gopsslOutcomeInsight from "@/imports/gopssl/gopssl-outcome-insight.webp"
+import gopsslSolutionHome from "@/imports/gopssl/gopssl-solution-home.webp"
 import gopsslStackArchitecture from "@/imports/gopssl/gopssl-stack-architecture.webp"
 import type { ProjectDetail } from "./types"
 
@@ -72,6 +73,7 @@ export const gopsslDetail: ProjectDetail = {
     {
       title: "워크인 미용실에 맞춘 단순한 앱",
       body: "예약 기능을 걷어내고 고객·시술·매출에 꼭 필요한 화면만 직접 설계했고, 실사용자(어머니) 피드백을 반영해 반복 개선했습니다. 무료 인프라로 운영해 매달 나가는 구독료도 없습니다.",
+      image: gopsslSolutionHome,
       comparison: {
         before: [
           {
