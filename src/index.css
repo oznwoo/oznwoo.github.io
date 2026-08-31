@@ -86,6 +86,169 @@ img {
   scale: 1 1.28;
 }
 
+/* Gopssl Overview 히어로 — 텍스트 주변 고정 위치에 흩어 둔 미용실 도구
+   라인아트(SalonTools).
+   · 등장: --pop-delay(seeded shuffle)만큼 늦게 하나씩 뒤죽박죽 팝인
+   · 상시: 도구마다 은은하게 움직임(.salon-tool-idle: 흔들/회전/미세진동)
+   · 호버: 도구 특성대로 크게 반응(svg 안쪽 그룹)
+   · 퇴장: data-shown이 false가 되면 전부 함께 천천히 페이드아웃 */
+.salon-tool,
+.salon-sparkle {
+  position: absolute;
+  z-index: 0;
+  color: inherit;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.salon-tool {
+  /* 텍스트 선택 등 다른 곳은 막지 않고 도구 위에서만 hover가 잡히게 */
+  pointer-events: auto;
+}
+.salon-tool-rot,
+.salon-tool-idle { display: block; }
+
+/* 뒤죽박죽 하나씩 팝인 — 각 요소의 --pop-delay만큼 늦게 */
+@keyframes tool-pop {
+  0%   { opacity: 0; transform: scale(0.2); }
+  65%  { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.salon-tools[data-shown="true"] .salon-tool,
+.salon-tools[data-shown="true"] .salon-sparkle {
+  animation: tool-pop 0.5s cubic-bezier(0.34, 1.5, 0.5, 1) both;
+  animation-delay: var(--pop-delay, 0ms);
+}
+
+.salon-tool-svg {
+  display: block;
+  width: clamp(44px, 6vw, 74px);
+  height: auto;
+  overflow: visible;
+  opacity: 0.45;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── 상시 움직임(idle) — 도구마다 다른 결·주기 ── */
+@keyframes idle-sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(3deg); }
+}
+@keyframes idle-bob {
+  0%, 100% { transform: translateY(-1.6px); }
+  50%      { transform: translateY(1.6px); }
+}
+@keyframes idle-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes idle-buzz {
+  0%, 100% { transform: translate(0, 0); }
+  25%      { transform: translate(0.3px, -0.25px); }
+  55%      { transform: translate(-0.3px, 0.28px); }
+  80%      { transform: translate(0.22px, 0.18px); }
+}
+.tool-scissors .salon-tool-idle { animation: idle-sway 5.6s ease-in-out infinite; }
+.tool-dryer .salon-tool-idle { animation: idle-sway 6.4s ease-in-out infinite; animation-delay: -2s; }
+.tool-curling .salon-tool-idle { animation: idle-sway 5s ease-in-out infinite reverse; }
+.tool-spray .salon-tool-idle { animation: idle-bob 4.2s ease-in-out infinite; }
+.tool-roller .salon-tool-idle { animation: idle-spin 9s linear infinite; }
+.tool-clipper .salon-tool-idle { animation: idle-buzz 0.45s linear infinite; }
+
+/* ── 호버 반응 ── */
+/* 가위 — 양날이 교차점(12,12) 기준으로 벌어졌다 닫히길 3번(싹둑싹둑) */
+.sc-a, .sc-b { transform-box: view-box; transform-origin: 12px 12px; }
+@keyframes snip-a {
+  0%, 24%, 48%, 100% { transform: rotate(0deg); }
+  12%, 36%, 60%      { transform: rotate(7deg); }
+}
+@keyframes snip-b {
+  0%, 24%, 48%, 100% { transform: rotate(0deg); }
+  12%, 36%, 60%      { transform: rotate(-7deg); }
+}
+.tool-scissors:hover .sc-a { animation: snip-a 0.9s ease-in-out; }
+.tool-scissors:hover .sc-b { animation: snip-b 0.9s ease-in-out; }
+
+/* 바리깡 — 상시 미세진동에 더해, 호버 시 크게 떨림 */
+@keyframes clipper-buzz {
+  0%, 100% { transform: translate(0, 0) rotate(0); }
+  25%      { transform: translate(0.7px, -0.6px) rotate(1.4deg); }
+  50%      { transform: translate(-0.7px, 0.5px) rotate(-1.4deg); }
+  75%      { transform: translate(0.5px, 0.6px) rotate(0.7deg); }
+}
+.tool-clipper:hover .salon-tool-svg { animation: clipper-buzz 0.1s linear infinite; }
+
+/* 헤어롤 — 상시 회전에서 호버 시 빠르게 굴러감 */
+.tool-roller:hover .salon-tool-idle { animation-duration: 1.1s; }
+
+/* 스프레이 — 분무 점들이 노즐에서 뿜어져 나옴(2회) */
+.spray-mist { transform-box: view-box; transform-origin: 12px 8px; }
+@keyframes spray-puff {
+  0%   { opacity: 0.15; transform: translateX(-4px) scale(0.5); }
+  40%  { opacity: 1; }
+  100% { opacity: 0.15; transform: translateX(3px) scale(1.05); }
+}
+.tool-spray:hover .spray-mist { animation: spray-puff 0.55s ease-out 2; }
+
+/* 드라이기 — 노즐 앞 바람 선이 오른쪽으로 흐르며 세졌다 잦아든다(2회) */
+.dryer-air { transform-box: view-box; transform-origin: 19px 10px; }
+@keyframes dryer-blow {
+  0%   { opacity: 0.2; transform: translateX(-3px) scaleX(0.7); }
+  45%  { opacity: 1; }
+  100% { opacity: 0.2; transform: translateX(4px) scaleX(1.12); }
+}
+.tool-dryer:hover .dryer-air { animation: dryer-blow 0.5s ease-out 2; }
+
+/* 고데기 — 호버 시 배럴이 한 바퀴 돌며 머리를 마는 듯 */
+.curl-barrel { transform-box: view-box; transform-origin: 11px 6px; }
+@keyframes curl-wind {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.tool-curling:hover .curl-barrel { animation: curl-wind 0.85s cubic-bezier(0.5, 0, 0.5, 1); }
+
+/* 반짝임 — 평상시에도 커졌다 작아지며 깜빡인다 */
+.salon-sparkle { width: clamp(10px, 1.4vw, 17px); }
+.salon-sparkle svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform-origin: center;
+  animation: sparkle-twinkle 3.4s ease-in-out infinite;
+}
+@keyframes sparkle-twinkle {
+  0%, 100% { transform: scale(0.45) rotate(0deg); opacity: 0.12; }
+  50%      { transform: scale(1) rotate(45deg); opacity: 0.42; }
+}
+
+@media (max-width: 640px) {
+  .salon-tool-svg { width: clamp(38px, 11vw, 54px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .salon-tools[data-shown="true"] .salon-tool,
+  .salon-tools[data-shown="true"] .salon-sparkle {
+    animation: none;
+    opacity: 1;
+  }
+  .salon-tool-idle,
+  .tool-scissors:hover .sc-a,
+  .tool-scissors:hover .sc-b,
+  .tool-clipper:hover .salon-tool-svg,
+  .tool-spray:hover .spray-mist,
+  .tool-dryer:hover .dryer-air,
+  .tool-curling:hover .curl-barrel,
+  .salon-sparkle svg {
+    animation: none;
+  }
+}
+
 body {
   font-family: var(--font-body);
   background-color: #F0F3F9;
