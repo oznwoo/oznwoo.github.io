@@ -1,6 +1,9 @@
 import gopsslLogo from "@/imports/gopssl-logo.png"
 import gopsslAboutHero from "@/imports/gopssl/gopssl-about-hero.webp"
 import gopsslAboutRole from "@/imports/gopssl/gopssl-about-role.webp"
+import gopsslProblemFit from "@/imports/gopssl/gopssl-problem-fit.webp"
+import gopsslProblemLedger from "@/imports/gopssl/gopssl-problem-ledger.webp"
+import gopsslProblemInsight from "@/imports/gopssl/gopssl-problem-insight.webp"
 import gopsslStackArchitecture from "@/imports/gopssl/gopssl-stack-architecture.webp"
 import type { ProjectDetail } from "./types"
 
@@ -15,7 +18,8 @@ export const gopsslDetail: ProjectDetail = {
   overviewBody:
     "어머니의 미용실이 수기로 장부를 관리하는 것을 보고 직접 기획했습니다. UI/UX 설계부터 React Native 앱 개발, 백엔드 서버 배포까지 전 과정을 혼자 진행했습니다.",
   aboutImage: gopsslAboutHero,
-  roleHeadline: "개인 프로젝트로 기획·디자인·풀스택 개발·배포를 모두 담당",
+  roleHeadline:
+    "개인 프로젝트로 [기획] [디자인] [모바일 풀스택 개발] [배포]를 모두 담당",
   roleBody:
     "어머니의 미용실 운영을 곁에서 지켜보며 꼭 필요한 기능만 추렸고, 화면 설계와 앱·서버 개발, 배포를 이어서 진행했습니다.",
   roleImage: gopsslAboutRole,
@@ -26,14 +30,15 @@ export const gopsslDetail: ProjectDetail = {
   problem: [
     {
       title: "맞춤 서비스 부재",
-      body: "시중의 미용실 관리 솔루션은 대부분 예약 시스템 중심이라, 예약 없이 워크인으로 운영하는 소규모 미용실에는 안 쓰는 기능이 많고 설정도 복잡했습니다.",
+      body: "시중의 미용실 관리 솔루션은 예약제로 운영하는 매장에 맞춰 설계돼 있고, 이용하려면 매달 구독료를 내야 했습니다. 예약 없이 워크인으로 운영하는 작은 미용실에 맞는 선택지는 없었습니다.",
       shortBody: [
-        "기존 솔루션은 **예약 시스템 중심**",
-        "워크인 매장엔 **안 쓰는 기능**이 대부분",
-        "설정·사용법이 **복잡함**",
+        "대부분 **예약제 매장 전용**으로 설계",
+        "워크인 매장엔 **맞는 선택지가 없음**",
+        "이용하려면 **매달 구독료** 부담",
       ],
       icon: "alert",
-      tags: ["예약중심", "과한기능"],
+      tags: ["예약제전용", "구독료"],
+      image: gopsslProblemFit,
     },
     {
       title: "수기 장부 관리",
@@ -45,6 +50,7 @@ export const gopsslDetail: ProjectDetail = {
       ],
       icon: "duplicate",
       tags: ["수기관리", "기록실수"],
+      image: gopsslProblemLedger,
     },
     {
       title: "경영 현황 파악 어려움",
@@ -56,6 +62,7 @@ export const gopsslDetail: ProjectDetail = {
       ],
       icon: "trend-down",
       tags: ["집계시간", "데이터부재"],
+      image: gopsslProblemInsight,
     },
   ],
   solution: [
