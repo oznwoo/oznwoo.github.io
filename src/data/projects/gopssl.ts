@@ -14,10 +14,9 @@ export const gopsslDetail: ProjectDetail = {
   overviewBody:
     "어머니의 미용실이 수기로 장부를 관리하는 것을 보고 직접 기획했습니다. UI/UX 설계부터 React Native 앱 개발, 백엔드 서버 배포까지 전 과정을 혼자 진행했습니다.",
   aboutImage: gopsslAboutHero,
-  roleHeadline:
-    "기획부터 디자인, React Native 앱 개발, 백엔드 서버 배포까지 전 과정 단독 진행",
+  roleHeadline: "개인 프로젝트로 기획·디자인·풀스택 개발·배포를 모두 담당",
   roleBody:
-    "어머니의 미용실 운영 방식을 직접 관찰하며 요구사항을 정의했고, **UI/UX 설계**와 **React Native 프론트엔드**, **FastAPI 백엔드**, **OCI 서버 배포**까지 혼자 맡았습니다.",
+    "어머니의 미용실 운영을 곁에서 지켜보며 꼭 필요한 기능만 추렸고, 화면 설계와 앱·서버 개발, 배포를 이어서 진행했습니다.",
   demoHeadline: "고객 카드 등록부터 매출 입력, 대시보드 확인까지의 흐름",
   demoBody:
     "고객 정보를 카드로 저장하고 시술 후 몇 번의 탭으로 매출을 기록해 월별 대시보드에서 확인하는 과정을 시연 영상으로 담을 예정입니다.",
