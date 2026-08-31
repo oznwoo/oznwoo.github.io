@@ -4,6 +4,9 @@ import gopsslAboutRole from "@/imports/gopssl/gopssl-about-role.webp"
 import gopsslProblemFit from "@/imports/gopssl/gopssl-problem-fit.webp"
 import gopsslProblemLedger from "@/imports/gopssl/gopssl-problem-ledger.webp"
 import gopsslProblemInsight from "@/imports/gopssl/gopssl-problem-insight.webp"
+import gopsslOutcomeFit from "@/imports/gopssl/gopssl-outcome-fit.webp"
+import gopsslOutcomeLedger from "@/imports/gopssl/gopssl-outcome-ledger.webp"
+import gopsslOutcomeInsight from "@/imports/gopssl/gopssl-outcome-insight.webp"
 import gopsslStackArchitecture from "@/imports/gopssl/gopssl-stack-architecture.webp"
 import type { ProjectDetail } from "./types"
 
@@ -190,6 +193,7 @@ export const gopsslDetail: ProjectDetail = {
         "직접 만들어 **매달 나가는 구독료 없음**",
       ],
       tags: ["워크인전용", "구독료없음"],
+      image: gopsslOutcomeFit,
     },
     {
       title: "수기 장부 관리 → 해결",
@@ -200,6 +204,7 @@ export const gopsslDetail: ProjectDetail = {
         "실사용 중 **누적 약 350명** 등록·관리",
       ],
       tags: ["고객카드", "빠른검색"],
+      image: gopsslOutcomeLedger,
     },
     {
       title: "경영 현황 파악 어려움 → 해결",
@@ -210,6 +215,7 @@ export const gopsslDetail: ProjectDetail = {
         "**현금·카드 비율**과 **전월 대비 증감**까지",
       ],
       tags: ["자동집계", "매출대시보드"],
+      image: gopsslOutcomeInsight,
     },
   ],
   tech: [
