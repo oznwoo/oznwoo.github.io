@@ -12,10 +12,9 @@ export const cochatDetail: ProjectDetail = {
   logoClassName: "h-20 sm:h-24 w-auto",
   // 심볼에 서비스명이 없어 로고 아래에 별도 텍스트로 표시
   logoShowName: true,
-  overviewHeadline:
-    "파편화된 메신저 플랫폼의 알림들을 한곳에 모으고, AI가 중요도를 분류·요약하는 모바일 프로젝트",
+  overviewHeadline: "Co(함께) + Chat(대화하자)",
   overviewBody:
-    "메신저 다양화가 오히려 소통의 장애를 유발한다는 문제를 인식하고, 소통의 본질을 회복하기 위해 기획했습니다. 한양대 졸업 프로젝트로 진행했으며, KIPS 정보처리학회 학술대회에서 논문을 발표했습니다.",
+    "여러 메신저에 흩어진 알림을 한 곳에 모으고, AI가 취향에 맞는 메시지만 골라 요약해 주는 메신저 통합 앱",
   roleHeadline:
     "5인 팀 대표로 [기획] [시스템 설계] [OAuth·백엔드] [논문 발표]를 담당",
   roleBody:
