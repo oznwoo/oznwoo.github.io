@@ -13,7 +13,7 @@ export const cochatDetail: ProjectDetail = {
   // 심볼에 서비스명이 없어 로고 아래에 별도 텍스트로 표시
   logoShowName: true,
   overviewHeadline:
-    "카카오톡·문자·이메일 알림을 한곳에 모으고, AI가 중요도를 분류·요약해 주는 앱.",
+    "파편화된 메신저 플랫폼의 알림들을 한곳에 모으고, AI가 중요도를 분류·요약하는 모바일 프로젝트",
   overviewBody:
     "메신저 다양화가 오히려 소통의 장애를 유발한다는 문제를 인식하고, 소통의 본질을 회복하기 위해 기획했습니다. 한양대 졸업 프로젝트로 진행했으며, KIPS 정보처리학회 학술대회에서 논문을 발표했습니다.",
   roleHeadline:
@@ -22,7 +22,7 @@ export const cochatDetail: ProjectDetail = {
     "5인 팀의 대표로 전체 시스템을 설계하고 일정과 역할을 조율했습니다. **OAuth 계정 통합**과 **백엔드 서버**는 직접 개발했고, 연구 내용을 정리해 KIPS 정보처리학회 학술대회에 **제1저자로 발표**했습니다.",
   demoHeadline: "캡스톤 발표에서 선보인 메신저 연동·선별·요약 시연",
   demoBody:
-    "여러 메신저를 계정 연동으로 한 앱에 모으고, AI가 취향에 맞는 중요 메시지만 골라 요약해 알려주는 과정을 캡스톤 디자인 발표 영상에 담았습니다.",
+    "여러 메신저를 한 앱에 모으고, AI가 취향에 맞는 메시지만 골라 요약해 알려줍니다. 이 과정을 캡스톤 디자인 발표 영상에 담았습니다.",
   demoVideo: cochatDemoVideo,
   demoPoster: cochatDemoPoster,
   githubUrl: "https://github.com/oznwoo/cochat-frontend",
