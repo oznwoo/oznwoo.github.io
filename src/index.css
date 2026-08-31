@@ -86,6 +86,227 @@ img {
   scale: 1 1.28;
 }
 
+/* Gopssl Overview 히어로 — 텍스트 주변에 흩어 둔 미용실 도구
+   라인아트(SalonTools).
+   · 등장: --pop-delay(seeded shuffle)만큼 늦게 하나씩 뒤죽박죽 팝인
+   · 상시: 도구마다 다른 주기로 천천히 떠다니고(.salon-tool-drift) 그 위에
+     제자리 흔들림·미세진동(.salon-tool-idle)
+   · 호버: drift·idle을 함께 멈춰 자리를 고정하고 svg 안쪽 그룹이 크게 반응
+   · 퇴장: data-shown이 false가 되면 컨테이너(.salon-tools) opacity가 0으로
+     바뀌며 자식 전부가 한 몸처럼 0.6s 페이드아웃한다. 자식 opacity는 tool-pop
+     애니메이션이 그리는 값이라 애니메이션이 제거돼도 transition이 안정적으로
+     발동하지 않아, 퇴장 페이드는 컨테이너 레벨에서 처리한다 */
+.salon-tools {
+  opacity: 1;
+}
+.salon-tools[data-shown="false"] {
+  opacity: 0;
+  /* transition을 이 규칙에만 둬서 퇴장(→false)만 0.6s 페이드하고,
+     재등장(→true)은 즉시 복귀해 스태거 팝인을 가리지 않는다 */
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+.salon-tool,
+.salon-sparkle {
+  position: absolute;
+  z-index: 0;
+  color: inherit;
+}
+.salon-tool {
+  /* 텍스트 선택 등 다른 곳은 막지 않고 도구 위에서만 hover가 잡히게 */
+  pointer-events: auto;
+}
+/* 퇴장 페이드 동안에는 도구 호버를 받지 않는다 */
+.salon-tools[data-shown="false"] .salon-tool {
+  pointer-events: none;
+}
+.salon-tool-drift,
+.salon-tool-rot,
+.salon-tool-idle { display: block; }
+
+/* 뒤죽박죽 하나씩 팝인 — 각 요소의 --pop-delay만큼 늦게 */
+@keyframes tool-pop {
+  0%   { opacity: 0; transform: scale(0.2); }
+  65%  { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.salon-tools[data-shown="true"] .salon-tool,
+.salon-tools[data-shown="true"] .salon-sparkle {
+  animation: tool-pop 0.5s cubic-bezier(0.34, 1.5, 0.5, 1) both;
+  animation-delay: var(--pop-delay, 0ms);
+}
+
+.salon-tool-svg {
+  display: block;
+  width: clamp(44px, 6vw, 74px);
+  height: auto;
+  overflow: visible;
+  opacity: 0.45;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── 느린 표류(drift) — 등장 후 각자 다른 경로·주기로 떠다닌다 ── */
+@keyframes drift-a {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(16px, -13px); }
+  50%  { transform: translate(-8px, 13px); }
+  75%  { transform: translate(-16px, -8px); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes drift-b {
+  0%   { transform: translate(0, 0); }
+  33%  { transform: translate(-18px, 8px); }
+  66%  { transform: translate(11px, 16px); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes drift-c {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(10px, 10px); }
+  50%  { transform: translate(18px, -8px); }
+  80%  { transform: translate(-10px, 6px); }
+  100% { transform: translate(0, 0); }
+}
+.tool-scissors .salon-tool-drift { animation: drift-a 20s ease-in-out infinite; animation-delay: -4s; }
+.tool-dryer .salon-tool-drift { animation: drift-b 23s ease-in-out infinite; animation-delay: -9s; }
+.tool-clipper .salon-tool-drift { animation: drift-c 17s ease-in-out infinite; animation-delay: -2s; }
+.tool-mirror .salon-tool-drift { animation: drift-b 21s ease-in-out infinite reverse; animation-delay: -13s; }
+.tool-spray .salon-tool-drift { animation: drift-a 18s ease-in-out infinite reverse; animation-delay: -6s; }
+.tool-curling .salon-tool-drift { animation: drift-c 25s ease-in-out infinite; animation-delay: -16s; }
+
+/* ── 상시 움직임(idle) — 도구마다 다른 결·주기 ── */
+@keyframes idle-sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(3deg); }
+}
+@keyframes idle-bob {
+  0%, 100% { transform: translateY(-1.6px); }
+  50%      { transform: translateY(1.6px); }
+}
+@keyframes idle-buzz {
+  0%, 100% { transform: translate(0, 0); }
+  25%      { transform: translate(0.3px, -0.25px); }
+  55%      { transform: translate(-0.3px, 0.28px); }
+  80%      { transform: translate(0.22px, 0.18px); }
+}
+.tool-scissors .salon-tool-idle { animation: idle-sway 5.6s ease-in-out infinite; }
+.tool-dryer .salon-tool-idle { animation: idle-sway 6.4s ease-in-out infinite; animation-delay: -2s; }
+.tool-curling .salon-tool-idle { animation: idle-sway 5s ease-in-out infinite reverse; }
+.tool-spray .salon-tool-idle { animation: idle-bob 4.2s ease-in-out infinite; }
+.tool-mirror .salon-tool-idle { animation: idle-sway 5.8s ease-in-out infinite; }
+.tool-clipper .salon-tool-idle { animation: idle-buzz 0.45s linear infinite; }
+
+/* ── 호버 반응 ── */
+/* 호버하면 표류·흔들림을 그 자리에서 멈춰 위치를 고정하고, 안쪽 svg만 반응 */
+.salon-tool:hover .salon-tool-drift,
+.salon-tool:hover .salon-tool-idle {
+  animation-play-state: paused;
+}
+
+/* 가위 — 양날이 교차점(12,12) 기준으로 벌어졌다 닫히길 3번(싹둑싹둑) */
+.sc-a, .sc-b { transform-box: view-box; transform-origin: 12px 12px; }
+@keyframes snip-a {
+  0%, 24%, 48%, 100% { transform: rotate(0deg); }
+  12%, 36%, 60%      { transform: rotate(7deg); }
+}
+@keyframes snip-b {
+  0%, 24%, 48%, 100% { transform: rotate(0deg); }
+  12%, 36%, 60%      { transform: rotate(-7deg); }
+}
+.tool-scissors:hover .sc-a { animation: snip-a 0.9s ease-in-out; }
+.tool-scissors:hover .sc-b { animation: snip-b 0.9s ease-in-out; }
+
+/* 바리깡 — 상시 미세진동에 더해, 호버 시 크게 떨림 */
+@keyframes clipper-buzz {
+  0%, 100% { transform: translate(0, 0) rotate(0); }
+  25%      { transform: translate(0.7px, -0.6px) rotate(1.4deg); }
+  50%      { transform: translate(-0.7px, 0.5px) rotate(-1.4deg); }
+  75%      { transform: translate(0.5px, 0.6px) rotate(0.7deg); }
+}
+.tool-clipper:hover .salon-tool-svg { animation: clipper-buzz 0.1s linear infinite; }
+
+/* 손거울 — 호버 시 거울 면의 4각 별이 커졌다 작아지며 반짝인다(2회) */
+.mirror-spark {
+  transform-box: view-box;
+  transform-origin: 12px 7.5px;
+  opacity: 0;
+}
+@keyframes mirror-spark {
+  0%, 100% { opacity: 0; transform: scale(0.2) rotate(0deg); }
+  50%      { opacity: 0.9; transform: scale(1) rotate(90deg); }
+}
+.tool-mirror:hover .mirror-spark { animation: mirror-spark 0.7s ease-in-out 2; }
+
+/* 스프레이 — 분무 점들이 노즐에서 뿜어져 나옴(2회) */
+.spray-mist { transform-box: view-box; transform-origin: 12px 8px; }
+@keyframes spray-puff {
+  0%   { opacity: 0.15; transform: translateX(-4px) scale(0.5); }
+  40%  { opacity: 1; }
+  100% { opacity: 0.15; transform: translateX(3px) scale(1.05); }
+}
+.tool-spray:hover .spray-mist { animation: spray-puff 0.55s ease-out 2; }
+
+/* 드라이기 — 바람 선은 평소 숨어 있다가 호버 시에만 오른쪽으로 뿜어진다(2회) */
+.dryer-air { transform-box: view-box; transform-origin: 19px 9px; opacity: 0; }
+@keyframes dryer-blow {
+  0%   { opacity: 0; transform: translateX(-3px) scaleX(0.7); }
+  40%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(4px) scaleX(1.12); }
+}
+.tool-dryer:hover .dryer-air { animation: dryer-blow 0.5s ease-out 2; }
+
+/* 고데기 — 호버 시 위 판이 경첩을 축으로 아래 판 쪽으로 여닫힌다(집게, 2회) */
+.curl-clamp { transform-box: view-box; transform-origin: 4.5px 12px; }
+@keyframes curl-clamp {
+  0%, 50%, 100% { transform: rotate(0deg); }
+  25%, 75%      { transform: rotate(9deg); }
+}
+.tool-curling:hover .curl-clamp { animation: curl-clamp 0.7s ease-in-out; }
+
+/* 반짝임 — 평상시에도 커졌다 작아지며 깜빡인다 */
+.salon-sparkle { width: clamp(10px, 1.4vw, 17px); }
+.salon-sparkle svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform-origin: center;
+  animation: sparkle-twinkle 3.4s ease-in-out infinite;
+}
+@keyframes sparkle-twinkle {
+  0%, 100% { transform: scale(0.45) rotate(0deg); opacity: 0.12; }
+  50%      { transform: scale(1) rotate(45deg); opacity: 0.42; }
+}
+
+@media (max-width: 640px) {
+  .salon-tool-svg { width: clamp(38px, 11vw, 54px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .salon-tools[data-shown="true"] .salon-tool,
+  .salon-tools[data-shown="true"] .salon-sparkle {
+    animation: none;
+    opacity: 1;
+  }
+  .salon-tool-drift,
+  .salon-tool-idle,
+  .tool-scissors:hover .sc-a,
+  .tool-scissors:hover .sc-b,
+  .tool-clipper:hover .salon-tool-svg,
+  .tool-spray:hover .spray-mist,
+  .tool-dryer:hover .dryer-air,
+  .tool-curling:hover .curl-clamp,
+  .tool-mirror:hover .mirror-spark,
+  .salon-sparkle svg {
+    animation: none;
+  }
+}
+
 body {
   font-family: var(--font-body);
   background-color: #F0F3F9;

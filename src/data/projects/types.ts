@@ -88,8 +88,10 @@ export interface ProjectDetail {
   demoPoster?: string
   // Overview 히어로 뒤에 까는 장식 배경 효과(선택). "bars"는 하단 이퀄라이저
   // 막대(HeroBarChart), "falling-messages"는 메신저 말풍선이 위에서 아래로
-  // 흘러내리는 레이어(FallingMessages). 없으면 정적인 히어로.
-  heroEffect?: "bars" | "falling-messages"
+  // 흘러내리는 레이어(FallingMessages), "salon-tools"는 히어로 곳곳에 고정
+  // 배치된 미용 도구 라인아트가 호버 시 도구별로 움직이는 레이어(SalonTools).
+  // 없으면 정적인 히어로.
+  heroEffect?: "bars" | "falling-messages" | "salon-tools"
   // 이 프로젝트의 GitHub 저장소(프론트엔드 repo). 있으면 상세 우측 하단에
   // 항상 GitHub로 가는 링크 버튼이 뜬다.
   githubUrl?: string
