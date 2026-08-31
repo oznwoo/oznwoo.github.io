@@ -1,8 +1,8 @@
 // Gopssl Overview 히어로 배경. 히어로 텍스트 주변 고정 위치에 미용실 도구
-// 라인아트(가위·바리깡·헤어롤·스프레이·드라이기·고데기)와 반짝임을 흩어
-// 두고, 평상시에도 도구마다 은은하게 움직이며(흔들·회전·미세진동), 커서를
+// 라인아트(가위·바리깡·손거울·스프레이·드라이기·고데기)와 반짝임을 흩어
+// 두고, 평상시에도 도구마다 은은하게 움직이며(흔들·미세진동), 커서를
 // 올리면 도구 특성대로 크게 반응한다 — 가위는 자르고, 바리깡은 진동하고,
-// 헤어롤은 빠르게 돌고, 스프레이는 뿌리고, 드라이기는 바람을 내고, 고데기는
+// 손거울은 반짝이고, 스프레이는 뿌리고, 드라이기는 바람을 내고, 고데기는
 // 집게가 여닫힌다.
 //
 // 처음 등장할 때는 전부 한 번에 뜨지 않고, seeded shuffle로 정한 --pop-delay
@@ -14,7 +14,7 @@
 // 움직임) > svg.salon-tool-svg(호버 반응). transform이 겹치지 않게 나눴다.
 //
 // 가위·바리깡·스프레이는 Tabler Icons(MIT)의 아웃라인 path를 그대로 인라인으로
-// 쓰고, 헤어롤·드라이기·고데기는 같은 24그리드·stroke 규격으로 직접 그렸다.
+// 쓰고, 손거울·드라이기·고데기는 같은 24그리드·stroke 규격으로 직접 그렸다.
 // path 문자열만 복사해 런타임 의존성은 없다.
 
 import { useMemo } from "react"
@@ -69,45 +69,58 @@ function Spray() {
   )
 }
 
-// 헤어롤 — 원통 + 양 끝 + 감긴 선. .salon-tool-idle가 통째로 천천히 회전
-function Roller() {
+// 탁상 거울 — 원형 거울 + 오른쪽 위 사선 하이라이트 2줄 + 거울 아래를 감싸는
+// C자 받침 + 기둥 + 바닥. 호버 시 거울 면에서 4각 별(.mirror-spark)이 커졌다
+// 작아지며 반짝인다
+function StandMirror() {
   return (
     <svg className="salon-tool-svg" viewBox="0 0 24 24" fill="none">
-      <rect x={5} y={8} width={14} height={8} rx={4} />
-      <ellipse cx={5} cy={12} rx={2.4} ry={4} />
-      <ellipse cx={19} cy={12} rx={2.4} ry={4} />
-      <path d="M9.5 8.4v7.2" />
-      <path d="M14.5 8.4v7.2" />
+      <circle cx={12} cy={7.5} r={6} />
+      <path d="M12 4.3l2.8 -2.2" />
+      <path d="M13.6 6.2l2.2 -1.7" />
+      <path d="M7.6 11.4q0 4.6 4.4 4.6t4.4 -4.6" />
+      <path d="M12 15.8v2.4" />
+      <path d="M8.6 18.2h6.8" />
+      <path
+        className="mirror-spark"
+        fill="currentColor"
+        stroke="none"
+        d="M12 3.8l0.9 2.9l2.9 0.9l-2.9 0.9l-0.9 2.9l-0.9 -2.9l-2.9 -0.9l2.9 -0.9z"
+      />
     </svg>
   )
 }
 
-// 헤어드라이어 — 모터 + 노즐 + 손잡이, 노즐 앞 바람 선(.dryer-air)
+// 헤어드라이어 — 뒤쪽 모터(왼쪽 동심원) + 앞으로 살짝 벌어지는 노즐(오른쪽) +
+// 손잡이. 노즐이 오른쪽을 향하고 그 앞으로 바람(.dryer-air)이 호버 시 뿜어진다
 function Dryer() {
   return (
     <svg className="salon-tool-svg" viewBox="0 0 24 24" fill="none">
-      <circle cx={8} cy={10} r={5} />
-      <path d="M12.5 7.5l5 1a1.2 1.2 0 0 1 0 3l-5 1z" />
-      <path d="M6 14.5v3a2.5 2.5 0 0 0 5 0v-1.5" />
+      <circle cx={5.5} cy={9} r={4.5} />
+      <circle cx={5.5} cy={9} r={1.5} />
+      <path d="M9.5 4.8l6.8 -2a1.1 1.1 0 0 1 1.5 1.1v7.6a1.1 1.1 0 0 1 -1.5 1.1l-6.8 -2" />
+      <path d="M3 12.6v4.3a2.5 2.5 0 0 0 5 0v-2" />
       <g className="dryer-air">
-        <path d="M19 6.5h3" />
-        <path d="M19 10h3.5" />
-        <path d="M19 13.5h3" />
+        <path d="M19 5h2.5" />
+        <path d="M19 9h3" />
+        <path d="M19 13h2.5" />
       </g>
     </svg>
   )
 }
 
-// 고데기 — 얇은 배럴(.curl-barrel) + 클램프 밴드 + 굵은 손잡이 + 전선
+// 고데기(판고데) — 왼쪽 경첩(원) + 오른쪽으로 벌어진 두 판(끝이 둥근 막대) +
+// 경첩 옆 스프링. 호버 시 위 판(.curl-clamp)이 경첩을 축으로 아래 판 쪽으로
+// 여닫히며 집게처럼 움직인다
 function CurlingIron() {
   return (
     <svg className="salon-tool-svg" viewBox="0 0 24 24" fill="none">
-      <g className="curl-barrel">
-        <rect x={9} y={2} width={4.5} height={9} rx={2.25} />
-        <path d="M8 6.3h6.5" />
+      <circle cx={4.5} cy={12} r={2} />
+      <rect x={5} y={12.4} width={13.5} height={2.8} rx={1.4} transform="rotate(16 5 13.8)" />
+      <path d="M6.6 10.7l1.6 2.7" />
+      <g className="curl-clamp">
+        <rect x={5} y={8.8} width={13.5} height={2.8} rx={1.4} transform="rotate(-16 5 10.2)" />
       </g>
-      <rect x={7} y={11} width={8.5} height={6} rx={2.6} />
-      <path d="M11 17c0 3 1.5 3.6 3.4 3.6c1.9 0 2.6 -1 2.6 -2" />
     </svg>
   )
 }
@@ -125,7 +138,7 @@ const TOOLS: Tool[] = [
   { key: "scissors", toolClass: "tool-scissors", rotate: -12, style: { left: "13%", top: "21%" }, render: Scissors },
   { key: "dryer", toolClass: "tool-dryer", rotate: -4, style: { left: "42%", top: "10%" }, render: Dryer },
   { key: "clipper", toolClass: "tool-clipper", rotate: 10, style: { right: "13%", top: "19%" }, render: Clipper },
-  { key: "roller", toolClass: "tool-roller", rotate: -10, style: { left: "8%", top: "56%" }, render: Roller },
+  { key: "mirror", toolClass: "tool-mirror", rotate: -5, style: { left: "8%", top: "56%" }, render: StandMirror },
   { key: "spray", toolClass: "tool-spray", rotate: 8, style: { right: "9%", top: "56%" }, render: Spray },
   { key: "curling", toolClass: "tool-curling", rotate: 12, style: { right: "33%", top: "79%" }, render: CurlingIron },
 ]
