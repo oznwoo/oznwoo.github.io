@@ -154,7 +154,7 @@ const SPARKLES: { style: CSSProperties; twinkleDelay: string }[] = [
 ]
 
 const TOTAL = TOOLS.length + SPARKLES.length
-const POP_STEP_MS = 95
+const POP_STEP_MS = 55
 
 // seeded Fisher–Yates — 마운트마다 흔들리지 않는 고정 순서
 function shuffledRanks(count: number): number[] {
