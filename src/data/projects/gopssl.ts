@@ -7,6 +7,8 @@ export const gopsslDetail: ProjectDetail = {
   period: "2025.06 – 진행 중",
   role: "기획 | 디자인 | 풀스택 개발 (개인 프로젝트)",
   logoSrc: gopsslLogo,
+  // 히어로 곳곳에 고정 배치된 미용 도구(가위·빗·롤·브러시)가 호버 시 도구별로 움직임
+  heroEffect: "salon-tools",
   overviewHeadline:
     "예약제 없이 운영되는 소규모 미용실을 위한 고객·매출 관리 앱.",
   overviewBody:

@@ -4,6 +4,7 @@ import type { ProjectAccent } from "@/lib/color"
 import { AccentPill } from "../AccentPill"
 import { HeroBarChart } from "../HeroBarChart"
 import { FallingMessages } from "../FallingMessages"
+import { SalonTools } from "../SalonTools"
 
 // 상세 패널이 메인에서 슬라이드-인하는 가로 전환(App.tsx, 0.75s)과 맞춘
 // 지연 시간 — 그 전환이 끝난 뒤에야 차트가 올라오며 나타난다.
@@ -27,7 +28,8 @@ interface OverviewSlideProps {
 // Hero. 소개 문단만 바로 다음 "소개" 슬라이드로 넘긴다.
 // 프로젝트별로 배경 장식(detail.heroEffect)이 다르다 — Fintag는 하단 전용
 // 밴드의 이퀄라이저 막대(HeroBarChart), CoChat for Business는 텍스트 뒤로
-// 흘러내리는 메신저 말풍선(FallingMessages). 둘 다 정보가 아니라 분위기라
+// 흘러내리는 메신저 말풍선(FallingMessages), Gopssl은 곳곳에 흩어진 미용 도구
+// 라인아트(SalonTools). 모두 정보가 아니라 분위기라
 // 히어로 텍스트(z-10) 뒤(z-0)에 낮은 불투명도로 깔고, 기존 공유
 // GradientBackground는 그대로 두고 그 위에 얹기만 한다.
 export function OverviewSlide({
@@ -69,6 +71,9 @@ export function OverviewSlide({
       )}
       {detail.heroEffect === "falling-messages" && accent && (
         <FallingMessages accent={accent} visible={showHeroEffect} />
+      )}
+      {detail.heroEffect === "salon-tools" && (
+        <SalonTools visible={showHeroEffect} color={accentColor} />
       )}
       <div className="relative z-10 flex flex-col items-center gap-6">
         {detail.logoSrc ? (
