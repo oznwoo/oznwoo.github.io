@@ -244,10 +244,12 @@ export function SolutionShowcase({
                             className="rounded-2xl overflow-hidden border shrink-0 cursor-default"
                             style={{
                               position: overlapImages ? "relative" : undefined,
+                              // 평상시엔 왼쪽 카드가 앞(부채꼴을 왼→오로 읽게),
+                              // hover한 카드는 항상 맨 위로
                               zIndex: overlapImages
                                 ? isHovered
                                   ? 40
-                                  : i + 1
+                                  : solution.images!.length - i
                                 : undefined,
                               transformOrigin: overlapImages
                                 ? "center bottom"
@@ -445,6 +447,7 @@ export function SolutionShowcase({
         zoomContentRef={zoomContentRef}
         closeZoom={closeZoom}
         resetZoomImmediately={resetZoomImmediately}
+        accentColor={accentColor}
         arrowGradientStops={arrowGradientStops}
         arrowShadowColor={arrowShadowColor}
       />
