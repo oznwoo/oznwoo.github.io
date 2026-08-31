@@ -136,30 +136,30 @@ img {
 /* ── 느린 표류(drift) — 등장 후 각자 다른 경로·주기로 떠다닌다 ── */
 @keyframes drift-a {
   0%   { transform: translate(0, 0); }
-  25%  { transform: translate(6px, -5px); }
-  50%  { transform: translate(-3px, 5px); }
-  75%  { transform: translate(-6px, -3px); }
+  25%  { transform: translate(16px, -13px); }
+  50%  { transform: translate(-8px, 13px); }
+  75%  { transform: translate(-16px, -8px); }
   100% { transform: translate(0, 0); }
 }
 @keyframes drift-b {
   0%   { transform: translate(0, 0); }
-  33%  { transform: translate(-7px, 3px); }
-  66%  { transform: translate(4px, 6px); }
+  33%  { transform: translate(-18px, 8px); }
+  66%  { transform: translate(11px, 16px); }
   100% { transform: translate(0, 0); }
 }
 @keyframes drift-c {
   0%   { transform: translate(0, 0); }
-  20%  { transform: translate(4px, 4px); }
-  50%  { transform: translate(7px, -3px); }
-  80%  { transform: translate(-4px, 2px); }
+  20%  { transform: translate(10px, 10px); }
+  50%  { transform: translate(18px, -8px); }
+  80%  { transform: translate(-10px, 6px); }
   100% { transform: translate(0, 0); }
 }
-.tool-scissors .salon-tool-drift { animation: drift-a 13s ease-in-out infinite; animation-delay: -3s; }
-.tool-dryer .salon-tool-drift { animation: drift-b 15s ease-in-out infinite; animation-delay: -6s; }
-.tool-clipper .salon-tool-drift { animation: drift-c 11s ease-in-out infinite; animation-delay: -1s; }
-.tool-mirror .salon-tool-drift { animation: drift-b 14s ease-in-out infinite reverse; animation-delay: -9s; }
-.tool-spray .salon-tool-drift { animation: drift-a 12s ease-in-out infinite reverse; animation-delay: -4s; }
-.tool-curling .salon-tool-drift { animation: drift-c 16s ease-in-out infinite; animation-delay: -11s; }
+.tool-scissors .salon-tool-drift { animation: drift-a 20s ease-in-out infinite; animation-delay: -4s; }
+.tool-dryer .salon-tool-drift { animation: drift-b 23s ease-in-out infinite; animation-delay: -9s; }
+.tool-clipper .salon-tool-drift { animation: drift-c 17s ease-in-out infinite; animation-delay: -2s; }
+.tool-mirror .salon-tool-drift { animation: drift-b 21s ease-in-out infinite reverse; animation-delay: -13s; }
+.tool-spray .salon-tool-drift { animation: drift-a 18s ease-in-out infinite reverse; animation-delay: -6s; }
+.tool-curling .salon-tool-drift { animation: drift-c 25s ease-in-out infinite; animation-delay: -16s; }
 
 /* ── 상시 움직임(idle) — 도구마다 다른 결·주기 ── */
 @keyframes idle-sway {
