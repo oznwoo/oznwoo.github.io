@@ -108,4 +108,8 @@ export interface ProjectDetail {
   // 시스템 아키텍처 다이어그램(선택) — 있으면 STACK 슬라이드가 카테고리별
   // 텍스트 목록 대신 이 이미지 하나만 보여준다.
   stackDiagram?: string
+  // stackDiagram과 달리 카테고리 목록을 대체하지 않고 그 아래에 함께 놓는
+  // 다이어그램(선택). 짧은 설명(stackDiagramNote)과 같이 렌더링된다.
+  stackDiagramBelow?: string
+  stackDiagramNote?: string
 }

@@ -5,6 +5,9 @@ import { hexToRgba } from "@/lib/color"
 interface StackSlideProps {
   tech: ProjectDetail["tech"]
   stackDiagram?: string
+  // 카테고리 목록을 대체하지 않고 그 아래에 함께 놓는 다이어그램 + 짧은 설명
+  stackDiagramBelow?: string
+  stackDiagramNote?: string
   accentColor: string
   isMobile: boolean
 }
@@ -15,6 +18,8 @@ interface StackSlideProps {
 export function StackSlide({
   tech,
   stackDiagram,
+  stackDiagramBelow,
+  stackDiagramNote,
   accentColor,
   isMobile,
 }: StackSlideProps) {
@@ -68,7 +73,7 @@ export function StackSlide({
 
   return (
     <div className={wrapClass}>
-      <div className="max-w-2xl w-full">
+      <div className={stackDiagramBelow ? "max-w-4xl w-full" : "max-w-2xl w-full"}>
         <span
           style={{ fontFamily: "var(--font-mono)" }}
           className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-12 block"
@@ -98,6 +103,44 @@ export function StackSlide({
             </div>
           ))}
         </div>
+        {stackDiagramBelow && (
+          <div>
+            <div
+              onMouseEnter={() => setImgHovered(true)}
+              onMouseLeave={() => setImgHovered(false)}
+              className="rounded-2xl overflow-hidden border cursor-default"
+              style={{
+                borderColor: imgHovered
+                  ? hexToRgba(accentColor, 0.35)
+                  : "rgba(12,15,26,0.1)",
+                boxShadow: imgHovered
+                  ? `0 20px 45px -14px ${hexToRgba(accentColor, 0.35)}, 0 8px 18px -8px rgba(12,15,26,0.28)`
+                  : "0 14px 34px -18px rgba(12,15,26,0.24), 0 4px 10px -6px rgba(12,15,26,0.12)",
+                transform: imgHovered
+                  ? "translateY(-3px) scale(1.008)"
+                  : "translateY(0) scale(1)",
+                transition:
+                  "transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease-out, border-color 0.4s ease-out",
+              }}
+            >
+              <img
+                src={stackDiagramBelow}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                className="w-full h-auto block"
+              />
+            </div>
+            {stackDiagramNote && (
+              <p
+                style={{ fontFamily: "var(--font-body)" }}
+                className="text-sm text-[#0C0F1A]/45 font-light mt-4 leading-relaxed"
+              >
+                {stackDiagramNote}
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
