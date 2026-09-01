@@ -14,6 +14,8 @@ import cochatSolutionFlow2 from "@/imports/cochat/cochat-solution-integration-2.
 import cochatSolutionFlow3 from "@/imports/cochat/cochat-solution-integration-3.webp"
 import cochatSolutionFlow4 from "@/imports/cochat/cochat-solution-integration-4.webp"
 import cochatStackArchitecture from "@/imports/cochat/cochat-stack-architecture.webp"
+import cochatSolutionContext1 from "@/imports/cochat/cochat-solution-context-1.webp"
+import cochatSolutionContext2 from "@/imports/cochat/cochat-solution-context-2.webp"
 import type { ProjectDetail } from "./types"
 
 export const cochatDetail: ProjectDetail = {
@@ -174,6 +176,9 @@ export const cochatDetail: ProjectDetail = {
           },
         ],
       },
+      // '어제 그거'처럼 앞 대화를 알아야 하는 메시지 처리 흐름 (KIPS 발표자료)
+      // 1컷: LLM만 쓰면 문맥을 몰라 잘못 해석 / 2컷: RAG로 외부에서 문맥을 찾아 보정
+      images: [cochatSolutionContext1, cochatSolutionContext2],
       icon: "sparkle",
     },
     {
