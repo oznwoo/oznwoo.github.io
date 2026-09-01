@@ -9,6 +9,7 @@ import cochatProblemContent from "@/imports/cochat/cochat-problem-content.webp"
 import cochatOutcomeScattered from "@/imports/cochat/cochat-outcome-scattered.webp"
 import cochatOutcomePriority from "@/imports/cochat/cochat-outcome-priority.webp"
 import cochatOutcomeContent from "@/imports/cochat/cochat-outcome-content.webp"
+import cochatSolutionIntegration from "@/imports/cochat/cochat-solution-integration.webp"
 import type { ProjectDetail } from "./types"
 
 export const cochatDetail: ProjectDetail = {
@@ -122,6 +123,9 @@ export const cochatDetail: ProjectDetail = {
           },
         ],
       },
+      // '계정 연동 완료' 화면 — 한 서비스(Gmail·Facebook)에 흩어진 여러 계정을
+      // 자동으로 찾아 연결한 결과. KIPS 발표자료 목업에서 폰만 크롭
+      image: cochatSolutionIntegration,
       icon: "layers",
     },
     {
