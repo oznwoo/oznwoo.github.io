@@ -5,16 +5,19 @@ import { hexToRgba } from "@/lib/color"
 interface StackSlideProps {
   tech: ProjectDetail["tech"]
   stackDiagram?: string
+  // stackDiagram 아래에 붙는 짧은 설명(선택)
+  stackDiagramNote?: string
   accentColor: string
   isMobile: boolean
 }
 
 // 기술 — stackDiagram이 있으면(Fintag) 카테고리 텍스트 목록 대신 아키텍처
 // 다이어그램 이미지 하나만, 다른 이미지 카드와 동일한 border/hover 컨벤션으로
-// 보여준다.
+// 보여준다. stackDiagramNote가 있으면 그 아래에 한 문단 설명을 붙인다.
 export function StackSlide({
   tech,
   stackDiagram,
+  stackDiagramNote,
   accentColor,
   isMobile,
 }: StackSlideProps) {
@@ -26,7 +29,7 @@ export function StackSlide({
   if (stackDiagram) {
     return (
       <div className={wrapClass}>
-        <div className="max-w-6xl w-full">
+        <div className="max-w-5xl w-full">
           <span
             style={{ fontFamily: "var(--font-mono)" }}
             className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-10 block"
@@ -56,11 +59,17 @@ export function StackSlide({
               alt=""
               aria-hidden="true"
               loading="lazy"
-              width={1672}
-              height={941}
               className="w-full h-auto block"
             />
           </div>
+          {stackDiagramNote && (
+            <p
+              style={{ fontFamily: "var(--font-body)" }}
+              className="text-sm text-[#0C0F1A]/45 font-light mt-5 leading-relaxed max-w-3xl"
+            >
+              {stackDiagramNote}
+            </p>
+          )}
         </div>
       </div>
     )

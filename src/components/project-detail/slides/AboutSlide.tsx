@@ -309,7 +309,10 @@ export function AboutSlide({
               className="text-sm sm:text-base text-[#0C0F1A]/55 leading-relaxed font-normal"
             >
               {splitSentences(current.body).map((sentence, i) => (
-                <span key={i} className="block sm:whitespace-nowrap">
+                <span
+                  key={i}
+                  className="block w-fit mx-auto sm:whitespace-nowrap"
+                >
                   {renderWithEmphasis(sentence)}
                 </span>
               ))}
