@@ -16,6 +16,8 @@ import cochatSolutionFlow4 from "@/imports/cochat/cochat-solution-integration-4.
 import cochatStackArchitecture from "@/imports/cochat/cochat-stack-architecture.webp"
 import cochatSolutionContext1 from "@/imports/cochat/cochat-solution-context-1.webp"
 import cochatSolutionContext2 from "@/imports/cochat/cochat-solution-context-2.webp"
+import cochatSolutionSummary1 from "@/imports/cochat/cochat-solution-summary-1.webp"
+import cochatSolutionSummary2 from "@/imports/cochat/cochat-solution-summary-2.webp"
 import type { ProjectDetail } from "./types"
 
 export const cochatDetail: ProjectDetail = {
@@ -218,6 +220,9 @@ export const cochatDetail: ProjectDetail = {
           },
         ],
       },
+      // 요약 푸시 알림 예시 (KIPS 발표자료) — 메일(마감 공지)·문자(요금 명세)를
+      // 잠금화면에서 요약으로 바로 확인
+      images: [cochatSolutionSummary1, cochatSolutionSummary2],
       icon: "filter",
     },
   ],
