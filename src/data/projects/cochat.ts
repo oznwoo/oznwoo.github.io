@@ -3,6 +3,9 @@ import cochatAboutHero from "@/imports/cochat/cochat-about-hero.webp"
 import cochatAboutRole from "@/imports/cochat/cochat-about-role.webp"
 import cochatDemoVideo from "@/imports/cochat/cochat-demo.mp4"
 import cochatDemoPoster from "@/imports/cochat/cochat-demo-poster.webp"
+import cochatProblemScattered from "@/imports/cochat/cochat-problem-scattered.webp"
+import cochatProblemPriority from "@/imports/cochat/cochat-problem-priority.webp"
+import cochatProblemContent from "@/imports/cochat/cochat-problem-content.webp"
 import type { ProjectDetail } from "./types"
 
 export const cochatDetail: ProjectDetail = {
@@ -45,6 +48,9 @@ export const cochatDetail: ProjectDetail = {
       ],
       icon: "duplicate",
       tags: ["채널파편화", "세대별단절"],
+      // CoChat for Business problem-scattered와 같은 3D 클레이 계열이되, 아이 같은
+      // 클레이 캐릭터 + 쿨 페리윙클 팔레트 + B2C 소셜 메신저 아이콘으로 차별화
+      image: cochatProblemScattered,
     },
     {
       title: "우선순위 부재",
@@ -56,6 +62,8 @@ export const cochatDetail: ProjectDetail = {
       ],
       icon: "alert",
       tags: ["정보과부하", "기준제각각"],
+      // 돋보기로 쏟아지는 알림 속 중요한 메시지를 찾는 장면 — 페리윙클 팔레트
+      image: cochatProblemPriority,
     },
     {
       title: "내용 파악 부담",
@@ -67,6 +75,10 @@ export const cochatDetail: ProjectDetail = {
       ],
       icon: "trend-down",
       tags: ["확인부담", "문맥오해"],
+      // for Business("업무 집중 불가")와 달리 CoChat 고유 문제라 새 장면 —
+      // 긴 텍스트 두루마리를 다 읽어야 하고, 은어 말풍선엔 물음표, 앞 대화가
+      // 빠진 끊긴 말풍선 체인으로 "내용 파악 부담"을 표현
+      image: cochatProblemContent,
     },
   ],
   solution: [
