@@ -9,7 +9,10 @@ import cochatProblemContent from "@/imports/cochat/cochat-problem-content.webp"
 import cochatOutcomeScattered from "@/imports/cochat/cochat-outcome-scattered.webp"
 import cochatOutcomePriority from "@/imports/cochat/cochat-outcome-priority.webp"
 import cochatOutcomeContent from "@/imports/cochat/cochat-outcome-content.webp"
-import cochatSolutionIntegration from "@/imports/cochat/cochat-solution-integration.webp"
+import cochatSolutionFlow1 from "@/imports/cochat/cochat-solution-integration-1.webp"
+import cochatSolutionFlow2 from "@/imports/cochat/cochat-solution-integration-2.webp"
+import cochatSolutionFlow3 from "@/imports/cochat/cochat-solution-integration-3.webp"
+import cochatSolutionFlow4 from "@/imports/cochat/cochat-solution-integration-4.webp"
 import type { ProjectDetail } from "./types"
 
 export const cochatDetail: ProjectDetail = {
@@ -123,9 +126,14 @@ export const cochatDetail: ProjectDetail = {
           },
         ],
       },
-      // '계정 연동 완료' 화면 — 한 서비스(Gmail·Facebook)에 흩어진 여러 계정을
-      // 자동으로 찾아 연결한 결과. KIPS 발표자료 목업에서 폰만 크롭
-      image: cochatSolutionIntegration,
+      // 온보딩 플로우 — 로그인 → 메신저 선택 → 받을 알림 유형 선택 → 계정 연동 완료.
+      // 실제 앱(Android) 스크린샷에서 에뮬레이터 크롬을 걷어내고 화면만 크롭
+      images: [
+        cochatSolutionFlow1,
+        cochatSolutionFlow2,
+        cochatSolutionFlow3,
+        cochatSolutionFlow4,
+      ],
       icon: "layers",
     },
     {
