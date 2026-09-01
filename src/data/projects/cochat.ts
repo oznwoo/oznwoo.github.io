@@ -279,8 +279,8 @@ export const cochatDetail: ProjectDetail = {
     },
     { category: "Auth", items: ["OAuth 2.0"] },
   ],
-  // KIPS 학술대회에 발표한 시스템 설계도 — STACK 카테고리 목록 아래에 함께 표시
-  stackDiagramBelow: cochatStackArchitecture,
+  // KIPS 학술대회에 발표한 시스템 설계도 — 카테고리 목록 대신 이 다이어그램만 표시
+  stackDiagram: cochatStackArchitecture,
   stackDiagramNote:
     "KIPS 정보처리학회 학술대회에서 발표한 CoChat 시스템 설계도입니다. 메신저 계정을 연동해 메시지를 모으고(계정 관리자) → 은어·문맥을 AI로 보정해 벡터로 바꾼 뒤 → 사용자 관심사와 비교해 중요·사소를 나누고 → 중요한 메시지는 요약해 전달하는 흐름을 담았습니다.",
 }

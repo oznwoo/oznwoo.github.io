@@ -170,7 +170,6 @@ export function ProjectDetailView({
     <StackSlide
       tech={detail.tech}
       stackDiagram={detail.stackDiagram}
-      stackDiagramBelow={detail.stackDiagramBelow}
       stackDiagramNote={detail.stackDiagramNote}
       accentColor={accentColor}
       isMobile={isMobile}
