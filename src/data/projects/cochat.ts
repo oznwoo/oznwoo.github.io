@@ -1,5 +1,6 @@
 import cochatLogo from "@/imports/cochat-logo.png"
 import cochatAboutHero from "@/imports/cochat/cochat-about-hero.webp"
+import cochatAboutRole from "@/imports/cochat/cochat-about-role.webp"
 import cochatDemoVideo from "@/imports/cochat/cochat-demo.mp4"
 import cochatDemoPoster from "@/imports/cochat/cochat-demo-poster.webp"
 import type { ProjectDetail } from "./types"
@@ -20,9 +21,13 @@ export const cochatDetail: ProjectDetail = {
   // 로고 + "Co-Chat" 워드마크 + 태그라인). About 탭 컨테이너 비율에 맞춰 1830×1014
   aboutImage: cochatAboutHero,
   roleHeadline:
-    "5인 팀 대표로 [기획] [시스템 설계] [OAuth·백엔드] [논문 발표]를 담당",
+    "한양대학교 ERICA 컴퓨터공학 [캡스톤 디자인]에 참여한 졸업 프로젝트입니다.",
   roleBody:
     "5인 팀의 대표로 전체 시스템을 설계하고 일정과 역할을 조율했습니다. **OAuth 계정 통합**과 **백엔드 서버**는 직접 개발했고, 연구 내용을 정리해 KIPS 정보처리학회 학술대회에 **제1저자로 발표**했습니다.",
+  // '담당 업무' 탭 이미지 — CoChat for Business about-role와 같은 3D 클레이 계열이되,
+  // 더 이전 학생 캡스톤 프로젝트라 아이 같은 3인 + 역할 3분할(가운데 리더 / 왼쪽
+  // 기획·디자인 / 오른쪽 개발), 쿨 페리윙클 팔레트로 차별화. 1830×1014
+  roleImage: cochatAboutRole,
   demoHeadline: "캡스톤 발표에서 선보인 메신저 연동·선별·요약 시연",
   demoBody:
     "여러 메신저를 한 앱에 모으고, AI가 취향에 맞는 메시지만 골라 요약해 알려줍니다. 이 과정을 캡스톤 디자인 발표 영상에 담았습니다.",
