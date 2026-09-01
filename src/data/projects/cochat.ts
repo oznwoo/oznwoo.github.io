@@ -36,7 +36,7 @@ export const cochatDetail: ProjectDetail = {
   githubUrl: "https://github.com/oznwoo/cochat-frontend",
   problem: [
     {
-      title: "메신저 파편화로 인한 소통 단절",
+      title: "메신저의 다양화",
       body: "SMS·카카오톡만 쓰던 시절과 달리, 지금은 인스타그램 DM·텔레그램·슬랙·이메일 등 소통 수단이 지나치게 많아졌습니다. 세대와 성향에 따라 주로 쓰는 메신저가 갈리면서, 상대가 어느 채널을 보는지 몰라 메시지가 닿지 않는 일이 잦아졌습니다.",
       shortBody: [
         "소통 수단이 **지나치게 많아짐**",
@@ -47,7 +47,7 @@ export const cochatDetail: ProjectDetail = {
       tags: ["채널파편화", "세대별단절"],
     },
     {
-      title: "통합하면 따라오는 정보 과부하",
+      title: "우선순위 부재",
       body: "여러 메신저를 한곳에 모으면 이번엔 알림이 한꺼번에 쏟아져, 정작 중요한 메시지가 그 사이에 묻힙니다. 게다가 무엇이 급한지는 사람마다 기준이 달라, 단순히 모으는 것만으로는 오히려 혼란을 키웁니다.",
       shortBody: [
         "다 모으면 **알림이 한꺼번에 쏟아짐**",
@@ -58,7 +58,7 @@ export const cochatDetail: ProjectDetail = {
       tags: ["정보과부하", "기준제각각"],
     },
     {
-      title: "메시지 내용 파악에 드는 시간",
+      title: "내용 파악 부담",
       body: "중요한 메시지라도 전체 내용을 다 읽어야 무슨 일인지 알 수 있었습니다. ‘플젝’ 같은 은어나 앞선 대화를 알아야 이해되는 말은 뜻을 잘못 읽기도 쉬웠습니다.",
       shortBody: [
         "핵심을 알려면 **내용을 다 읽어야 함**",
@@ -199,7 +199,7 @@ export const cochatDetail: ProjectDetail = {
   ],
   outcomeGallery: [
     {
-      title: "메신저 파편화로 인한 소통 단절 → 해결",
+      title: "메신저의 다양화 → 해결",
       body: "",
       shortBody: [
         "OAuth로 여러 메신저 계정·메시지를 **한 앱에 통합**",
@@ -209,7 +209,7 @@ export const cochatDetail: ProjectDetail = {
       tags: ["OAuth통합", "계정자동검색"],
     },
     {
-      title: "통합하면 따라오는 정보 과부하 → 해결",
+      title: "우선순위 부재 → 해결",
       body: "",
       shortBody: [
         "받고 싶은 알림 종류로 만든 **‘취향 벡터’와 비교해 선별**",
@@ -219,7 +219,7 @@ export const cochatDetail: ProjectDetail = {
       tags: ["취향벡터", "RAG문맥보정"],
     },
     {
-      title: "메시지 내용 파악에 드는 시간 → 해결",
+      title: "내용 파악 부담 → 해결",
       body: "",
       shortBody: [
         "중요 메시지를 **키워드·주제에 맞게 요약**",
