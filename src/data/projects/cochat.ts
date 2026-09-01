@@ -1,4 +1,5 @@
 import cochatLogo from "@/imports/cochat-logo.png"
+import cochatAboutHero from "@/imports/cochat/cochat-about-hero.webp"
 import cochatDemoVideo from "@/imports/cochat/cochat-demo.mp4"
 import cochatDemoPoster from "@/imports/cochat/cochat-demo-poster.webp"
 import type { ProjectDetail } from "./types"
@@ -15,6 +16,9 @@ export const cochatDetail: ProjectDetail = {
   overviewHeadline: "Co(함께) + Chat(대화하자)",
   overviewBody:
     "여러 메신저에 흩어진 알림을 한 곳에 모으고, AI가 취향에 맞는 메시지만 골라 요약해 주는 메신저 통합 앱",
+  // About '프로젝트 소개' 탭 히어로 — Gopssl about-hero와 동일 포맷(폰 목업 + 큐브
+  // 로고 + "Co-Chat" 워드마크 + 태그라인). About 탭 컨테이너 비율에 맞춰 1830×1014
+  aboutImage: cochatAboutHero,
   roleHeadline:
     "5인 팀 대표로 [기획] [시스템 설계] [OAuth·백엔드] [논문 발표]를 담당",
   roleBody:
