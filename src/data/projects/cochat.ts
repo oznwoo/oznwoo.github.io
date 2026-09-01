@@ -6,6 +6,9 @@ import cochatDemoPoster from "@/imports/cochat/cochat-demo-poster.webp"
 import cochatProblemScattered from "@/imports/cochat/cochat-problem-scattered.webp"
 import cochatProblemPriority from "@/imports/cochat/cochat-problem-priority.webp"
 import cochatProblemContent from "@/imports/cochat/cochat-problem-content.webp"
+import cochatOutcomeScattered from "@/imports/cochat/cochat-outcome-scattered.webp"
+import cochatOutcomePriority from "@/imports/cochat/cochat-outcome-priority.webp"
+import cochatOutcomeContent from "@/imports/cochat/cochat-outcome-content.webp"
 import type { ProjectDetail } from "./types"
 
 export const cochatDetail: ProjectDetail = {
@@ -219,6 +222,7 @@ export const cochatDetail: ProjectDetail = {
         "채널이 갈려도 **한 화면에서 소통**",
       ],
       tags: ["OAuth통합", "계정자동검색"],
+      image: cochatOutcomeScattered,
     },
     {
       title: "우선순위 부재 → 해결",
@@ -229,6 +233,7 @@ export const cochatDetail: ProjectDetail = {
         "읽음·관심 반응으로 **취향이 계속 학습**됨",
       ],
       tags: ["취향벡터", "RAG문맥보정"],
+      image: cochatOutcomePriority,
     },
     {
       title: "내용 파악 부담 → 해결",
@@ -239,6 +244,7 @@ export const cochatDetail: ProjectDetail = {
         "열어보지 않아도 **핵심만 바로 파악**",
       ],
       tags: ["핵심요약", "알림요약"],
+      image: cochatOutcomeContent,
     },
   ],
   tech: [
