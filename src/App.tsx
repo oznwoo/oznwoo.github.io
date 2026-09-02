@@ -291,7 +291,7 @@ export default function App() {
   // ─── 페이지 목록: 실제 pages/*.tsx 컴포넌트를 순서대로 배치 ────────────
   // mobilePages: 모바일 가로 전환용 (Projects가 프로젝트별로 쪼개짐)
   const mobilePages = [
-    <PageHome key="home" />,
+    <PageHome key="home" isActive={mobilePage === 0} />,
     <PageAbout key="about" isActive={mobilePage === 1} />,
     <PageResume key="resume" isActive={mobilePage === 2} />,
     ...PROJECTS.map((p, i) => (
@@ -311,7 +311,7 @@ export default function App() {
 
   // pages: 데스크톱 세로 전환용 (Projects는 그리드 한 페이지)
   const pages = [
-    <PageHome />,
+    <PageHome isActive={current === 0} />,
     <PageAbout isActive={current === 1} />,
     <PageResume isActive={current === 2} />,
     <PageProjects

@@ -1,7 +1,13 @@
 import { Page } from "@/components/layout/Page"
 import { StatusTicker } from "@/components/ui/StatusTicker"
+import { Reveal } from "@/components/ui/Reveal"
+import { useSlideReveal } from "@/hooks/useSlideReveal"
 
-export function PageHome() {
+export function PageHome({ isActive = true }: { isActive?: boolean }) {
+  // 페이지 전환이 끝나면 이름 → 링크가 나타난다 (이어브로우·헤드라인은 고정)
+  const nameRevealed = useSlideReveal(isActive)
+  const linksRevealed = useSlideReveal(isActive, 850)
+
   return (
     <Page>
       <div className="flex flex-col gap-8">
@@ -20,13 +26,18 @@ export function PageHome() {
           <span className="font-semibold">현실로 만듭니다.</span>
         </h1>
         <div className="border-t border-[#0C0F1A]/10 pt-7 flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <p
-            style={{ fontFamily: "var(--font-body)" }}
-            className="max-w-sm text-[#0C0F1A]/65 text-base leading-loose font-normal"
+          <Reveal show={nameRevealed}>
+            <p
+              style={{ fontFamily: "var(--font-body)" }}
+              className="max-w-sm text-[#0C0F1A]/65 text-base leading-loose font-normal"
+            >
+              오진우
+            </p>
+          </Reveal>
+          <Reveal
+            show={linksRevealed}
+            className="flex items-center gap-4 sm:gap-8 shrink-0 flex-wrap"
           >
-            오진우
-          </p>
-          <div className="flex items-center gap-4 sm:gap-8 shrink-0 flex-wrap">
             {[
               { label: "GitHub", href: "https://github.com/oznwoo" },
               { label: "RESUME", href: "/documents/resume.pdf" },
@@ -43,7 +54,7 @@ export function PageHome() {
                 {label}
               </a>
             ))}
-          </div>
+          </Reveal>
         </div>
         <div className="flex items-center gap-3 mt-2">
           <div className="w-1.5 h-1.5 rounded-full bg-[#4F6EF7] animate-pulse shrink-0" />
