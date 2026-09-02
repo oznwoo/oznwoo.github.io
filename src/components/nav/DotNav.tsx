@@ -97,7 +97,7 @@ export function DotNav({
                 style={{
                   width: i === current ? "20px" : "6px",
                   height: "6px",
-                  background: i === current ? "#4F6EF7" : "rgba(12,15,26,0.22)",
+                  background: i === current ? "#4F6EF7" : "rgba(12,15,26,0.32)",
                 }}
               >
                 {i === current && (

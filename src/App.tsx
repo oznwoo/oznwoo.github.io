@@ -291,9 +291,9 @@ export default function App() {
   // ─── 페이지 목록: 실제 pages/*.tsx 컴포넌트를 순서대로 배치 ────────────
   // mobilePages: 모바일 가로 전환용 (Projects가 프로젝트별로 쪼개짐)
   const mobilePages = [
-    <PageHome key="home" />,
-    <PageAbout key="about" />,
-    <PageResume key="resume" />,
+    <PageHome key="home" isActive={mobilePage === 0} />,
+    <PageAbout key="about" isActive={mobilePage === 1} />,
+    <PageResume key="resume" isActive={mobilePage === 2} />,
     ...PROJECTS.map((p, i) => (
       <MobileProjectPage
         key={p.id}
@@ -303,15 +303,19 @@ export default function App() {
         onOpen={setActiveProject}
       />
     )),
-    <PageContact key="contact" />,
+    <PageContact
+      key="contact"
+      isActive={mobilePage === 3 + PROJECTS.length}
+    />,
   ]
 
   // pages: 데스크톱 세로 전환용 (Projects는 그리드 한 페이지)
   const pages = [
-    <PageHome />,
-    <PageAbout />,
-    <PageResume />,
+    <PageHome isActive={current === 0} />,
+    <PageAbout isActive={current === 1} />,
+    <PageResume isActive={current === 2} />,
     <PageProjects
+      isActive={current === 3}
       // 상세 페이지로 들어갈 때는 웜프(회전·blob 강조) 없이 가로 슬라이드만
       // 재생한다. 호버 중이던 색은 renderedProject가 이어받아 끊기지 않는다.
       onOpen={setActiveProject}
@@ -321,7 +325,7 @@ export default function App() {
         if (!warping) setHoverId(id)
       }}
     />,
-    <PageContact />,
+    <PageContact isActive={current === 4} />,
   ]
 
   // ─── 공유 배경 + 상세 패널 (데스크톱/모바일 렌더 양쪽에서 재사용) ──────
@@ -436,7 +440,7 @@ export default function App() {
           </div>
           <div
             style={{ fontFamily: "var(--font-mono)" }}
-            className="fixed bottom-6 left-6 md:left-12 text-xs text-[#0C0F1A]/25 select-none"
+            className="fixed bottom-6 left-6 md:left-12 text-xs text-[#0C0F1A]/40 select-none"
           >
             {String(current + 1).padStart(2, "0")} /{" "}
             {String(TOTAL).padStart(2, "0")}
