@@ -39,10 +39,6 @@ export interface ProjectDetailCardItem {
   icon?: DetailIconKey
   tags?: string[]
   image?: string
-  // 단일 image를 이미지 영역 좌우 끝까지(풀블리드) 채워 보여준다 — 가로로
-  // 넓은 파이프라인 다이어그램/애니메이션처럼 낱장 스크린샷이 아니라 한 장이
-  // 그 자체로 슬롯을 꽉 채워야 하는 경우에만 쓴다.
-  imageFullBleed?: boolean
   // 하나의 합성 스크린샷 대신 개별 스텝 이미지 여러 장을 나란히 보여주고
   // 싶을 때 image 대신 이걸 쓴다 — 이미지 사이 화살표는 이미지에 미리
   // 박아 넣지 않고, SolutionShowcase가 직접 그린다.
