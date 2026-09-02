@@ -14,7 +14,7 @@ import cochatSolutionFlow2 from "@/imports/cochat/cochat-solution-integration-2.
 import cochatSolutionFlow3 from "@/imports/cochat/cochat-solution-integration-3.webp"
 import cochatSolutionFlow4 from "@/imports/cochat/cochat-solution-integration-4.webp"
 import cochatStackArchitecture from "@/imports/cochat/cochat-stack-architecture.webp"
-import cochatSolutionContextFlow from "@/imports/cochat/cochat-solution-context-flow.webp"
+import cochatSolutionContextCompare from "@/imports/cochat/cochat-solution-context-compare.webp"
 import cochatSolutionSummary1 from "@/imports/cochat/cochat-solution-summary-1.webp"
 import cochatSolutionSummary2 from "@/imports/cochat/cochat-solution-summary-2.webp"
 import type { ProjectDetail } from "./types"
@@ -178,9 +178,9 @@ export const cochatDetail: ProjectDetail = {
         ],
       },
       // 문맥 보정 파이프라인을 페리윙클 3D 클레이 톤 인포그래픽 한 장으로 —
-      // '문맥 없음(잘못 보정)' 상태와 'LLM + 이전 대화 검색(제대로 보정)' 상태를
-      // 오가는 전환 애니메이션. 가로로 넓어 이미지 영역을 풀블리드로 채운다.
-      image: cochatSolutionContextFlow,
+      // 위: LLM 단독(잘못 보정) / 아래: LLM + 이전 대화 검색(제대로 보정)을
+      // 상하로 비교. 가로로 넓어 이미지 영역을 풀블리드로 채운다.
+      image: cochatSolutionContextCompare,
       imageFullBleed: true,
       icon: "sparkle",
     },
