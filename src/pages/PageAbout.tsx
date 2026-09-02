@@ -47,7 +47,7 @@ export function PageAbout() {
           </h2>
           <div
             style={{ fontFamily: "var(--font-body)" }}
-            className="space-y-2 text-[#0C0F1A]/50 font-light text-xs leading-relaxed max-w-lg md:space-y-3 md:text-sm md:leading-loose"
+            className="space-y-2 text-[#0C0F1A]/70 font-normal text-xs leading-relaxed max-w-lg md:space-y-3 md:text-sm md:leading-loose"
           >
             <p className="hidden sm:block">
               안녕하세요. 세상의 다양한 문제를 해결하고 싶은 오진우입니다.
