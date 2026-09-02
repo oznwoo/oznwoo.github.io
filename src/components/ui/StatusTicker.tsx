@@ -42,7 +42,7 @@ export function StatusTicker() {
         transition:
           phase === "enter" ? "none" : "transform 0.3s ease, opacity 0.3s ease",
         fontSize: "0.75rem",
-        color: "rgba(12,15,26,0.3)",
+        color: "rgba(12,15,26,0.62)",
       }}
     >
       {STATUS_MESSAGES[index]}

@@ -18,7 +18,7 @@ export function PageProjects({
           <div>
             <span
               style={{ fontFamily: "var(--font-mono)" }}
-              className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase"
+              className="text-xs text-[#0C0F1A]/45 tracking-[0.04em] uppercase"
             >
               Projects
             </span>
@@ -34,7 +34,7 @@ export function PageProjects({
             target="_blank"
             rel="noreferrer"
             style={{ fontFamily: "var(--font-mono)" }}
-            className="text-xs text-[#0C0F1A]/30 hover:text-[#0C0F1A] transition-colors uppercase tracking-[0.02em]"
+            className="text-xs text-[#0C0F1A]/45 hover:text-[#0C0F1A] transition-colors uppercase tracking-[0.02em]"
           >
             GitHub →
           </a>
@@ -101,7 +101,7 @@ export function PageProjects({
                             fontFamily: "var(--font-mono)",
                             color: active
                               ? "rgba(255,255,255,0.95)"
-                              : "rgba(12,15,26,0.38)",
+                              : "rgba(12,15,26,0.5)",
                             // font-weight를 바꾸면 글자 폭이 변해 pill이 넓어지며 옆
                             // pill들이 밀리므로, 폭에 영향 없는 text-stroke로 굵기감만 더한다
                             WebkitTextStroke: active
@@ -140,8 +140,8 @@ export function PageProjects({
                     style={{
                       fontFamily: "var(--font-mono)",
                       color: cardActive
-                        ? "rgba(12,15,26,0.4)"
-                        : "rgba(12,15,26,0.2)",
+                        ? "rgba(12,15,26,0.5)"
+                        : "rgba(12,15,26,0.35)",
                       transition: "color 0.35s ease-out",
                     }}
                     className="text-xs shrink-0"
@@ -164,8 +164,8 @@ export function PageProjects({
                       style={{
                         fontFamily: "var(--font-body)",
                         color: cardActive
-                          ? "rgba(12,15,26,0.55)"
-                          : "rgba(12,15,26,0.35)",
+                          ? "rgba(12,15,26,0.6)"
+                          : "rgba(12,15,26,0.5)",
                         // font-weight를 바꾸면 글자 폭이 변해 옆 요소가 밀리므로
                         // (pill과 동일한 이유), 폭에 영향 없는 text-stroke로 굵기감만 더한다
                         WebkitTextStroke: cardActive
@@ -182,8 +182,8 @@ export function PageProjects({
                     style={{
                       fontFamily: "var(--font-body)",
                       color: cardActive
-                        ? "rgba(12,15,26,0.65)"
-                        : "rgba(12,15,26,0.45)",
+                        ? "rgba(12,15,26,0.75)"
+                        : "rgba(12,15,26,0.6)",
                       WebkitTextStroke: cardActive
                         ? "0.25px currentColor"
                         : "0px transparent",

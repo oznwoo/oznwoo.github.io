@@ -25,14 +25,14 @@ export function MobileProjectPage({
         <div className="flex items-center justify-between">
           <span
             style={{ fontFamily: "var(--font-mono)" }}
-            className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase"
+            className="text-xs text-[#0C0F1A]/45 tracking-[0.04em] uppercase"
           >
             Projects · {String(index + 1).padStart(2, "0")}/
             {String(total).padStart(2, "0")}
           </span>
           <span
             style={{ fontFamily: "var(--font-mono)" }}
-            className="text-xs text-[#0C0F1A]/30"
+            className="text-xs text-[#0C0F1A]/45"
           >
             {project.year}
           </span>
@@ -48,7 +48,7 @@ export function MobileProjectPage({
                   : "rgba(12,15,26,0.05)",
                 color: accent
                   ? hexToRgba(accent.primary, 0.85)
-                  : "rgba(12,15,26,0.4)",
+                  : "rgba(12,15,26,0.55)",
               }}
               className="text-[9px] px-2.5 py-1 rounded-full uppercase tracking-[0.08em]"
             >
@@ -65,14 +65,14 @@ export function MobileProjectPage({
           </h2>
           <p
             style={{ fontFamily: "var(--font-body)" }}
-            className="text-sm text-[#0C0F1A]/40 font-light mt-1"
+            className="text-sm text-[#0C0F1A]/55 font-normal mt-1"
           >
             {project.subtitle}
           </p>
         </div>
         <p
           style={{ fontFamily: "var(--font-body)" }}
-          className="text-sm text-[#0C0F1A]/55 leading-relaxed font-light"
+          className="text-sm text-[#0C0F1A]/70 leading-relaxed font-normal"
         >
           {project.description}
         </p>

@@ -436,7 +436,7 @@ export default function App() {
           </div>
           <div
             style={{ fontFamily: "var(--font-mono)" }}
-            className="fixed bottom-6 left-6 md:left-12 text-xs text-[#0C0F1A]/25 select-none"
+            className="fixed bottom-6 left-6 md:left-12 text-xs text-[#0C0F1A]/40 select-none"
           >
             {String(current + 1).padStart(2, "0")} /{" "}
             {String(TOTAL).padStart(2, "0")}

@@ -7,9 +7,9 @@ export function PageHome() {
       <div className="flex flex-col gap-8">
         <span
           style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/30 tracking-[0.04em] uppercase"
+          className="text-xs text-[#0C0F1A]/45 tracking-[0.04em] uppercase"
         >
-          Fullstack Developer
+          Developer
         </span>
         <h1
           style={{ fontFamily: "var(--font-display)", lineHeight: 1.15 }}
@@ -22,14 +22,14 @@ export function PageHome() {
         <div className="border-t border-[#0C0F1A]/10 pt-7 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <p
             style={{ fontFamily: "var(--font-body)" }}
-            className="max-w-sm text-[#0C0F1A]/45 text-base leading-loose font-light"
+            className="max-w-sm text-[#0C0F1A]/65 text-base leading-loose font-normal"
           >
             오진우
           </p>
           <div className="flex items-center gap-4 sm:gap-8 shrink-0 flex-wrap">
             {[
               { label: "GitHub", href: "https://github.com/oznwoo" },
-              { label: "RESUME", href: "https://oznwoo.github.io" },
+              { label: "RESUME", href: "/documents/resume.pdf" },
               { label: "Email", href: "mailto:luvmoire@gmail.com" },
             ].map(({ label, href }) => (
               <a
@@ -38,7 +38,7 @@ export function PageHome() {
                 target="_blank"
                 rel="noreferrer"
                 style={{ fontFamily: "var(--font-mono)" }}
-                className="text-xs text-[#0C0F1A]/30 hover:text-[#0C0F1A] transition-colors uppercase tracking-[0.02em]"
+                className="text-xs text-[#0C0F1A]/45 hover:text-[#0C0F1A] transition-colors uppercase tracking-[0.02em]"
               >
                 {label}
               </a>

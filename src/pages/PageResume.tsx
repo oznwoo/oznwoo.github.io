@@ -14,7 +14,7 @@ export function PageResume() {
       <div>
         <span
           style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase"
+          className="text-xs text-[#0C0F1A]/45 tracking-[0.04em] uppercase"
         >
           Resume
         </span>
@@ -42,7 +42,7 @@ export function PageResume() {
             </div>
           </div>
           <div>
-            <ResumeCardHeader label="Skills" color="rgba(12,15,26,0.35)" />
+            <ResumeCardHeader label="Skills" color="rgba(12,15,26,0.5)" />
             <div className="grid grid-cols-3 gap-x-2 gap-y-1.5 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-3">
               {CORE_SKILLS.map((item) => (
                 <div

@@ -11,7 +11,7 @@ export function TimelineItem({ item }: { item: TimelineEntry }) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${item.name} 증명서 PDF 열기`}
-              className="shrink-0 self-center -m-2 p-2 text-[#0C0F1A]/30 transition-colors duration-150 hover:text-[#4F6EF7]"
+              className="shrink-0 self-center -m-2 p-2 text-[#0C0F1A]/45 transition-colors duration-150 hover:text-[#4F6EF7]"
             >
               <svg
                 width="11"
@@ -37,14 +37,14 @@ export function TimelineItem({ item }: { item: TimelineEntry }) {
         </div>
         <div
           style={{ fontFamily: "var(--font-mono)" }}
-          className="shrink-0 whitespace-nowrap text-[9px] text-[#0C0F1A]/30 sm:text-[10px]"
+          className="shrink-0 whitespace-nowrap text-[9px] text-[#0C0F1A]/45 sm:text-[10px]"
         >
           {item.date}
         </div>
       </div>
       <div
         style={{ fontFamily: "var(--font-body)" }}
-        className="text-[10px] font-light leading-snug text-[#0C0F1A]/40 sm:text-[11px] sm:leading-relaxed"
+        className="text-[10px] font-normal leading-snug text-[#0C0F1A]/60 sm:text-[11px] sm:leading-relaxed"
       >
         {item.sub}
       </div>

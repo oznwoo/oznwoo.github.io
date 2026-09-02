@@ -27,7 +27,7 @@ export function PageContact() {
         <div>
           <span
             style={{ fontFamily: "var(--font-mono)" }}
-            className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase"
+            className="text-xs text-[#0C0F1A]/45 tracking-[0.04em] uppercase"
           >
             Contact
           </span>
@@ -41,7 +41,7 @@ export function PageContact() {
           </h2>
           <p
             style={{ fontFamily: "var(--font-body)" }}
-            className="hidden mt-5 text-[#0C0F1A]/40 font-light text-sm leading-loose max-w-xs sm:block"
+            className="hidden mt-5 text-[#0C0F1A]/60 font-normal text-sm leading-loose max-w-xs sm:block"
           >
             풀타임 포지션, 프리랜스, 사이드 프로젝트 등 다양한 기회에 열려
             있습니다.
@@ -55,13 +55,13 @@ export function PageContact() {
               <div key={label} className="flex gap-5 items-center">
                 <span
                   style={{ fontFamily: "var(--font-mono)" }}
-                  className="text-[10px] text-[#0C0F1A]/25 uppercase tracking-[0.04em] w-14 shrink-0"
+                  className="text-[10px] text-[#0C0F1A]/45 uppercase tracking-[0.04em] w-14 shrink-0"
                 >
                   {label}
                 </span>
                 <span
                   style={{ fontFamily: "var(--font-body)" }}
-                  className="text-xs text-[#0C0F1A]/55 font-light sm:text-sm"
+                  className="text-xs text-[#0C0F1A]/65 font-normal sm:text-sm"
                 >
                   {value}
                 </span>
@@ -87,7 +87,7 @@ export function PageContact() {
               </div>
               <p
                 style={{ fontFamily: "var(--font-body)" }}
-                className="mt-3 text-sm text-[#0C0F1A]/40 font-light"
+                className="mt-3 text-sm text-[#0C0F1A]/60 font-normal"
               >
                 빠른 시일 내에 답장 드리겠습니다.
               </p>
@@ -112,7 +112,7 @@ export function PageContact() {
                   <label
                     htmlFor={id}
                     style={{ fontFamily: "var(--font-mono)" }}
-                    className="block text-[10px] text-[#0C0F1A]/30 uppercase tracking-[0.04em] mb-1.5"
+                    className="block text-[10px] text-[#0C0F1A]/45 uppercase tracking-[0.04em] mb-1.5"
                   >
                     {label}
                   </label>
@@ -132,7 +132,7 @@ export function PageContact() {
                 <label
                   htmlFor="message"
                   style={{ fontFamily: "var(--font-mono)" }}
-                  className="block text-[10px] text-[#0C0F1A]/30 uppercase tracking-[0.04em] mb-1.5"
+                  className="block text-[10px] text-[#0C0F1A]/45 uppercase tracking-[0.04em] mb-1.5"
                 >
                   메시지
                 </label>

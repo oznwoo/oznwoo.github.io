@@ -9,7 +9,7 @@ export function PageAbout() {
             데스크톱은 텍스트 블록 맨 위에 있는 라벨을 그대로 쓴다 */}
         <span
           style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase md:hidden"
+          className="text-xs text-[#0C0F1A]/45 tracking-[0.04em] uppercase md:hidden"
         >
           About
         </span>
@@ -33,7 +33,7 @@ export function PageAbout() {
         <div>
           <span
             style={{ fontFamily: "var(--font-mono)" }}
-            className="hidden text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase md:inline-block"
+            className="hidden text-xs text-[#0C0F1A]/45 tracking-[0.04em] uppercase md:inline-block"
           >
             About
           </span>
@@ -77,7 +77,7 @@ export function PageAbout() {
                 </div>
                 <div
                   style={{ fontFamily: "var(--font-mono)" }}
-                  className="text-[9px] text-[#0C0F1A]/30 uppercase tracking-[0.02em] mt-1 sm:text-xs"
+                  className="text-[9px] text-[#0C0F1A]/50 uppercase tracking-[0.02em] mt-1 sm:text-xs"
                 >
                   {l}
                 </div>
