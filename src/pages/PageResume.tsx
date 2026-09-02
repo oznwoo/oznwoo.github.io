@@ -1,7 +1,7 @@
 import { Page } from "@/components/layout/Page"
 import { ResumeCardHeader } from "@/components/resume/ResumeCardHeader"
 import { TimelineItem } from "@/components/resume/TimelineItem"
-import { CORE_SKILLS, EXP_COLS, CATEGORY_COLOR } from "@/data/resume"
+import { CORE_SKILLS, EXP_COLS, RESUME_HEADER_COLOR } from "@/data/resume"
 import { SkillIcon } from "@/lib/skillIcons"
 
 export function PageResume() {
@@ -26,7 +26,7 @@ export function PageResume() {
         </h2>
         <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:gap-x-8 sm:gap-y-6 md:grid-cols-2 md:gap-x-14 md:gap-y-10">
           <div>
-            <ResumeCardHeader label="Education" color={CATEGORY_COLOR.교육} />
+            <ResumeCardHeader label="Education" color={RESUME_HEADER_COLOR} />
             <div className="space-y-2 sm:space-y-3 md:space-y-4">
               {education?.items.map((item) => (
                 <TimelineItem key={item.name} item={item} />
@@ -34,7 +34,7 @@ export function PageResume() {
             </div>
           </div>
           <div>
-            <ResumeCardHeader label="Activities" color={CATEGORY_COLOR.활동} />
+            <ResumeCardHeader label="Activities" color={RESUME_HEADER_COLOR} />
             <div className="space-y-2 sm:space-y-3 md:space-y-4">
               {activity?.items.map((item) => (
                 <TimelineItem key={item.name} item={item} />
@@ -42,7 +42,7 @@ export function PageResume() {
             </div>
           </div>
           <div>
-            <ResumeCardHeader label="Skills" color="rgba(12,15,26,0.5)" />
+            <ResumeCardHeader label="Skills" color={RESUME_HEADER_COLOR} />
             <div className="grid grid-cols-3 gap-x-2 gap-y-1.5 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-3">
               {CORE_SKILLS.map((item) => (
                 <div
@@ -63,10 +63,7 @@ export function PageResume() {
             </div>
           </div>
           <div>
-            <ResumeCardHeader
-              label="Certifications"
-              color={CATEGORY_COLOR.자격증}
-            />
+            <ResumeCardHeader label="Certifications" color={RESUME_HEADER_COLOR} />
             <div className="space-y-2 sm:space-y-3 md:space-y-4">
               {certificate?.items.map((item) => (
                 <TimelineItem key={item.name} item={item} />
