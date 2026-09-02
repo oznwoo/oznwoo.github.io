@@ -8,7 +8,7 @@ export function ResumeCardHeader({
   return (
     <div
       style={{ fontFamily: "var(--font-mono)", color }}
-      className="mb-2 text-[11px] font-semibold uppercase tracking-[0.04em] opacity-70 sm:mb-3 sm:text-sm md:mb-4 md:text-base"
+      className="mb-2 text-[11px] font-semibold uppercase tracking-[0.04em] sm:mb-3 sm:text-sm md:mb-4 md:text-base"
     >
       {label}
     </div>

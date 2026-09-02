@@ -54,8 +54,6 @@ export const EXP_COLS = [
   },
 ]
 
-export const CATEGORY_COLOR: Record<string, string> = {
-  교육: "#4F6EF7",
-  활동: "#7C5FD4",
-  자격증: "#2BA68A",
-}
+// RESUME 섹션 헤더(EDUCATION/ACTIVITIES/SKILLS/CERTIFICATIONS) 색 —
+// 좌측 네비게이터의 현재 선택 dot과 같은 메인 컬러로 통일한다.
+export const RESUME_HEADER_COLOR = "#4F6EF7"

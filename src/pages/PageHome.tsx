@@ -1,15 +1,21 @@
 import { Page } from "@/components/layout/Page"
 import { StatusTicker } from "@/components/ui/StatusTicker"
+import { Reveal } from "@/components/ui/Reveal"
+import { useSlideReveal } from "@/hooks/useSlideReveal"
 
-export function PageHome() {
+export function PageHome({ isActive = true }: { isActive?: boolean }) {
+  // 페이지 전환이 끝나면 이름 → 링크가 나타난다 (이어브로우·헤드라인은 고정)
+  const nameRevealed = useSlideReveal(isActive)
+  const linksRevealed = useSlideReveal(isActive, 850)
+
   return (
     <Page>
       <div className="flex flex-col gap-8">
         <span
           style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/30 tracking-[0.04em] uppercase"
+          className="text-xs text-[#0C0F1A]/45 tracking-[0.04em] uppercase"
         >
-          Fullstack Developer
+          Developer
         </span>
         <h1
           style={{ fontFamily: "var(--font-display)", lineHeight: 1.15 }}
@@ -20,16 +26,21 @@ export function PageHome() {
           <span className="font-semibold">현실로 만듭니다.</span>
         </h1>
         <div className="border-t border-[#0C0F1A]/10 pt-7 flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <p
-            style={{ fontFamily: "var(--font-body)" }}
-            className="max-w-sm text-[#0C0F1A]/45 text-base leading-loose font-light"
+          <Reveal show={nameRevealed}>
+            <p
+              style={{ fontFamily: "var(--font-body)" }}
+              className="max-w-sm text-[#0C0F1A]/65 text-base leading-loose font-normal"
+            >
+              오진우
+            </p>
+          </Reveal>
+          <Reveal
+            show={linksRevealed}
+            className="flex items-center gap-4 sm:gap-8 shrink-0 flex-wrap"
           >
-            오진우
-          </p>
-          <div className="flex items-center gap-4 sm:gap-8 shrink-0 flex-wrap">
             {[
               { label: "GitHub", href: "https://github.com/oznwoo" },
-              { label: "RESUME", href: "https://oznwoo.github.io" },
+              { label: "RESUME", href: "/documents/resume.pdf" },
               { label: "Email", href: "mailto:luvmoire@gmail.com" },
             ].map(({ label, href }) => (
               <a
@@ -38,12 +49,12 @@ export function PageHome() {
                 target="_blank"
                 rel="noreferrer"
                 style={{ fontFamily: "var(--font-mono)" }}
-                className="text-xs text-[#0C0F1A]/30 hover:text-[#0C0F1A] transition-colors uppercase tracking-[0.02em]"
+                className="text-xs text-[#0C0F1A]/45 hover:text-[#0C0F1A] transition-colors uppercase tracking-[0.02em]"
               >
                 {label}
               </a>
             ))}
-          </div>
+          </Reveal>
         </div>
         <div className="flex items-center gap-3 mt-2">
           <div className="w-1.5 h-1.5 rounded-full bg-[#4F6EF7] animate-pulse shrink-0" />
