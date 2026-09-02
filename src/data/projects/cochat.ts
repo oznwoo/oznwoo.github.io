@@ -219,9 +219,12 @@ export const cochatDetail: ProjectDetail = {
           },
         ],
       },
-      // 요약 푸시 알림 예시 (KIPS 발표자료) — 메일(마감 공지)·문자(요금 명세)를
-      // 잠금화면에서 요약으로 바로 확인
+      // 요약 푸시 알림 예시 — 실제 앱 화면에서 알림 배너만 확대 크롭(상태바·
+      // 아이콘 일부는 남겨 폰임을 인지). 메일(마감 공지)·문자(요금 명세) 두 컷을
+      // 화살표 없이 부채꼴로 겹쳐 보여준다.
       images: [cochatSolutionSummary1, cochatSolutionSummary2],
+      imagesShowArrows: false,
+      imagesOverlap: true,
       icon: "filter",
     },
   ],
