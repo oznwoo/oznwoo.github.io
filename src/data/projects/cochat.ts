@@ -272,22 +272,22 @@ export const cochatDetail: ProjectDetail = {
       image: cochatOutcomeContent,
     },
   ],
+  // stackDiagram이 설정돼 있어 STACK 슬라이드에서 이 목록은 렌더되지 않지만,
+  // 프로젝트 메타데이터로서 실제 레포(frontend/backend/llm) 스택을 유지한다.
   tech: [
-    { category: "App", items: ["React Native", "TypeScript"] },
-    { category: "Backend", items: ["FastAPI", "Python", "PostgreSQL"] },
+    { category: "App", items: ["React Native", "Expo", "Redux Toolkit"] },
+    { category: "Backend", items: ["FastAPI", "Python", "SQLite", "PostgreSQL"] },
     {
       category: "AI",
-      items: [
-        "GPT-4o-mini",
-        "RAG",
-        "sentence-transformers",
-        "Cosine Similarity",
-      ],
+      items: ["OpenAI GPT-4o", "text-embedding-3-small", "scikit-learn"],
     },
-    { category: "Auth", items: ["OAuth 2.0"] },
+    {
+      category: "Integration",
+      items: ["Google OAuth 2.0", "Gmail API", "Cloud Pub/Sub"],
+    },
+    { category: "Infra", items: ["Docker", "Render"] },
   ],
-  // KIPS 학술대회에 발표한 시스템 설계도 — 카테고리 목록 대신 이 다이어그램만 표시
+  // GitHub 3개 레포 구조를 바탕으로 그린 시스템 아키텍처 다이어그램 —
+  // 카테고리 목록·설명 문단 없이 이 이미지 하나만 보여준다.
   stackDiagram: cochatStackArchitecture,
-  stackDiagramNote:
-    "KIPS 정보처리학회 학술대회에서 발표한 CoChat 시스템 설계도입니다. 메신저 계정을 연동해 메시지를 모으고(계정 관리자) → 은어·앞 대화의 문맥을 예전 대화·자료로 보완해 벡터로 바꾼 뒤 → 사용자 관심사와 비교해 중요·사소를 나누고 → 중요한 메시지는 요약해 전달하는 흐름을 담았습니다.",
 }
