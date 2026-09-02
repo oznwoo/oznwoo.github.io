@@ -14,8 +14,7 @@ import cochatSolutionFlow2 from "@/imports/cochat/cochat-solution-integration-2.
 import cochatSolutionFlow3 from "@/imports/cochat/cochat-solution-integration-3.webp"
 import cochatSolutionFlow4 from "@/imports/cochat/cochat-solution-integration-4.webp"
 import cochatStackArchitecture from "@/imports/cochat/cochat-stack-architecture.webp"
-import cochatSolutionContext1 from "@/imports/cochat/cochat-solution-context-1.webp"
-import cochatSolutionContext2 from "@/imports/cochat/cochat-solution-context-2.webp"
+import cochatSolutionContextFlow from "@/imports/cochat/cochat-solution-context-flow.webp"
 import cochatSolutionSummary1 from "@/imports/cochat/cochat-solution-summary-1.webp"
 import cochatSolutionSummary2 from "@/imports/cochat/cochat-solution-summary-2.webp"
 import type { ProjectDetail } from "./types"
@@ -178,12 +177,11 @@ export const cochatDetail: ProjectDetail = {
           },
         ],
       },
-      // '어제 그거'처럼 앞 대화를 알아야 하는 메시지 처리 흐름 (KIPS 발표자료)
-      // 1컷: LLM만 쓰면 문맥을 몰라 잘못 해석 / 2컷: RAG로 외부에서 문맥을 찾아 보정.
-      // 흐름도 본체만 담은 정사각형에 가까운 크롭이라 두 장을 겹치지 않고
-      // FlowArrow로 나란히 잇는다.
-      images: [cochatSolutionContext1, cochatSolutionContext2],
-      imagesShowArrows: true,
+      // 문맥 보정 파이프라인을 페리윙클 3D 클레이 톤 인포그래픽 한 장으로 —
+      // '문맥 없음(잘못 보정)' 상태와 'LLM + 이전 대화 검색(제대로 보정)' 상태를
+      // 오가는 전환 애니메이션. 가로로 넓어 이미지 영역을 풀블리드로 채운다.
+      image: cochatSolutionContextFlow,
+      imageFullBleed: true,
       icon: "sparkle",
     },
     {

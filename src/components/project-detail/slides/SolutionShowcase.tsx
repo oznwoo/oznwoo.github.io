@@ -174,8 +174,16 @@ export function SolutionShowcase({
                 className="relative flex items-center justify-center"
                 // 스텝 종류(단일 이미지/멀티 이미지/비교 카드/미디어 없음)와
                 // 무관하게 항상 같은 높이를 써야 탭을 전환해도 아래 콘텐츠·
-                // 페이지 위치가 흔들리지 않는다 — 스텝별로 값을 다르게 주면 안 된다
-                style={{ height: isMobile ? undefined : "300px" }}
+                // 페이지 위치가 흔들리지 않는다 — 스텝별로 값을 다르게 주면 안 된다.
+                // 단, 풀블리드 이미지는 좌우를 꽉 채우느라 300px를 살짝 넘겨서
+                // 잘리므로 이 스텝에서만 높이를 이미지에 맡긴다.
+                style={{
+                  height: isMobile
+                    ? undefined
+                    : solution.imageFullBleed
+                      ? "auto"
+                      : "300px",
+                }}
               >
                 {!isMobile && step > 0 && (
                   <TabArrowButton
@@ -295,7 +303,12 @@ export function SolutionShowcase({
                   <div
                     onMouseEnter={() => setImgHovered(true)}
                     onMouseLeave={() => setImgHovered(false)}
-                    className="inline-block max-w-full rounded-2xl overflow-hidden border cursor-default"
+                    className={
+                      (solution.imageFullBleed
+                        ? "block w-full"
+                        : "inline-block max-w-full") +
+                      " rounded-2xl overflow-hidden border cursor-default"
+                    }
                     style={{
                       borderColor: imgHovered
                         ? hexToRgba(accentColor, 0.35)
@@ -317,8 +330,16 @@ export function SolutionShowcase({
                       loading="lazy"
                       width={imageWidth}
                       height={imageHeight}
-                      className="block w-auto h-auto max-w-full"
-                      style={{ maxHeight: isMobile ? "38vh" : "260px" }}
+                      className={
+                        solution.imageFullBleed
+                          ? "block w-full h-auto"
+                          : "block w-auto h-auto max-w-full"
+                      }
+                      style={
+                        solution.imageFullBleed
+                          ? { maxHeight: isMobile ? "42vh" : undefined }
+                          : { maxHeight: isMobile ? "38vh" : "260px" }
+                      }
                     />
                   </div>
                 ) : (
