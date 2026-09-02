@@ -22,6 +22,10 @@ import type { ProjectDetail } from "./types"
 export const cochatDetail: ProjectDetail = {
   period: "2024.09 – 2025.06",
   role: "기획 총괄 | 모바일 풀스택 개발 | 논문 작성 (졸업 프로젝트)",
+  // 자매 프로덕트 CoChat for Business와 같은 falling-messages 효과 — 색은
+  // CoChat(2024) accent("04": 앰버·네이비·브릭)를 그대로 써서 for Business의
+  // 밝은 노랑·파랑·핑크보다 어둡고 차분하게 구분된다.
+  heroEffect: "falling-messages",
   logoSrc: cochatLogo,
   // 정사각형 심볼 로고 — CoChat for Business(로고 아래 'for Business' 텍스트가
   // 더 있는)보다 한 단계 작게 잡는다
