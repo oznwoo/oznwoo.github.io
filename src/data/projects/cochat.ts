@@ -14,8 +14,7 @@ import cochatSolutionFlow2 from "@/imports/cochat/cochat-solution-integration-2.
 import cochatSolutionFlow3 from "@/imports/cochat/cochat-solution-integration-3.webp"
 import cochatSolutionFlow4 from "@/imports/cochat/cochat-solution-integration-4.webp"
 import cochatStackArchitecture from "@/imports/cochat/cochat-stack-architecture.webp"
-import cochatSolutionContext1 from "@/imports/cochat/cochat-solution-context-1.webp"
-import cochatSolutionContext2 from "@/imports/cochat/cochat-solution-context-2.webp"
+import cochatSolutionContextCompare from "@/imports/cochat/cochat-solution-context-compare.webp"
 import cochatSolutionSummary1 from "@/imports/cochat/cochat-solution-summary-1.webp"
 import cochatSolutionSummary2 from "@/imports/cochat/cochat-solution-summary-2.webp"
 import type { ProjectDetail } from "./types"
@@ -66,9 +65,9 @@ export const cochatDetail: ProjectDetail = {
     },
     {
       title: "우선순위 부재",
-      body: "메신저별로 흩어진 알림을 한곳에 모으기만 하면, 이번엔 알림 양이 감당하기 어려울 만큼 늘어나 중요한 메시지가 그 사이에 묻힙니다. 게다가 무엇이 급한지는 사람마다 기준이 달라, 단순히 모으는 것만으로는 우선순위를 가리기 어렵고 오히려 내용을 파악하기 더 힘들어집니다.",
+      body: "흩어진 알림을 한곳에 모으기만 하면, 이번엔 알림 양이 감당하기 어려울 만큼 늘어납니다. 쏟아지는 알림 속에서 정작 중요한 메시지는 묻히고, 무엇이 급한지는 사람마다 기준이 달라 단순히 모으는 것만으로는 우선순위를 가릴 수 없습니다.",
       shortBody: [
-        "메신저 통합만 하면 **알림 양이 너무 많아짐**",
+        "메신저를 통합만 하면 **알림이 폭증함**",
         "쏟아지는 알림에 **중요한 메시지가 묻힘**",
         "급한 기준은 사람마다 달라 **우선순위를 못 가림**",
       ],
@@ -79,17 +78,16 @@ export const cochatDetail: ProjectDetail = {
     },
     {
       title: "내용 파악 부담",
-      body: "중요한 메시지라도 전체 내용을 다 읽어야 무슨 일인지 알 수 있었습니다. ‘플젝’ 같은 은어나 앞선 대화를 알아야 이해되는 말은 뜻을 잘못 읽기도 쉬웠습니다.",
+      body: "알림을 받아도 결국 메시지를 하나하나 열어 전체를 읽어야 무슨 일인지 알 수 있습니다. 확인할 메시지가 줄어도, 매번 전문을 훑는 일 자체가 계속 부담으로 남습니다.",
       shortBody: [
-        "핵심을 알려면 **내용을 다 읽어야 함**",
-        "은어·줄임말은 **뜻이 헷갈림**",
-        "앞 대화를 모르면 **의미를 오해**",
+        "알림이 와도 **메시지를 다 열어 읽어야 함**",
+        "핵심만 **빠르게 파악하기 어려움**",
+        "확인할 때마다 **읽는 시간·피로가 쌓임**",
       ],
       icon: "trend-down",
-      tags: ["확인부담", "문맥오해"],
-      // for Business("업무 집중 불가")와 달리 CoChat 고유 문제라 새 장면 —
-      // 긴 텍스트 두루마리를 다 읽어야 하고, 은어 말풍선엔 물음표, 앞 대화가
-      // 빠진 끊긴 말풍선 체인으로 "내용 파악 부담"을 표현
+      tags: ["확인부담", "읽기피로"],
+      // 긴 텍스트 두루마리를 붙잡고 다 읽어야 하는 장면으로 "내용 파악 부담"을
+      // 표현 — 페리윙클 클레이
       image: cochatProblemContent,
     },
   ],
@@ -143,7 +141,7 @@ export const cochatDetail: ProjectDetail = {
     },
     {
       title: "AI가 나에게 중요한 메시지만 선별",
-      body: "로그인할 때 받고 싶은 알림 종류(마감·결제·공지 등)를 고르면, 그걸 기준으로 ‘나만의 관심사’를 만들어 둡니다. 새 메시지가 오면 그 내용이 내 관심사와 얼마나 가까운지 따져, 충분히 가까우면 알림을 보냅니다. 이때 ‘플젝’ 같은 은어는 AI가 뜻을 풀어 주고, ‘어제 그거’처럼 앞 대화를 알아야 하는 말은 예전 대화·자료를 찾아 맥락을 채운 뒤 비교해 오해를 줄였고, 읽음·관심 반응을 반영해 관심사를 계속 다듬습니다.",
+      body: "로그인할 때 받고 싶은 알림 종류(마감·결제·공지 등)를 고르면 그걸 ‘나만의 관심사’로 삼습니다. 새 메시지가 오면 내용이 관심사와 얼마나 가까운지 따져 가까운 것만 알림으로 보냅니다. 이때 ‘플젝’ 같은 은어나 ‘어제 그거’처럼 앞 대화를 알아야 하는 표현은 예전 대화·자료를 찾아 문맥을 채운 뒤 판단해, 잘못 걸러내는 일을 줄였습니다.",
       comparison: {
         before: [
           {
@@ -154,9 +152,9 @@ export const cochatDetail: ProjectDetail = {
             ],
           },
           {
-            title: "은어·문맥을 놓쳐 잘못 판단",
+            title: "은어·앞 대화를 놓쳐 잘못 걸러냄",
             detail: [
-              "줄임말은 **의미를 제대로 못 읽음**",
+              "줄임말·은어는 **뜻을 제대로 못 읽음**",
               "앞 대화를 몰라 **엉뚱하게 해석**",
             ],
           },
@@ -165,50 +163,51 @@ export const cochatDetail: ProjectDetail = {
           {
             title: "내 관심사와 비교해 선별",
             detail: [
-              "받고 싶은 알림 종류로 **나만의 관심사를 정해 둠**",
+              "받고 싶은 알림 종류로 **관심사를 정해 둠**",
               "메시지가 **관심사와 가까우면 알림**",
             ],
           },
           {
-            title: "은어·앞 대화까지 이해해서 판단",
+            title: "앞 대화·자료까지 찾아 문맥을 채워 판단",
             detail: [
-              "은어는 **AI가 뜻을 풀고**, 앞 대화는 **예전 대화를 찾아 보충**",
-              "읽음·관심 반응으로 **관심사가 계속 학습**",
+              "은어는 **뜻을 풀고**, 앞 대화는 **예전 대화·자료로 보충**",
+              "문맥을 채운 뒤 비교해 **정확도를 높임**",
             ],
           },
         ],
       },
-      // '어제 그거'처럼 앞 대화를 알아야 하는 메시지 처리 흐름 (KIPS 발표자료)
-      // 1컷: LLM만 쓰면 문맥을 몰라 잘못 해석 / 2컷: RAG로 외부에서 문맥을 찾아 보정
-      images: [cochatSolutionContext1, cochatSolutionContext2],
+      // 문맥 보정 파이프라인 인포그래픽 한 장 — 위: LLM 단독(잘못 보정) /
+      // 아래: 웹 검색·지난 기록으로 문맥 보완(제대로 보정)을 상하로 비교.
+      // 다른 탭 이미지와 같은 높이(최대 260px)로 표시한다.
+      image: cochatSolutionContextCompare,
       icon: "sparkle",
     },
     {
       title: "핵심만 요약해서 알림",
-      body: "중요하다고 분류된 메시지는 다시 한 번 AI가 사용자가 정한 키워드·주제에 맞는 내용만 뽑아 요약합니다. 요약이 알림에 함께 떠서, 메시지를 열어보지 않아도 무슨 일인지 바로 파악할 수 있습니다.",
+      body: "알림을 보내기로 정해진 메시지는 LLM이 핵심만 짧게 요약합니다. 요약이 푸시 알림에 함께 표시돼, 메시지를 열지 않고도 무슨 일인지 바로 알 수 있습니다.",
       comparison: {
         before: [
           {
             title: "내용을 다 읽어야 파악",
             detail: [
-              "중요한 메시지도 **전문을 읽어야 함**",
+              "중요한 메시지도 **전문을 열어 읽어야 함**",
               "핵심만 **빠르게 못 봄**",
             ],
           },
           {
-            title: "모아두면 오히려 부담",
+            title: "확인할 때마다 시간이 듦",
             detail: [
-              "여러 메신저를 모을수록 **읽을 게 많아짐**",
-              "확인에 시간이 계속 듦",
+              "알림이 와도 **매번 앱을 열어 확인**",
+              "쌓일수록 **읽는 부담이 커짐**",
             ],
           },
         ],
         after: [
           {
-            title: "키워드·주제에 맞춰 요약",
+            title: "LLM이 메시지를 요약",
             detail: [
-              "내 관심사에 해당하는 부분만 **선별 요약**",
-              "불필요한 내용은 걸러냄",
+              "알림 보낼 메시지를 **핵심만 짧게 정리**",
+              "긴 내용도 **한눈에 들어옴**",
             ],
           },
           {
@@ -220,9 +219,12 @@ export const cochatDetail: ProjectDetail = {
           },
         ],
       },
-      // 요약 푸시 알림 예시 (KIPS 발표자료) — 메일(마감 공지)·문자(요금 명세)를
-      // 잠금화면에서 요약으로 바로 확인
+      // 요약 푸시 알림 예시 — 실제 앱 화면에서 알림 배너만 확대 크롭(상태바·
+      // 아이콘 일부는 남겨 폰임을 인지). 메일(마감 공지)·문자(요금 명세) 두 컷을
+      // 화살표 없이 부채꼴로 겹쳐 보여준다.
       images: [cochatSolutionSummary1, cochatSolutionSummary2],
+      imagesShowArrows: false,
+      imagesOverlap: true,
       icon: "filter",
     },
   ],
@@ -251,41 +253,41 @@ export const cochatDetail: ProjectDetail = {
       title: "우선순위 부재 → 해결",
       body: "",
       shortBody: [
-        "받고 싶은 알림 종류로 만든 **‘나만의 관심사’로 걸러냄**",
-        "쏟아지는 알림 중 **중요한 것만 통과**, 나머지는 모아둠",
-        "훑어볼 양이 줄어 **확인 시간이 단축**",
+        "받고 싶은 알림 종류로 만든 **관심사로 걸러냄**",
+        "쏟아지는 알림 중 **중요한 것만 통과**",
+        "은어·앞 대화는 **예전 대화를 찾아 문맥을 채워 판단**",
       ],
-      tags: ["관심사선별", "중요알림만"],
+      tags: ["관심사선별", "문맥보완"],
       image: cochatOutcomePriority,
     },
     {
       title: "내용 파악 부담 → 해결",
       body: "",
       shortBody: [
-        "긴 메시지도 **CoChat이 핵심만 요약**해 전달",
-        "은어·예전 대화는 **AI가 알아서 맥락을 보충**",
-        "요약이 **알림에 함께 떠서**, 안 열어봐도 파악",
+        "알림 보낼 메시지를 **LLM이 핵심만 요약**",
+        "요약이 **푸시 알림에 함께 표시**",
+        "메시지를 **열지 않아도 무슨 일인지 파악**",
       ],
-      tags: ["핵심요약", "맥락보충"],
+      tags: ["핵심요약", "즉시파악"],
       image: cochatOutcomeContent,
     },
   ],
+  // stackDiagram이 설정돼 있어 STACK 슬라이드에서 이 목록은 렌더되지 않지만,
+  // 프로젝트 메타데이터로서 실제 레포(frontend/backend/llm) 스택을 유지한다.
   tech: [
-    { category: "App", items: ["React Native", "TypeScript"] },
-    { category: "Backend", items: ["FastAPI", "Python", "PostgreSQL"] },
+    { category: "App", items: ["React Native", "Expo", "Redux Toolkit"] },
+    { category: "Backend", items: ["FastAPI", "Python", "SQLite", "PostgreSQL"] },
     {
       category: "AI",
-      items: [
-        "GPT-4o-mini",
-        "RAG",
-        "sentence-transformers",
-        "Cosine Similarity",
-      ],
+      items: ["OpenAI GPT-4o", "text-embedding-3-small", "scikit-learn"],
     },
-    { category: "Auth", items: ["OAuth 2.0"] },
+    {
+      category: "Integration",
+      items: ["Google OAuth 2.0", "Gmail API", "Cloud Pub/Sub"],
+    },
+    { category: "Infra", items: ["Docker", "Render"] },
   ],
-  // KIPS 학술대회에 발표한 시스템 설계도 — 카테고리 목록 대신 이 다이어그램만 표시
+  // GitHub 3개 레포 구조를 바탕으로 그린 시스템 아키텍처 다이어그램 —
+  // 카테고리 목록·설명 문단 없이 이 이미지 하나만 보여준다.
   stackDiagram: cochatStackArchitecture,
-  stackDiagramNote:
-    "KIPS 정보처리학회 학술대회에서 발표한 CoChat 시스템 설계도입니다. 메신저 계정을 연동해 메시지를 모으고(계정 관리자) → 은어·문맥을 AI로 보정해 벡터로 바꾼 뒤 → 사용자 관심사와 비교해 중요·사소를 나누고 → 중요한 메시지는 요약해 전달하는 흐름을 담았습니다.",
 }
