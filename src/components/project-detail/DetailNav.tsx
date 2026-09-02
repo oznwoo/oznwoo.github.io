@@ -41,8 +41,12 @@ export function DetailNav({
         className="flex items-center gap-2.5 shrink-0"
         style={{ height: "20px" }}
       >
+        {/* dot 아이콘 칸과 동일하게 좌측 정렬 — justify-center로 24px 칸
+            가운데에 두면 화살표가 아래 dot 열보다 오른쪽으로 치우쳐 보인다.
+            글리프 자체의 좌측 여백만큼만 음수 마진으로 당겨 dot 좌측 edge에
+            시각적으로 맞춘다 (DotNav 로고 아이콘 보정과 같은 방식). */}
         <span
-          className="flex items-center justify-center shrink-0"
+          className="flex items-center shrink-0"
           style={{ width: "24px", height: "20px" }}
         >
           <span
@@ -50,6 +54,7 @@ export function DetailNav({
               fontFamily: "var(--font-mono)",
               fontSize: "0.8rem",
               color: "rgba(12,15,26,0.35)",
+              marginLeft: "-1px",
             }}
           >
             ←
