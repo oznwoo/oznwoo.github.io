@@ -1,11 +1,17 @@
 import { useState } from "react"
 import { Page } from "@/components/layout/Page"
 import { useIsMobile } from "@/hooks/useIsMobile"
+import { Reveal } from "@/components/ui/Reveal"
+import { useSlideReveal } from "@/hooks/useSlideReveal"
 
-export function PageContact() {
+export function PageContact({ isActive = true }: { isActive?: boolean }) {
   const isMobile = useIsMobile()
   const [status, setStatus] = useState<"idle" | "sent">("idle")
   const [form, setForm] = useState({ name: "", email: "", message: "" })
+  // 페이지 전환이 끝나면 왼쪽(소개·연락처) → 오른쪽(폼)이 차례로 나타난다.
+  // 섹션 라벨과 헤드라인은 고정.
+  const leftRevealed = useSlideReveal(isActive)
+  const formRevealed = useSlideReveal(isActive, 880)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -39,6 +45,7 @@ export function PageContact() {
             <br />
             <span className="font-semibold">만들어봐요.</span>
           </h2>
+          <Reveal show={leftRevealed}>
           <p
             style={{ fontFamily: "var(--font-body)" }}
             className="hidden mt-5 text-[#0C0F1A]/60 font-normal text-sm leading-loose max-w-xs sm:block"
@@ -68,9 +75,10 @@ export function PageContact() {
               </div>
             ))}
           </div>
+          </Reveal>
         </div>
 
-        <div>
+        <Reveal show={formRevealed}>
           {status === "sent" ? (
             <div
               className="rounded-2xl p-6 text-center sm:p-10"
@@ -168,7 +176,7 @@ export function PageContact() {
               </button>
             </form>
           )}
-        </div>
+        </Reveal>
       </div>
     </Page>
   )

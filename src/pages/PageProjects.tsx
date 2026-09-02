@@ -1,16 +1,22 @@
-import { useState } from "react"
+import { useState, type ReactNode } from "react"
 import { Page } from "@/components/layout/Page"
 import { PROJECTS, PROJECT_ACCENT } from "@/data/projects"
 import { hexToRgba, mixWithWhite } from "@/lib/color"
+import { Reveal } from "@/components/ui/Reveal"
+import { useSlideReveal } from "@/hooks/useSlideReveal"
 
 export function PageProjects({
   onOpen,
   onHover,
+  isActive = true,
 }: {
   onOpen: (id: string) => void
   onHover: (id: string | null) => void
+  isActive?: boolean
 }) {
   const [hovered, setHovered] = useState<string | null>(null)
+  // 페이지 전환이 끝나면 GitHub 링크 → 프로젝트 카드가 차례로 나타난다
+  const linkRevealed = useSlideReveal(isActive)
   return (
     <Page>
       <div>
@@ -29,23 +35,25 @@ export function PageProjects({
               주요 프로젝트
             </h2>
           </div>
-          <a
-            href="https://github.com/oznwoo"
-            target="_blank"
-            rel="noreferrer"
-            style={{ fontFamily: "var(--font-mono)" }}
-            className="text-xs text-[#0C0F1A]/45 hover:text-[#0C0F1A] transition-colors uppercase tracking-[0.02em]"
-          >
-            GitHub →
-          </a>
+          <Reveal show={linkRevealed}>
+            <a
+              href="https://github.com/oznwoo"
+              target="_blank"
+              rel="noreferrer"
+              style={{ fontFamily: "var(--font-mono)" }}
+              className="text-xs text-[#0C0F1A]/45 hover:text-[#0C0F1A] transition-colors uppercase tracking-[0.02em]"
+            >
+              GitHub →
+            </a>
+          </Reveal>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {PROJECTS.map((p) => {
+          {PROJECTS.map((p, i) => {
             const cardAccent = PROJECT_ACCENT[p.id] ?? null
             const cardActive = hovered === p.id
             return (
+              <ProjectCardReveal key={p.id} isActive={isActive} index={i}>
               <button
-                key={p.id}
                 onClick={() => onOpen(p.id)}
                 onMouseEnter={() => {
                   setHovered(p.id)
@@ -55,7 +63,7 @@ export function PageProjects({
                   setHovered(null)
                   onHover(null)
                 }}
-                className="group text-left rounded-2xl p-6 flex flex-col gap-4 transition-all duration-200"
+                className="group w-full h-full text-left rounded-2xl p-6 flex flex-col gap-4 transition-all duration-200"
                 style={{
                   // 한쪽에서 옅어지는 선형 그라디언트 대신, 카드 곳곳에 부드러운
                   // blob 여러 개를 겹쳐 얼룩덜룩하게 번진 느낌을 낸다. 단색
@@ -195,10 +203,30 @@ export function PageProjects({
                   </p>
                 </div>
               </button>
+              </ProjectCardReveal>
             )
           })}
         </div>
       </div>
     </Page>
+  )
+}
+
+// 카드마다 자기 지연으로 reveal 훅을 호출해야 해서(맵 콜백에서 훅 금지)
+// 얇은 래퍼로 분리한다. 카드 순서대로 조금씩 늦춰 계단식으로 등장시킨다.
+function ProjectCardReveal({
+  isActive,
+  index,
+  children,
+}: {
+  isActive: boolean
+  index: number
+  children: ReactNode
+}) {
+  const revealed = useSlideReveal(isActive, 800 + index * 90)
+  return (
+    <Reveal show={revealed} className="h-full">
+      {children}
+    </Reveal>
   )
 }
