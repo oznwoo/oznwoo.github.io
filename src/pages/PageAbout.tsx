@@ -64,9 +64,9 @@ export function PageAbout() {
           </div>
           <div className="mt-4 grid grid-cols-3 gap-3 border-t border-[#0C0F1A]/8 pt-4 sm:gap-6 sm:pt-5 md:mt-8 md:pt-7">
             {[
+              ["24세", "AGE"],
+              ["INFJ", "MBTI"],
               ["4.22", "GPA / 4.5"],
-              ["4건", "주요 프로젝트"],
-              ["1편", "학술 논문"],
             ].map(([n, l]) => (
               <div key={l}>
                 <div
