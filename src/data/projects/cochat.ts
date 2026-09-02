@@ -179,8 +179,11 @@ export const cochatDetail: ProjectDetail = {
         ],
       },
       // '어제 그거'처럼 앞 대화를 알아야 하는 메시지 처리 흐름 (KIPS 발표자료)
-      // 1컷: LLM만 쓰면 문맥을 몰라 잘못 해석 / 2컷: RAG로 외부에서 문맥을 찾아 보정
+      // 1컷: LLM만 쓰면 문맥을 몰라 잘못 해석 / 2컷: RAG로 외부에서 문맥을 찾아 보정.
+      // 흐름도 본체만 담은 정사각형에 가까운 크롭이라 두 장을 겹치지 않고
+      // FlowArrow로 나란히 잇는다.
       images: [cochatSolutionContext1, cochatSolutionContext2],
+      imagesShowArrows: true,
       icon: "sparkle",
     },
     {
