@@ -23,7 +23,7 @@ export function PageHome({ isActive = true }: { isActive?: boolean }) {
             style={{ fontFamily: "var(--font-display)", lineHeight: 1.15 }}
             className="text-[clamp(2.1rem,9vw,6.5rem)] font-light tracking-tight text-[#0C0F1A]"
           >
-            <span>아이디어를</span>
+            <span className="text-[0.8em]">아이디어를</span>
             <br />
             <span className="font-semibold">현실로 만듭니다.</span>
           </h1>

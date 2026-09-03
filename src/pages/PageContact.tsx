@@ -40,7 +40,7 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
             style={{ fontFamily: "var(--font-display)", lineHeight: 1.3 }}
             className="text-[clamp(1.5rem,6vw,3rem)] font-light text-[#0C0F1A] mt-2"
           >
-            <span>함께</span>
+            <span className="text-[0.8em]">함께</span>
             <br />
             <span className="font-semibold">만들어봐요.</span>
           </h2>
