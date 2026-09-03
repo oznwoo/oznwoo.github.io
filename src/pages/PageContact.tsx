@@ -14,8 +14,24 @@ const LINKEDIN_PATH =
 const DOC_PATH =
   "M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6zm7 1.5L18.5 9H14a1 1 0 0 1-1-1V3.5zM8 13h8v1.5H8V13zm0 3.5h8V18H8v-1.5z"
 
-// desc는 Email만 노출한다 (제목 오른쪽에 작게). 나머지는 채널명만.
+// 제목 오른쪽에 주소를 작게 노출한다. Resume만 파일이라 desc 없음.
 const CHANNELS = [
+  {
+    label: "GitHub",
+    desc: "github.com/oznwoo",
+    href: "https://github.com/oznwoo",
+    external: true,
+    icon: siGithub.path,
+    tint: "#1B2333",
+  },
+  {
+    label: "LinkedIn",
+    desc: "linkedin.com/in/진우-오",
+    href: "https://www.linkedin.com/in/%EC%A7%84%EC%9A%B0-%EC%98%A4-9a2133327/",
+    external: true,
+    icon: LINKEDIN_PATH,
+    tint: "#0A66C2",
+  },
   {
     label: "Email",
     desc: EMAIL,
@@ -23,22 +39,6 @@ const CHANNELS = [
     external: false,
     icon: siGmail.path,
     tint: "#4F6EF7",
-  },
-  {
-    label: "LinkedIn",
-    desc: null,
-    href: "https://www.linkedin.com/in/%EC%A7%84%EC%9A%B0-%EC%98%A4-9a2133327/",
-    external: true,
-    icon: LINKEDIN_PATH,
-    tint: "#0A66C2",
-  },
-  {
-    label: "GitHub",
-    desc: null,
-    href: "https://github.com/oznwoo",
-    external: true,
-    icon: siGithub.path,
-    tint: "#1B2333",
   },
   {
     label: "Resume",
