@@ -44,8 +44,8 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
 
   return (
     <Page>
-      <div className="flex flex-col gap-10 md:flex-row md:items-start md:gap-20">
-        <div className="md:max-w-sm">
+      <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between md:gap-14">
+        <div className="md:max-w-sm md:shrink-0">
           <span
             style={{ fontFamily: "var(--font-mono)" }}
             className="text-xs text-[#0C0F1A]/45 tracking-[0.04em] uppercase"
@@ -55,7 +55,7 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
           <Reveal show={headlineRevealed}>
             <h2
               style={{ fontFamily: "var(--font-display)", lineHeight: 1.3 }}
-              className="text-[clamp(1.5rem,6vw,3rem)] font-light text-[#1B2333] mt-2"
+              className="text-[clamp(1.75rem,6.5vw,3.4rem)] font-light text-[#1B2333] mt-2"
             >
               <span className="text-[0.8em]">함께</span>
               <br />
@@ -65,7 +65,7 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
           <Reveal show={contentRevealed}>
             <p
               style={{ fontFamily: "var(--font-body)" }}
-              className="mt-5 max-w-xs text-[#0C0F1A]/60 font-normal text-sm leading-loose"
+              className="mt-6 max-w-sm text-[#0C0F1A]/60 font-normal text-[15px] leading-loose"
             >
               새로운 팀에 합류할 기회를 기다리고 있습니다. 함께할 자리가
               있다면 편하게 연락 부탁드립니다.
@@ -77,33 +77,37 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
             호버하면 카드가 살짝 떠오르며 그림자가 깊어져 "누르면 이동"을 알린다. */}
         <Reveal
           show={contentRevealed}
-          className="w-full space-y-3 md:w-[23rem] md:shrink-0"
+          className="w-full space-y-3.5 md:max-w-[38rem] md:flex-1"
         >
           {CHANNELS.map(({ label, desc, href, external, icon, tint }) => (
             <a
               key={label}
               href={href}
               {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
-              className="group flex items-center gap-4 rounded-2xl bg-white/65 px-4 py-3.5 shadow-[0_10px_30px_-14px_rgba(12,15,26,0.16)] backdrop-blur-sm transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-[0_20px_44px_-16px_rgba(12,15,26,0.28)]"
+              className="group flex items-center gap-5 rounded-2xl bg-white/65 px-5 py-4 shadow-[0_10px_30px_-14px_rgba(12,15,26,0.16)] backdrop-blur-sm transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-[0_20px_44px_-16px_rgba(12,15,26,0.28)]"
             >
               <span
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
                 style={{ background: hexToRgba(tint, 0.1), color: tint }}
               >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="h-[22px] w-[22px]"
+                >
                   <path d={icon} />
                 </svg>
               </span>
               <span className="min-w-0 flex-1">
                 <span
                   style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
-                  className="block text-sm text-[#1B2333]"
+                  className="block text-[15px] text-[#1B2333]"
                 >
                   {label}
                 </span>
                 <span
                   style={{ fontFamily: "var(--font-body)" }}
-                  className="block truncate text-xs text-[#0C0F1A]/50"
+                  className="block truncate text-[13px] text-[#0C0F1A]/50"
                 >
                   {desc}
                 </span>
