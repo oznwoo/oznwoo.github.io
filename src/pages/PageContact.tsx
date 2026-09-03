@@ -86,57 +86,75 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
           </Reveal>
         </div>
 
-        {/* 연락처 카드 — 아이콘 타일 + 채널명 + 주소, 우측 화살표. 호버 시
-            떠오름·그림자·테두리 효과는 ABOUT 증명사진과 동일(.lift-surface). */}
-        <Reveal
-          show={contentRevealed}
-          className="w-full space-y-3.5 md:w-[30rem] md:shrink-0"
-        >
-          {CHANNELS.map(({ label, desc, href, external, icon, tint }) => (
-            <a
-              key={label}
-              href={href}
-              {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
-              className="lift-surface group flex items-center gap-4 rounded-2xl bg-white/65 px-4 py-3 backdrop-blur-sm"
-            >
-              <span
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
-                style={{ background: hexToRgba(tint, 0.1), color: tint }}
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="h-5 w-5"
-                >
-                  <path d={icon} />
-                </svg>
-              </span>
-              <span className="flex min-w-0 flex-1 items-baseline gap-2.5">
-                <span
-                  style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
-                  className="shrink-0 text-[15px] text-[#1B2333]"
-                >
-                  {label}
-                </span>
-                {desc && (
-                  <span
-                    style={{ fontFamily: "var(--font-body)" }}
-                    className="truncate text-[13px] text-[#0C0F1A]/45"
-                  >
-                    {desc}
-                  </span>
-                )}
-              </span>
-              <span
-                aria-hidden="true"
-                className="shrink-0 text-sm text-[#0C0F1A]/25 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-[#4F6EF7]"
-              >
-                →
-              </span>
-            </a>
+        {/* 연락처 카드 — 헤드라인·본문 다음, 카드도 하나씩 시간차로 등장한다.
+            호버 떠오름·그림자·테두리는 ABOUT 증명사진과 동일(.lift-surface). */}
+        <div className="w-full space-y-3.5 md:w-[30rem] md:shrink-0">
+          {CHANNELS.map((channel, i) => (
+            <ChannelCard
+              key={channel.label}
+              channel={channel}
+              isActive={isActive}
+              index={i}
+            />
           ))}
-        </Reveal>
+        </div>
       </div>
     </Page>
+  )
+}
+
+// map 콜백 안에서 훅을 못 쓰므로 카드 하나를 얇게 감싸, 각자 자기 지연으로
+// reveal 훅을 호출한다. 본문(850ms) 뒤에 카드가 순서대로 조금씩 늦게 등장한다.
+function ChannelCard({
+  channel,
+  isActive,
+  index,
+}: {
+  channel: (typeof CHANNELS)[number]
+  isActive: boolean
+  index: number
+}) {
+  const { label, desc, href, external, icon, tint } = channel
+  const revealed = useSlideReveal(isActive, 950 + index * 100)
+
+  return (
+    <Reveal show={revealed}>
+      <a
+        href={href}
+        {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
+        className="lift-surface group flex items-center gap-4 rounded-2xl bg-white/65 px-4 py-3 backdrop-blur-sm"
+      >
+        <span
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+          style={{ background: hexToRgba(tint, 0.1), color: tint }}
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+            <path d={icon} />
+          </svg>
+        </span>
+        <span className="flex min-w-0 flex-1 items-baseline gap-2.5">
+          <span
+            style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
+            className="shrink-0 text-[15px] text-[#1B2333]"
+          >
+            {label}
+          </span>
+          {desc && (
+            <span
+              style={{ fontFamily: "var(--font-body)" }}
+              className="truncate text-[13px] text-[#0C0F1A]/45"
+            >
+              {desc}
+            </span>
+          )}
+        </span>
+        <span
+          aria-hidden="true"
+          className="shrink-0 text-sm text-[#0C0F1A]/25 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-[#4F6EF7]"
+        >
+          →
+        </span>
+      </a>
+    </Reveal>
   )
 }
