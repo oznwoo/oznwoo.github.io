@@ -5,11 +5,11 @@ import { useSlideReveal } from "@/hooks/useSlideReveal"
 
 export function PageAbout({ isActive = true }: { isActive?: boolean }) {
   // 페이지 전환이 끝나면 헤드라인 → 본문 → 스탯 → (마지막에) 사진이
-  // 차례로 나타난다
+  // 750ms부터 100ms 간격으로 차례로 나타난다 (전 페이지 공통 리듬)
   const headlineRevealed = useSlideReveal(isActive)
   const bodyRevealed = useSlideReveal(isActive, 850)
-  const statsRevealed = useSlideReveal(isActive, 980)
-  const photoRevealed = useSlideReveal(isActive, 1120)
+  const statsRevealed = useSlideReveal(isActive, 950)
+  const photoRevealed = useSlideReveal(isActive, 1050)
 
   return (
     <Page>

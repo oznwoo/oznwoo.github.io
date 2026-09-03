@@ -16,11 +16,12 @@ export function PageResume({ isActive = true }: { isActive?: boolean }) {
   // 위에서 아래로 나타난다. 페이지 라벨(RESUME)과 "이력" 타이틀만 고정.
   // 데스크톱은 2×2 그리드라 같은 가로 행끼리(교육·활동 / 스킬·자격증) 한
   // 타이밍에 등장하고, 모바일은 세로 1열이라 네 블록을 조금씩 늦춰 계단식으로 등장시킨다.
+  // 계단 간격은 전 페이지 공통 100ms.
   const isMobile = useIsMobile()
   const eduRevealed = useSlideReveal(isActive)
-  const actRevealed = useSlideReveal(isActive, isMobile ? 830 : 750)
-  const skillRevealed = useSlideReveal(isActive, isMobile ? 910 : 850)
-  const certRevealed = useSlideReveal(isActive, isMobile ? 990 : 850)
+  const actRevealed = useSlideReveal(isActive, isMobile ? 850 : 750)
+  const skillRevealed = useSlideReveal(isActive, isMobile ? 950 : 850)
+  const certRevealed = useSlideReveal(isActive, isMobile ? 1050 : 850)
 
   return (
     <Page>

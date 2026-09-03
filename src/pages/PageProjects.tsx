@@ -225,7 +225,7 @@ function ProjectCardReveal({
 }) {
   const isMobile = useIsMobile()
   const rowIndex = isMobile ? index : Math.floor(index / 2)
-  const revealed = useSlideReveal(isActive, 800 + rowIndex * 90)
+  const revealed = useSlideReveal(isActive, 750 + rowIndex * 100)
   return (
     <Reveal show={revealed} className="h-full">
       {children}
