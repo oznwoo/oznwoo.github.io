@@ -307,10 +307,12 @@ img {
   }
 }
 
-/* 히어로 타이틀 sheen — 잉크빛 글자 위로 밝은 띠가 아주 느리게 한 방향으로
-   훑고 지나가길 끝없이 반복한다(토스 온보딩 타이틀 느낌). 글자를 그라디언트로
-   채우고(background-clip:text) background-position만 한 타일 폭만큼 스크롤해
-   이음매 없이 루프시킨다. reduced-motion에서는 애니메이션을 빼고 단색 폴백. */
+/* 히어로 타이틀 sheen — 부드러운 잉크 네이비 글자 위로 살짝 밝은 페리윙클
+   빛이 아주 느리게 한 방향으로 훑고 지나가길 끝없이 반복한다(토스 온보딩
+   타이틀 느낌). 반복 타일 안에 빛을 두 개 균등 배치해, 하나가 왼쪽으로
+   빠지면 곧바로 다음 빛이 오른쪽에서 들어와 끊김 없이 이어진다. 글자를
+   그라디언트로 채우고(background-clip:text) background-position을 한 타일
+   폭만큼 스크롤해 이음매 없이 루프. reduced-motion에서는 단색 폴백. */
 @keyframes title-shimmer {
   from { background-position: 0% 50%; }
   to   { background-position: -200% 50%; }
@@ -318,11 +320,14 @@ img {
 .shimmer-title {
   background-image: linear-gradient(
     100deg,
-    #0C0F1A 0%,
-    #0C0F1A 40%,
-    #99A2B8 50%,
-    #0C0F1A 60%,
-    #0C0F1A 100%
+    #1B2333 0%,
+    #1B2333 14%,
+    #8E9AC2 24%,
+    #1B2333 34%,
+    #1B2333 64%,
+    #8E9AC2 74%,
+    #1B2333 84%,
+    #1B2333 100%
   );
   background-size: 200% 100%;
   background-position: 0% 50%;
@@ -330,14 +335,14 @@ img {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  animation: title-shimmer 14s linear infinite;
+  animation: title-shimmer 13s linear infinite;
 }
 @media (prefers-reduced-motion: reduce) {
   .shimmer-title {
     animation: none;
     background-image: none;
-    -webkit-text-fill-color: #0C0F1A;
-    color: #0C0F1A;
+    -webkit-text-fill-color: #1B2333;
+    color: #1B2333;
   }
 }
 
