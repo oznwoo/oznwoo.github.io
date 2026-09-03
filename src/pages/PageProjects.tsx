@@ -4,6 +4,7 @@ import { PROJECTS, PROJECT_ACCENT } from "@/data/projects"
 import { hexToRgba, mixWithWhite } from "@/lib/color"
 import { Reveal } from "@/components/ui/Reveal"
 import { useSlideReveal } from "@/hooks/useSlideReveal"
+import { useIsMobile } from "@/hooks/useIsMobile"
 
 export function PageProjects({
   onOpen,
@@ -15,8 +16,8 @@ export function PageProjects({
   isActive?: boolean
 }) {
   const [hovered, setHovered] = useState<string | null>(null)
-  // 페이지 전환이 끝나면 GitHub 링크 → 프로젝트 카드가 차례로 나타난다
-  const linkRevealed = useSlideReveal(isActive)
+  // 상단 바(라벨·타이틀·GitHub 링크)는 같은 가로 행이라 통째로 고정.
+  // 페이지 전환이 끝나면 프로젝트 카드만 행 단위로 나타난다.
   return (
     <Page>
       <div>
@@ -35,17 +36,15 @@ export function PageProjects({
               주요 프로젝트
             </h2>
           </div>
-          <Reveal show={linkRevealed}>
-            <a
-              href="https://github.com/oznwoo"
-              target="_blank"
-              rel="noreferrer"
-              style={{ fontFamily: "var(--font-mono)" }}
-              className="text-xs text-[#0C0F1A]/45 hover:text-[#0C0F1A] transition-colors uppercase tracking-[0.02em]"
-            >
-              GitHub →
-            </a>
-          </Reveal>
+          <a
+            href="https://github.com/oznwoo"
+            target="_blank"
+            rel="noreferrer"
+            style={{ fontFamily: "var(--font-mono)" }}
+            className="text-xs text-[#0C0F1A]/45 hover:text-[#0C0F1A] transition-colors uppercase tracking-[0.02em]"
+          >
+            GitHub →
+          </a>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {PROJECTS.map((p, i) => {
@@ -213,7 +212,8 @@ export function PageProjects({
 }
 
 // 카드마다 자기 지연으로 reveal 훅을 호출해야 해서(맵 콜백에서 훅 금지)
-// 얇은 래퍼로 분리한다. 카드 순서대로 조금씩 늦춰 계단식으로 등장시킨다.
+// 얇은 래퍼로 분리한다. 같은 가로 행의 카드는 한 타이밍에 등장하고, 행 단위로
+// 조금씩 늦춘다 — 데스크톱은 2열이라 두 장씩, 모바일은 1열이라 한 장씩이 한 행.
 function ProjectCardReveal({
   isActive,
   index,
@@ -223,7 +223,9 @@ function ProjectCardReveal({
   index: number
   children: ReactNode
 }) {
-  const revealed = useSlideReveal(isActive, 800 + index * 90)
+  const isMobile = useIsMobile()
+  const rowIndex = isMobile ? index : Math.floor(index / 2)
+  const revealed = useSlideReveal(isActive, 750 + rowIndex * 100)
   return (
     <Reveal show={revealed} className="h-full">
       {children}

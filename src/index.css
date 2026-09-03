@@ -307,6 +307,70 @@ img {
   }
 }
 
+/* 히어로 볼드 타이틀의 색 흐름 — 토스 온보딩 타이틀처럼, 넓고 부드러운
+   밝은 구역이 글자를 왼쪽에서 오른쪽으로 훑고 지나가며 잉크 네이비 →
+   옅은 슬레이트로 바뀐다. 글자가 "다 진함 → 밝은 파도가 지나감 → 다시
+   진함"을 반복. dark→light→dark 한 주기짜리 타일을 한 폭만큼 스크롤해
+   이음매 없이 루프. reduced-motion에서는 단색 폴백. */
+@keyframes title-shimmer {
+  from { background-position: 0% 50%; }
+  to   { background-position: -200% 50%; }
+}
+.shimmer-title {
+  background-image: linear-gradient(
+    108deg,
+    #1B2333 0%,
+    #1B2333 14%,
+    #A2A9B8 50%,
+    #1B2333 86%,
+    #1B2333 100%
+  );
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: title-shimmer 4.5s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-title {
+    animation: none;
+    background-image: none;
+    -webkit-text-fill-color: #1B2333;
+    color: #1B2333;
+  }
+}
+
+/* ABOUT 증명사진 · CONTACT 링크 카드 공통 표면 — 평소엔 은은한 그림자,
+   호버하면 제자리에서 앞으로 떠오르며 그림자가 깊어지고 테두리에 액센트가
+   돈다. 두 곳의 인터랙션을 한 규칙으로 통일한다. */
+.lift-surface {
+  border: 1px solid rgba(12, 15, 26, 0.1);
+  box-shadow:
+    0 20px 48px rgba(12, 15, 26, 0.18),
+    0 4px 12px rgba(12, 15, 26, 0.1);
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s ease-out,
+    border-color 0.4s ease-out;
+}
+.lift-surface:hover {
+  transform: translateY(-6px);
+  border-color: rgba(79, 110, 247, 0.35);
+  box-shadow:
+    0 30px 64px rgba(12, 15, 26, 0.26),
+    0 10px 24px rgba(12, 15, 26, 0.16);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lift-surface {
+    transition: none;
+  }
+  .lift-surface:hover {
+    transform: none;
+  }
+}
+
 body {
   font-family: var(--font-body);
   background-color: #F0F3F9;
@@ -314,6 +378,18 @@ body {
   -webkit-font-smoothing: antialiased;
   word-break: keep-all;
   line-height: 1.8;
+}
+
+/* 슬라이드형 포트폴리오라 텍스트 드래그 선택이 필요 없고, 큰 타이틀 위로
+   생기는 파란 선택 하이라이트가 지저분해 전역으로 막는다. 폼 입력만 예외. */
+body {
+  -webkit-user-select: none;
+  user-select: none;
+}
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 ::-webkit-scrollbar { display: none; }
