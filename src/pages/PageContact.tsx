@@ -38,11 +38,11 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
           </span>
           <h2
             style={{ fontFamily: "var(--font-display)", lineHeight: 1.3 }}
-            className="text-[clamp(1.5rem,6vw,3rem)] font-light text-[#0C0F1A] mt-2"
+            className="text-[clamp(1.5rem,6vw,3rem)] font-light text-[#1B2333] mt-2"
           >
             <span className="text-[0.8em]">함께</span>
             <br />
-            <span className="font-semibold">만들어봐요.</span>
+            <span className="shimmer-title font-semibold">만들어봐요.</span>
           </h2>
           <Reveal show={contentRevealed}>
           <p

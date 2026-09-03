@@ -61,11 +61,11 @@ export function PageAbout({ isActive = true }: { isActive?: boolean }) {
           <Reveal show={headlineRevealed}>
             <h2
               style={{ fontFamily: "var(--font-display)", lineHeight: 1.3 }}
-              className="text-[clamp(1.3rem,6vw,2.8rem)] font-light text-[#0C0F1A] mt-2 mb-4 md:mt-3 md:mb-6"
+              className="text-[clamp(1.3rem,6vw,2.8rem)] font-light text-[#1B2333] mt-2 mb-4 md:mt-3 md:mb-6"
             >
               <span className="text-[0.8em]">결국,</span>
               <br />
-              <span className="font-semibold">문제를 해결해야 합니다.</span>
+              <span className="shimmer-title font-semibold">문제를 해결해야 합니다.</span>
             </h2>
           </Reveal>
           <Reveal
