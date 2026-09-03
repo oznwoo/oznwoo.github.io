@@ -388,7 +388,16 @@ export default function App() {
           }}
         >
           {mobilePages.map((page, i) => (
-            <div key={i} className="h-screen w-screen shrink-0">
+            <div
+              key={i}
+              className="h-screen w-screen shrink-0"
+              style={{
+                // 전환 시 떠나는 페이지의 모든 요소가 함께 사라지도록 —
+                // 슬라이드와 나란히 현재 페이지만 보이고 나머지는 페이드아웃
+                opacity: i === mobilePage ? 1 : 0,
+                transition: "opacity 0.8s ease",
+              }}
+            >
               {page}
             </div>
           ))}
@@ -433,7 +442,17 @@ export default function App() {
             }}
           >
             {pages.map((page, i) => (
-              <div key={i} className="h-screen w-full shrink-0">
+              <div
+                key={i}
+                className="h-screen w-full shrink-0"
+                style={{
+                  // 전환 시 떠나는 페이지의 모든 요소(고정 라벨·타이틀 포함)가
+                  // 함께 사라지도록 — 세로 슬라이드와 나란히 현재 페이지만
+                  // 보이고 나머지는 페이드아웃한다.
+                  opacity: i === current ? 1 : 0,
+                  transition: "opacity 0.8s ease",
+                }}
+              >
                 {page}
               </div>
             ))}
