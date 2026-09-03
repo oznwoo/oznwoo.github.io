@@ -356,5 +356,17 @@ body {
   line-height: 1.8;
 }
 
+/* 슬라이드형 포트폴리오라 텍스트 드래그 선택이 필요 없고, 큰 타이틀 위로
+   생기는 파란 선택 하이라이트가 지저분해 전역으로 막는다. 폼 입력만 예외. */
+body {
+  -webkit-user-select: none;
+  user-select: none;
+}
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 ::-webkit-scrollbar { display: none; }
 * { scrollbar-width: none; }
