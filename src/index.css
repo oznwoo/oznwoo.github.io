@@ -342,6 +342,35 @@ img {
   }
 }
 
+/* ABOUT 증명사진 · CONTACT 링크 카드 공통 표면 — 평소엔 은은한 그림자,
+   호버하면 제자리에서 앞으로 떠오르며 그림자가 깊어지고 테두리에 액센트가
+   돈다. 두 곳의 인터랙션을 한 규칙으로 통일한다. */
+.lift-surface {
+  border: 1px solid rgba(12, 15, 26, 0.1);
+  box-shadow:
+    0 20px 48px rgba(12, 15, 26, 0.18),
+    0 4px 12px rgba(12, 15, 26, 0.1);
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s ease-out,
+    border-color 0.4s ease-out;
+}
+.lift-surface:hover {
+  transform: translateY(-6px);
+  border-color: rgba(79, 110, 247, 0.35);
+  box-shadow:
+    0 30px 64px rgba(12, 15, 26, 0.26),
+    0 10px 24px rgba(12, 15, 26, 0.16);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lift-surface {
+    transition: none;
+  }
+  .lift-surface:hover {
+    transform: none;
+  }
+}
+
 body {
   font-family: var(--font-body);
   background-color: #F0F3F9;

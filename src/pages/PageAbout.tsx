@@ -1,4 +1,3 @@
-import { useState } from "react"
 import profilePhoto from "@/imports/____________________.jpeg"
 import { Page } from "@/components/layout/Page"
 import { Reveal } from "@/components/ui/Reveal"
@@ -11,7 +10,6 @@ export function PageAbout({ isActive = true }: { isActive?: boolean }) {
   const bodyRevealed = useSlideReveal(isActive, 850)
   const statsRevealed = useSlideReveal(isActive, 980)
   const photoRevealed = useSlideReveal(isActive, 1120)
-  const [photoHovered, setPhotoHovered] = useState(false)
 
   return (
     <Page>
@@ -24,27 +22,12 @@ export function PageAbout({ isActive = true }: { isActive?: boolean }) {
         >
           About
         </span>
-        {/* 사진은 등장 순서상 가장 마지막에 나타난다 (헤드라인·본문·스탯 뒤) */}
+        {/* 사진은 등장 순서상 가장 마지막에 나타난다 (헤드라인·본문·스탯 뒤).
+            호버 떠오름·그림자·테두리 효과는 .lift-surface로 CONTACT 카드와 통일. */}
         <Reveal show={photoRevealed} className="shrink-0 md:order-2">
           <div
-            onMouseEnter={() => setPhotoHovered(true)}
-            onMouseLeave={() => setPhotoHovered(false)}
-            className="overflow-hidden w-40 sm:w-44 md:w-[260px] cursor-default"
-            style={{
-              aspectRatio: "3/4",
-              borderRadius: "16px",
-              border: "1px solid",
-              borderColor: photoHovered
-                ? "rgba(79,110,247,0.35)"
-                : "rgba(12,15,26,0.10)",
-              boxShadow: photoHovered
-                ? "0 30px 64px rgba(12,15,26,0.26), 0 10px 24px rgba(12,15,26,0.16)"
-                : "0 20px 48px rgba(12,15,26,0.18), 0 4px 12px rgba(12,15,26,0.10)",
-              // 호버 시 사진은 커지지 않고 그대로 앞으로 떠오르기만 한다
-              transform: photoHovered ? "translateY(-6px)" : "translateY(0)",
-              transition:
-                "transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease-out, border-color 0.4s ease-out",
-            }}
+            className="lift-surface overflow-hidden w-40 sm:w-44 md:w-[260px] cursor-default"
+            style={{ aspectRatio: "3/4", borderRadius: "16px" }}
           >
             <img
               src={profilePhoto}
