@@ -5,6 +5,7 @@ import type { ProjectAccent } from "@/lib/color"
 import { hexToRgba } from "@/lib/color"
 import { renderWithEmphasis } from "@/lib/emphasis"
 import { MediaPlaceholder } from "@/components/project-detail/MediaPlaceholder"
+import { useHorizontalStepKeys } from "@/hooks/useHorizontalStepKeys"
 
 const SLIDE_TRANSITION_MS = 750
 
@@ -124,6 +125,14 @@ export function AboutSlide({
     setStep(clamped)
     setShotHovered(false)
   }
+
+  // 좌우 화살표 버튼이 떠 있는 상황(데스크톱 + 스텝 2개 이상)에서는
+  // 키보드 ←/→로도 같은 스텝 이동을 할 수 있게 한다.
+  useHorizontalStepKeys({
+    enabled: isActive && !isMobile && hasTabs,
+    onPrev: () => goStep(step - 1),
+    onNext: () => goStep(step + 1),
+  })
 
   const current = steps[step]
 
