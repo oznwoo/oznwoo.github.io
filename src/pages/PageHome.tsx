@@ -44,7 +44,10 @@ export function PageHome({ isActive = true }: { isActive?: boolean }) {
             {[
               { label: "GitHub", href: "https://github.com/oznwoo" },
               { label: "RESUME", href: "/documents/resume.pdf" },
-              { label: "Email", href: "mailto:luvmoire@gmail.com" },
+              {
+                label: "LinkedIn",
+                href: "https://www.linkedin.com/in/%EC%A7%84%EC%9A%B0-%EC%98%A4-9a2133327/",
+              },
             ].map(({ label, href }) => (
               <a
                 key={label}

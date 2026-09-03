@@ -59,6 +59,7 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
             {[
               { label: "Email", value: "luvmoire@gmail.com" },
               { label: "GitHub", value: "github.com/oznwoo" },
+              { label: "LinkedIn", value: "linkedin.com/in/진우-오" },
               { label: "Phone", value: "010-5115-7895" },
             ].map(({ label, value }) => (
               <div key={label} className="flex gap-5 items-center">
