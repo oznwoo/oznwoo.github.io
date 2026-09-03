@@ -21,11 +21,11 @@ export function PageHome({ isActive = true }: { isActive?: boolean }) {
         <Reveal show={headlineRevealed}>
           <h1
             style={{ fontFamily: "var(--font-display)", lineHeight: 1.15 }}
-            className="shimmer-title text-[clamp(2.1rem,9vw,6.5rem)] font-light tracking-tight text-[#1B2333]"
+            className="text-[clamp(2.1rem,9vw,6.5rem)] font-light tracking-tight text-[#1B2333]"
           >
             <span className="text-[0.8em]">아이디어를</span>
             <br />
-            <span className="font-semibold">현실로 만듭니다.</span>
+            <span className="shimmer-title font-semibold">현실로 만듭니다.</span>
           </h1>
         </Reveal>
         <div className="border-t border-[#0C0F1A]/10 pt-7 flex flex-col md:flex-row md:items-end justify-between gap-6">
