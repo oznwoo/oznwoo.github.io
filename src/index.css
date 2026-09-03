@@ -307,36 +307,32 @@ img {
   }
 }
 
-/* 히어로 타이틀 색 물결 — 빛이 위를 스쳐가는 게 아니라, 글자 색 자체가
-   잉크 네이비 → 조금 옅은 톤으로 바뀌는 구역이 느리게 흘러간다(토스 온보딩
-   타이틀 느낌). 타일 안에 반주기(50%) 간격으로 옅은 구간을 둬서, 화면에는
-   항상 정확히 한 주기(진한 바탕 + 옅은 패치 하나)만 보이고 끊김 없이 이어진다.
-   대부분은 진한 채로 두고 옅은 패치만 작게 지나가게 한다. 글자를 그라디언트로
-   채우고(background-clip:text) 한 타일 폭만큼 스크롤해 이음매 없이 루프.
-   reduced-motion에서는 단색 폴백. */
+/* 히어로 볼드 타이틀의 색 흐름 — 넓고 부드러운 톤 변화 하나가 글자를 가로질러
+   아주 느리게 왔다 갔다 하며, 잉크 네이비가 살짝 옅은 슬레이트로 자연스럽게
+   번진다. 한 방향으로 계속 스크롤하면 루프 이음매가 기계적으로 느껴져,
+   ease-in-out + alternate로 좌우로 "쓸리듯" 왕복시킨다(양 끝에서 감속해
+   이음매 없음). 대비를 작게 둬 "빛이 지나간다"기보다 "색이 서서히 바뀐다"에
+   가깝게. reduced-motion에서는 단색 폴백. */
 @keyframes title-shimmer {
-  from { background-position: 0% 50%; }
-  to   { background-position: -200% 50%; }
+  0%   { background-position: 100% 50%; }
+  100% { background-position: -30% 50%; }
 }
 .shimmer-title {
   background-image: linear-gradient(
-    100deg,
+    105deg,
     #1B2333 0%,
-    #1B2333 17%,
-    #7C879F 25%,
-    #1B2333 33%,
-    #1B2333 67%,
-    #7C879F 75%,
-    #1B2333 83%,
+    #1B2333 10%,
+    #626D87 50%,
+    #1B2333 90%,
     #1B2333 100%
   );
-  background-size: 200% 100%;
-  background-position: 0% 50%;
+  background-size: 185% 100%;
+  background-position: 100% 50%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  animation: title-shimmer 16s linear infinite;
+  animation: title-shimmer 11s ease-in-out infinite alternate;
 }
 @media (prefers-reduced-motion: reduce) {
   .shimmer-title {
