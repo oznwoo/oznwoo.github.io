@@ -44,7 +44,7 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
 
   return (
     <Page>
-      <div className="flex flex-col gap-10 md:flex-row md:items-center md:gap-20">
+      <div className="flex flex-col gap-10 md:flex-row md:items-start md:gap-20">
         <div className="md:max-w-sm">
           <span
             style={{ fontFamily: "var(--font-mono)" }}
