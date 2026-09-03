@@ -8,10 +8,9 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
   const isMobile = useIsMobile()
   const [status, setStatus] = useState<"idle" | "sent">("idle")
   const [form, setForm] = useState({ name: "", email: "", message: "" })
-  // 페이지 전환이 끝나면 왼쪽(소개·연락처) → 오른쪽(폼)이 차례로 나타난다.
-  // 섹션 라벨과 헤드라인은 고정.
-  const leftRevealed = useSlideReveal(isActive)
-  const formRevealed = useSlideReveal(isActive, 880)
+  // 페이지 전환이 끝나면 본문이 나타난다. 섹션 라벨과 헤드라인은 고정.
+  // 왼쪽(소개·연락처)과 오른쪽(폼)은 같은 가로 행이라 한 타이밍에 함께 등장한다.
+  const contentRevealed = useSlideReveal(isActive)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -45,7 +44,7 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
             <br />
             <span className="font-semibold">만들어봐요.</span>
           </h2>
-          <Reveal show={leftRevealed}>
+          <Reveal show={contentRevealed}>
           <p
             style={{ fontFamily: "var(--font-body)" }}
             className="hidden mt-5 text-[#0C0F1A]/60 font-normal text-sm leading-loose max-w-xs sm:block"
@@ -78,7 +77,7 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
           </Reveal>
         </div>
 
-        <Reveal show={formRevealed}>
+        <Reveal show={contentRevealed}>
           {status === "sent" ? (
             <div
               className="rounded-2xl p-6 text-center sm:p-10"

@@ -5,6 +5,7 @@ import { CORE_SKILLS, EXP_COLS, RESUME_HEADER_COLOR } from "@/data/resume"
 import { SkillIcon } from "@/lib/skillIcons"
 import { Reveal } from "@/components/ui/Reveal"
 import { useSlideReveal } from "@/hooks/useSlideReveal"
+import { useIsMobile } from "@/hooks/useIsMobile"
 
 export function PageResume({ isActive = true }: { isActive?: boolean }) {
   const education = EXP_COLS.find((col) => col.title === "교육")
@@ -12,11 +13,14 @@ export function PageResume({ isActive = true }: { isActive?: boolean }) {
   const certificate = EXP_COLS.find((col) => col.title === "자격증")
 
   // 페이지 전환이 끝나면 카테고리별 "내용"만 위에서 아래로 나타난다 —
-  // 섹션 타이틀(EDUCATION 등)은 고정. 네 블록을 조금씩 늦춰 계단식으로 등장시킨다.
+  // 섹션 타이틀(EDUCATION 등)은 고정. 데스크톱은 2×2 그리드라 같은 가로 행끼리
+  // (교육·활동 / 스킬·자격증) 한 타이밍에 등장하고, 모바일은 세로 1열이라
+  // 네 블록을 조금씩 늦춰 계단식으로 등장시킨다.
+  const isMobile = useIsMobile()
   const eduRevealed = useSlideReveal(isActive)
-  const actRevealed = useSlideReveal(isActive, 830)
-  const skillRevealed = useSlideReveal(isActive, 910)
-  const certRevealed = useSlideReveal(isActive, 990)
+  const actRevealed = useSlideReveal(isActive, isMobile ? 830 : 750)
+  const skillRevealed = useSlideReveal(isActive, isMobile ? 910 : 850)
+  const certRevealed = useSlideReveal(isActive, isMobile ? 990 : 850)
 
   return (
     <Page>
