@@ -11,6 +11,7 @@ import { FlowArrow } from "./solution-showcase/FlowArrow"
 import { ImageLightbox } from "./solution-showcase/ImageLightbox"
 import { useImageLightbox } from "./solution-showcase/useImageLightbox"
 import { ZoomButton } from "./solution-showcase/ZoomButton"
+import { useHorizontalStepKeys } from "@/hooks/useHorizontalStepKeys"
 
 const SLIDE_TRANSITION_MS = 750
 
@@ -84,6 +85,19 @@ export function SolutionShowcase({
     setHoveredImageIndex(null)
     resetZoomImmediately()
   }
+
+  // 좌우 화살표 버튼이 떠 있을 때 키보드 ←/→로도 스텝을 넘긴다. 단
+  // 이미지 라이트박스가 열려 있으면(캐러셀 ←/→·Esc는 라이트박스가 직접
+  // 처리) 비활성화해 충돌을 막는다.
+  useHorizontalStepKeys({
+    enabled:
+      isActive &&
+      !isMobile &&
+      solutions.length > 1 &&
+      lightboxPhase === "closed",
+    onPrev: () => goStep(step - 1),
+    onNext: () => goStep(step + 1),
+  })
 
   const solution = solutions[step]
   // 여러 장을 나란히 두기엔 폭이 부족한 경우, 데스크톱에서만 카드를 서로
