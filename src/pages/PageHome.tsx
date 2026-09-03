@@ -4,9 +4,10 @@ import { Reveal } from "@/components/ui/Reveal"
 import { useSlideReveal } from "@/hooks/useSlideReveal"
 
 export function PageHome({ isActive = true }: { isActive?: boolean }) {
-  // 페이지 전환이 끝나면 이름 → 링크가 나타난다 (이어브로우·헤드라인은 고정)
-  const nameRevealed = useSlideReveal(isActive)
-  const linksRevealed = useSlideReveal(isActive, 850)
+  // 페이지 전환이 끝나면 헤드라인 → 이름 → 링크가 차례로 나타난다 (이어브로우는 고정)
+  const headlineRevealed = useSlideReveal(isActive)
+  const nameRevealed = useSlideReveal(isActive, 850)
+  const linksRevealed = useSlideReveal(isActive, 980)
 
   return (
     <Page>
@@ -17,14 +18,16 @@ export function PageHome({ isActive = true }: { isActive?: boolean }) {
         >
           Developer
         </span>
-        <h1
-          style={{ fontFamily: "var(--font-display)", lineHeight: 1.15 }}
-          className="text-[clamp(2.1rem,9vw,6.5rem)] font-light tracking-tight text-[#0C0F1A]"
-        >
-          <span>아이디어를</span>
-          <br />
-          <span className="font-semibold">현실로 만듭니다.</span>
-        </h1>
+        <Reveal show={headlineRevealed}>
+          <h1
+            style={{ fontFamily: "var(--font-display)", lineHeight: 1.15 }}
+            className="text-[clamp(2.1rem,9vw,6.5rem)] font-light tracking-tight text-[#0C0F1A]"
+          >
+            <span>아이디어를</span>
+            <br />
+            <span className="font-semibold">현실로 만듭니다.</span>
+          </h1>
+        </Reveal>
         <div className="border-t border-[#0C0F1A]/10 pt-7 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <Reveal show={nameRevealed}>
             <p
