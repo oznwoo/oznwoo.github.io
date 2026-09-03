@@ -15,6 +15,8 @@ import gopsslSolutionSaleAdd from "@/imports/gopssl/gopssl-solution-sale-add.web
 import gopsslSolutionCustomerCard from "@/imports/gopssl/gopssl-solution-customer-card.webp"
 import gopsslSolutionRevenueAnalysis from "@/imports/gopssl/gopssl-solution-revenue-analysis.webp"
 import gopsslStackArchitecture from "@/imports/gopssl/gopssl-stack-architecture.webp"
+import gopsslDemoVideo from "@/imports/gopssl/gopssl-demo.mp4"
+import gopsslDemoPoster from "@/imports/gopssl/gopssl-demo-poster.webp"
 import type { ProjectDetail } from "./types"
 
 export const gopsslDetail: ProjectDetail = {
@@ -35,7 +37,9 @@ export const gopsslDetail: ProjectDetail = {
   roleImage: gopsslAboutRole,
   demoHeadline: "고객 카드 등록부터 매출 입력, 월별 대시보드 확인까지",
   demoBody:
-    "고객을 카드로 관리하고 시술 뒤 몇 번의 탭으로 매출을 기록하는 흐름을 시연 영상으로 담을 예정입니다.",
+    "고객을 카드로 관리하고 시술 뒤 몇 번의 탭으로 매출을 기록하는 흐름을 시연 영상으로 담았습니다.",
+  demoVideo: gopsslDemoVideo,
+  demoPoster: gopsslDemoPoster,
   githubUrl: "https://github.com/oznwoo/gopssl-frontend",
   problem: [
     {
