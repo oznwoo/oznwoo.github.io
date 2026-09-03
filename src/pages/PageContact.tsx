@@ -8,9 +8,10 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
   const isMobile = useIsMobile()
   const [status, setStatus] = useState<"idle" | "sent">("idle")
   const [form, setForm] = useState({ name: "", email: "", message: "" })
-  // 페이지 전환이 끝나면 본문이 나타난다. 섹션 라벨과 헤드라인은 고정.
+  // 페이지 전환이 끝나면 헤드라인 → 본문이 차례로 나타난다. 섹션 라벨만 고정.
   // 왼쪽(소개·연락처)과 오른쪽(폼)은 같은 가로 행이라 한 타이밍에 함께 등장한다.
-  const contentRevealed = useSlideReveal(isActive)
+  const headlineRevealed = useSlideReveal(isActive)
+  const contentRevealed = useSlideReveal(isActive, 850)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -36,14 +37,16 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
           >
             Contact
           </span>
-          <h2
-            style={{ fontFamily: "var(--font-display)", lineHeight: 1.3 }}
-            className="text-[clamp(1.5rem,6vw,3rem)] font-light text-[#1B2333] mt-2"
-          >
-            <span className="text-[0.8em]">함께</span>
-            <br />
-            <span className="shimmer-title font-semibold">만들어봐요.</span>
-          </h2>
+          <Reveal show={headlineRevealed}>
+            <h2
+              style={{ fontFamily: "var(--font-display)", lineHeight: 1.3 }}
+              className="text-[clamp(1.5rem,6vw,3rem)] font-light text-[#1B2333] mt-2"
+            >
+              <span className="text-[0.8em]">함께</span>
+              <br />
+              <span className="shimmer-title font-semibold">만들어봐요.</span>
+            </h2>
+          </Reveal>
           <Reveal show={contentRevealed}>
           <p
             style={{ fontFamily: "var(--font-body)" }}
