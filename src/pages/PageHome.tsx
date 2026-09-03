@@ -47,6 +47,7 @@ export function PageHome({ isActive = true }: { isActive?: boolean }) {
                 label: "LinkedIn",
                 href: "https://www.linkedin.com/in/%EC%A7%84%EC%9A%B0-%EC%98%A4-9a2133327/",
               },
+              { label: "Email", href: "mailto:luvmoire@gmail.com" },
               { label: "RESUME", href: "/documents/resume.pdf" },
             ].map(({ label, href }) => (
               <a
