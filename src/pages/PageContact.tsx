@@ -14,6 +14,7 @@ const LINKEDIN_PATH =
 const DOC_PATH =
   "M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6zm7 1.5L18.5 9H14a1 1 0 0 1-1-1V3.5zM8 13h8v1.5H8V13zm0 3.5h8V18H8v-1.5z"
 
+// desc는 Email만 노출한다 (제목 오른쪽에 작게). 나머지는 채널명만.
 const CHANNELS = [
   {
     label: "Email",
@@ -25,7 +26,7 @@ const CHANNELS = [
   },
   {
     label: "LinkedIn",
-    desc: "linkedin.com/in/진우-오",
+    desc: null,
     href: "https://www.linkedin.com/in/%EC%A7%84%EC%9A%B0-%EC%98%A4-9a2133327/",
     external: true,
     icon: LINKEDIN_PATH,
@@ -33,7 +34,7 @@ const CHANNELS = [
   },
   {
     label: "GitHub",
-    desc: "github.com/oznwoo",
+    desc: null,
     href: "https://github.com/oznwoo",
     external: true,
     icon: siGithub.path,
@@ -41,7 +42,7 @@ const CHANNELS = [
   },
   {
     label: "Resume",
-    desc: "resume.pdf",
+    desc: null,
     href: "/documents/resume.pdf",
     external: true,
     icon: DOC_PATH,
@@ -56,7 +57,7 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
 
   return (
     <Page>
-      <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between md:gap-14">
+      <div className="flex flex-col gap-10 md:flex-row md:items-center md:justify-center md:gap-16">
         <div className="md:max-w-sm md:shrink-0">
           <span
             style={{ fontFamily: "var(--font-mono)" }}
@@ -67,7 +68,7 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
           <Reveal show={headlineRevealed}>
             <h2
               style={{ fontFamily: "var(--font-display)", lineHeight: 1.3 }}
-              className="text-[clamp(1.75rem,6.5vw,3.4rem)] font-light text-[#1B2333] mt-2"
+              className="text-[clamp(2rem,7vw,3.9rem)] font-light text-[#1B2333] mt-2"
             >
               <span className="text-[0.8em]">함께</span>
               <br />
@@ -89,40 +90,42 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
             떠오름·그림자·테두리 효과는 ABOUT 증명사진과 동일(.lift-surface). */}
         <Reveal
           show={contentRevealed}
-          className="w-full space-y-3.5 md:max-w-[38rem] md:flex-1"
+          className="w-full space-y-3.5 md:w-[30rem] md:shrink-0"
         >
           {CHANNELS.map(({ label, desc, href, external, icon, tint }) => (
             <a
               key={label}
               href={href}
               {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
-              className="lift-surface group flex items-center gap-5 rounded-2xl bg-white/65 px-5 py-4 backdrop-blur-sm"
+              className="lift-surface group flex items-center gap-4 rounded-2xl bg-white/65 px-4 py-3 backdrop-blur-sm"
             >
               <span
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
                 style={{ background: hexToRgba(tint, 0.1), color: tint }}
               >
                 <svg
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  className="h-[22px] w-[22px]"
+                  className="h-5 w-5"
                 >
                   <path d={icon} />
                 </svg>
               </span>
-              <span className="min-w-0 flex-1">
+              <span className="flex min-w-0 flex-1 items-baseline gap-2.5">
                 <span
                   style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
-                  className="block text-[15px] text-[#1B2333]"
+                  className="shrink-0 text-[15px] text-[#1B2333]"
                 >
                   {label}
                 </span>
-                <span
-                  style={{ fontFamily: "var(--font-body)" }}
-                  className="block truncate text-[13px] text-[#0C0F1A]/50"
-                >
-                  {desc}
-                </span>
+                {desc && (
+                  <span
+                    style={{ fontFamily: "var(--font-body)" }}
+                    className="truncate text-[13px] text-[#0C0F1A]/45"
+                  >
+                    {desc}
+                  </span>
+                )}
               </span>
               <span
                 aria-hidden="true"
