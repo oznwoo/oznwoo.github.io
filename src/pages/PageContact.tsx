@@ -3,7 +3,7 @@ import { Reveal } from "@/components/ui/Reveal"
 import { useSlideReveal } from "@/hooks/useSlideReveal"
 
 const EMAIL = "luvmoire@gmail.com"
-const SECONDARY_LINKS = [
+const CHANNELS = [
   {
     label: "LinkedIn",
     value: "linkedin.com/in/진우-오",
@@ -17,13 +17,13 @@ const SECONDARY_LINKS = [
 ]
 
 export function PageContact({ isActive = true }: { isActive?: boolean }) {
-  // 페이지 전환이 끝나면 헤드라인 → 본문·카드가 차례로 나타난다. 라벨만 고정.
+  // 페이지 전환이 끝나면 헤드라인 → 본문·연락 패널이 차례로 나타난다. 라벨만 고정.
   const headlineRevealed = useSlideReveal(isActive)
   const contentRevealed = useSlideReveal(isActive, 850)
 
   return (
     <Page>
-      <div className="grid items-center gap-8 md:grid-cols-2 md:gap-14">
+      <div className="grid items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
         <div>
           <span
             style={{ fontFamily: "var(--font-mono)" }}
@@ -52,16 +52,31 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
           </Reveal>
         </div>
 
-        {/* 연락 수단 카드 — 메일 CTA + 실제 주소 + 보조 링크(LinkedIn·GitHub) */}
+        {/* 연락 패널 — 사이트의 "여백 위 타이포" 언어에 맞춰 최소한의 면만 두고,
+            메일을 1차 액션으로, LinkedIn·GitHub를 보조 채널로 위계를 잡는다. */}
         <Reveal show={contentRevealed}>
           <div
-            className="rounded-2xl p-6 sm:p-8"
+            className="w-full rounded-[20px] p-7 md:w-[21rem]"
             style={{
-              background: "rgba(255,255,255,0.5)",
-              border: "1px solid rgba(12,15,26,0.08)",
-              boxShadow: "0 24px 56px -20px rgba(12,15,26,0.16)",
+              background: "rgba(255,255,255,0.34)",
+              border: "1px solid rgba(12,15,26,0.07)",
+              boxShadow: "0 14px 44px -22px rgba(12,15,26,0.22)",
+              backdropFilter: "blur(6px)",
             }}
           >
+            <span
+              style={{ fontFamily: "var(--font-mono)" }}
+              className="text-[10px] uppercase tracking-[0.12em] text-[#0C0F1A]/40"
+            >
+              Email
+            </span>
+            <a
+              href={`mailto:${EMAIL}`}
+              style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
+              className="mt-1.5 block text-lg text-[#1B2333] transition-colors hover:text-[#4F6EF7]"
+            >
+              {EMAIL}
+            </a>
             <a
               href={`mailto:${EMAIL}`}
               style={{
@@ -69,7 +84,7 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
                 fontWeight: 700,
                 background: "#0C0F1A",
               }}
-              className="flex items-center justify-between rounded-xl px-5 py-3.5 text-sm text-white transition-all duration-300 active:scale-[0.99]"
+              className="mt-4 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs text-white transition-all duration-300 active:scale-[0.98]"
               onMouseEnter={(e) =>
                 (e.currentTarget.style.background = "#4F6EF7")
               }
@@ -80,41 +95,35 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
               이메일 보내기
               <span aria-hidden="true">→</span>
             </a>
-            <p
-              style={{ fontFamily: "var(--font-mono)" }}
-              className="mt-3 text-xs text-[#0C0F1A]/50 tracking-[0.02em]"
-            >
-              {EMAIL}
-            </p>
 
-            <div className="mt-6 space-y-1 border-t border-[#0C0F1A]/[0.08] pt-4">
-              {SECONDARY_LINKS.map(({ label, value, href }) => (
+            <div className="mt-7 space-y-4 border-t border-[#0C0F1A]/[0.07] pt-6">
+              {CHANNELS.map(({ label, value, href }) => (
                 <a
                   key={label}
                   href={href}
                   target="_blank"
                   rel="noreferrer"
-                  className="group -mx-2 flex items-center justify-between rounded-lg px-2 py-2 transition-colors hover:bg-[#0C0F1A]/[0.03]"
+                  className="group block"
                 >
-                  <span className="flex items-baseline gap-3">
-                    <span
-                      style={{ fontFamily: "var(--font-mono)" }}
-                      className="w-16 shrink-0 text-[10px] uppercase tracking-[0.04em] text-[#0C0F1A]/45"
-                    >
-                      {label}
-                    </span>
+                  <span
+                    style={{ fontFamily: "var(--font-mono)" }}
+                    className="text-[10px] uppercase tracking-[0.12em] text-[#0C0F1A]/40"
+                  >
+                    {label}
+                  </span>
+                  <span className="mt-1 flex items-center gap-1.5">
                     <span
                       style={{ fontFamily: "var(--font-body)" }}
-                      className="text-xs text-[#0C0F1A]/65 transition-colors group-hover:text-[#0C0F1A] sm:text-sm"
+                      className="text-sm text-[#0C0F1A]/65 transition-colors group-hover:text-[#1B2333]"
                     >
                       {value}
                     </span>
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className="text-[#0C0F1A]/25 transition-all group-hover:translate-x-0.5 group-hover:text-[#0C0F1A]/55"
-                  >
-                    →
+                    <span
+                      aria-hidden="true"
+                      className="text-xs text-[#0C0F1A]/25 transition-all group-hover:translate-x-0.5 group-hover:text-[#4F6EF7]"
+                    >
+                      →
+                    </span>
                   </span>
                 </a>
               ))}
