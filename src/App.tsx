@@ -395,7 +395,7 @@ export default function App() {
                 // 전환 시 떠나는 페이지의 모든 요소가 함께 사라지도록 —
                 // 슬라이드와 나란히 현재 페이지만 보이고 나머지는 페이드아웃
                 opacity: i === mobilePage ? 1 : 0,
-                transition: "opacity 0.55s ease",
+                transition: "opacity 0.8s ease",
               }}
             >
               {page}
@@ -450,7 +450,7 @@ export default function App() {
                   // 함께 사라지도록 — 세로 슬라이드와 나란히 현재 페이지만
                   // 보이고 나머지는 페이드아웃한다.
                   opacity: i === current ? 1 : 0,
-                  transition: "opacity 0.55s ease",
+                  transition: "opacity 0.8s ease",
                 }}
               >
                 {page}
