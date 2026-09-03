@@ -52,8 +52,8 @@ export function PageContact({ isActive = true }: { isActive?: boolean }) {
             style={{ fontFamily: "var(--font-body)" }}
             className="hidden mt-5 text-[#0C0F1A]/60 font-normal text-sm leading-loose max-w-xs sm:block"
           >
-            풀타임 포지션, 프리랜스, 사이드 프로젝트 등 다양한 기회에 열려
-            있습니다.
+            새로운 팀에 합류할 기회를 기다리고 있습니다. 함께할 자리가
+            있다면 아래로 편하게 연락 부탁드립니다.
           </p>
           <div className="mt-3 space-y-1.5 sm:mt-8 sm:space-y-3">
             {[
