@@ -141,7 +141,7 @@ export function AboutSlide({
       className={
         isMobile
           ? "min-h-screen w-full flex items-center justify-center text-center pl-16 pr-6 py-20"
-          : "h-screen flex items-center justify-center px-8 md:px-16 shrink-0 text-center"
+          : "min-h-screen flex items-center justify-center px-8 md:px-16 shrink-0 text-center py-16"
       }
     >
       <div

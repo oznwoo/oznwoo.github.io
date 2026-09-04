@@ -15,8 +15,10 @@ const MIN_SCALE = 0.6
 // 이 값보다 더 넘칠 때만 "넘쳤다"고 본다.
 const OVERFLOW_TOLERANCE_PX = 2
 
-// 실제로 축소할 때만, 반올림으로 1~2px이 삐져나와 잘리는 걸 막는 여유.
-const EDGE_SLACK_PX = 4
+// 실제로 축소할 때, 스케일된 콘텐츠가 창 위아래 가장자리(브라우저 크롬과
+// 겹치는 지점)에 딱 붙지 않도록 남기는 여유. center 원점이라 위아래로 절반씩
+// 나뉜다.
+const EDGE_SLACK_PX = 16
 
 interface FitToViewportProps {
   children: ReactNode
