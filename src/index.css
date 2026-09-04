@@ -392,5 +392,16 @@ textarea {
   user-select: text;
 }
 
+/* 마우스로 클릭한 버튼·카드에는(특히 상세에서 Esc로 빠져나온 직후) 브라우저
+   기본 파란 포커스 링이 남아 요소가 선택된 것처럼 보인다. 마우스 조작에는
+   링을 없애고, 키보드 내비게이션 표시는 :focus-visible로만 은은하게 남긴다. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid rgba(79, 110, 247, 0.55);
+  outline-offset: 3px;
+}
+
 ::-webkit-scrollbar { display: none; }
 * { scrollbar-width: none; }
