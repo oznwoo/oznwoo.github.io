@@ -76,12 +76,12 @@ export function PageProjects({
                           `radial-gradient(circle at 60% 85%, ${hexToRgba(cardAccent.blobs[2], 0.11)} 0%, transparent 50%)`,
                           `radial-gradient(circle at 12% 88%, ${hexToRgba(cardAccent.blobs[0], 0.07)} 0%, transparent 40%)`,
                           `radial-gradient(circle at 92% 65%, ${hexToRgba(cardAccent.blobs[2], 0.07)} 0%, transparent 42%)`,
-                          "rgba(248,250,255,0.9)",
+                          "rgba(249,251,255,0.94)",
                         ].join(", ")
-                      : "rgba(248,250,255,0.88)"
+                      : "rgba(249,251,255,0.93)"
                     : "transparent",
                   boxShadow: cardActive
-                    ? "0 12px 40px rgba(79,110,247,0.10), 0 2px 10px rgba(12,15,26,0.07)"
+                    ? "0 14px 44px rgba(79,110,247,0.14), 0 2px 12px rgba(12,15,26,0.09)"
                     : "none",
                   backdropFilter: "blur(8px)",
                 }}
@@ -108,7 +108,7 @@ export function PageProjects({
                             fontFamily: "var(--font-mono)",
                             color: active
                               ? "rgba(255,255,255,0.95)"
-                              : "rgba(12,15,26,0.5)",
+                              : "rgba(12,15,26,0.64)",
                             // font-weight를 바꾸면 글자 폭이 변해 pill이 넓어지며 옆
                             // pill들이 밀리므로, 폭에 영향 없는 text-stroke로 굵기감만 더한다
                             WebkitTextStroke: active
@@ -147,8 +147,8 @@ export function PageProjects({
                     style={{
                       fontFamily: "var(--font-mono)",
                       color: cardActive
-                        ? "rgba(12,15,26,0.5)"
-                        : "rgba(12,15,26,0.35)",
+                        ? "rgba(12,15,26,0.6)"
+                        : "rgba(12,15,26,0.45)",
                       transition: "color 0.35s ease-out",
                     }}
                     className="text-xs shrink-0"
@@ -171,8 +171,8 @@ export function PageProjects({
                       style={{
                         fontFamily: "var(--font-body)",
                         color: cardActive
-                          ? "rgba(12,15,26,0.6)"
-                          : "rgba(12,15,26,0.5)",
+                          ? "rgba(12,15,26,0.8)"
+                          : "rgba(12,15,26,0.64)",
                         // font-weight를 바꾸면 글자 폭이 변해 옆 요소가 밀리므로
                         // (pill과 동일한 이유), 폭에 영향 없는 text-stroke로 굵기감만 더한다
                         WebkitTextStroke: cardActive
@@ -180,7 +180,7 @@ export function PageProjects({
                           : "0px transparent",
                         transition: "color 0.35s ease-out",
                       }}
-                      className="text-xs font-light"
+                      className="text-xs"
                     >
                       {p.subtitle}
                     </span>
@@ -189,14 +189,14 @@ export function PageProjects({
                     style={{
                       fontFamily: "var(--font-body)",
                       color: cardActive
-                        ? "rgba(12,15,26,0.75)"
-                        : "rgba(12,15,26,0.6)",
+                        ? "rgba(12,15,26,0.9)"
+                        : "rgba(12,15,26,0.75)",
                       WebkitTextStroke: cardActive
                         ? "0.25px currentColor"
                         : "0px transparent",
                       transition: "color 0.35s ease-out",
                     }}
-                    className="text-xs leading-relaxed font-light"
+                    className="text-xs leading-relaxed"
                   >
                     {p.description}
                   </p>
