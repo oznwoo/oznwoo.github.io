@@ -355,6 +355,10 @@ export default function App() {
       onClose={() => {
         triggerWarp(-1)
         setActiveProject(null)
+        // 상세를 연 카드 버튼이 아래에서 계속 포커스를 쥐고 있어, Esc(키보드)로
+        // 닫으면 그 카드에 :focus-visible 링이 켜져 선택된 것처럼 보인다. 닫는
+        // 순간 포커스를 놓아 링이 남지 않게 한다.
+        ;(document.activeElement as HTMLElement | null)?.blur()
       }}
       onTransition={(direction) => triggerWarp(direction, false, true)}
     />
