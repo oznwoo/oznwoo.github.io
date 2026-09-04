@@ -5,6 +5,7 @@ import { DETAIL_PAGE_LABELS } from "@/data/navigation"
 import { PROJECTS, PROJECT_DETAILS, PROJECT_ACCENT } from "@/data/projects"
 import { DetailNav } from "./DetailNav"
 import { DetailGithubLink } from "./DetailGithubLink"
+import { FitToViewport } from "./FitToViewport"
 import { OverviewSlide } from "./slides/OverviewSlide"
 import { AboutSlide } from "./slides/AboutSlide"
 import { ProblemSlide } from "./slides/ProblemSlide"
@@ -210,15 +211,18 @@ export function ProjectDetailView({
               }
         }
       >
-        {slides.map((s, i) => (
-          <div
-            key={i}
-            id={isMobile ? detailSlideIds[i] : undefined}
-            className={isMobile ? "w-full" : "h-screen w-full shrink-0"}
-          >
-            {s}
-          </div>
-        ))}
+        {slides.map((s, i) =>
+          isMobile ? (
+            <div key={i} id={detailSlideIds[i]} className="w-full">
+              {s}
+            </div>
+          ) : (
+            // 데스크톱/태블릿은 슬라이드가 창보다 길면 잘리므로 창 높이에
+            // 맞춰 자동 축소한다. 바깥 래퍼는 FitToViewport 안에서 항상
+            // 정확히 100vh를 유지해 세로 트랙 계산이 어긋나지 않는다.
+            <FitToViewport key={i}>{s}</FitToViewport>
+          ),
+        )}
       </div>
 
       {/* 하단 카운터 — DetailNav와 같은 이유로 데스크톱에서는 absolute를 써야
