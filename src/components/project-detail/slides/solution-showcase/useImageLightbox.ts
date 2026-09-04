@@ -15,14 +15,19 @@ export function useImageLightbox(
   // 라이트박스 안 실제 이미지 콘텐츠 — FLIP transform을 직접 주고받는 대상
   const zoomContentRef = useRef<HTMLDivElement>(null)
 
-  // 라이트박스가 열려 있는 동안 Esc로 닫을 수 있게 한다
+  // 라이트박스가 열려 있는 동안 Esc로 닫을 수 있게 한다. 캡처 단계로 등록해
+  // ProjectDetailView의 Esc(상세 페이지 닫기)보다 먼저 잡고, 이벤트를 소비해
+  // 라이트박스만 닫히고 상세 페이지로는 전파되지 않게 한다.
   useEffect(() => {
     if (lightboxPhase === "closed") return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeZoom()
+      if (e.key !== "Escape") return
+      e.preventDefault()
+      e.stopPropagation()
+      closeZoom()
     }
-    window.addEventListener("keydown", onKey)
-    return () => window.removeEventListener("keydown", onKey)
+    window.addEventListener("keydown", onKey, true)
+    return () => window.removeEventListener("keydown", onKey, true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lightboxPhase])
 
