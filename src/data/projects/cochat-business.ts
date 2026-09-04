@@ -13,6 +13,8 @@ import cochatBusinessSolutionPriorityMessages from "@/imports/cochat-business/co
 import cochatBusinessSolutionPriorityBriefing from "@/imports/cochat-business/cochat-business-solution-priority-briefing.webp"
 import cochatBusinessSolutionFocusMode from "@/imports/cochat-business/cochat-business-solution-focusmode.webp"
 import cochatBusinessStackArchitecture from "@/imports/cochat-business/cochat-business-stack-architecture.webp"
+import cochatBusinessDemoVideo from "@/imports/cochat-business/cochat-business-demo.mp4"
+import cochatBusinessDemoPoster from "@/imports/cochat-business/cochat-business-demo-poster.webp"
 import type { ProjectDetail } from "./types"
 
 export const cochatBusinessDetail: ProjectDetail = {
@@ -36,7 +38,9 @@ export const cochatBusinessDetail: ProjectDetail = {
   roleImage: cochatBusinessAboutRole,
   demoHeadline: "메신저 알림을 모으고 AI가 급한 순서대로 정리하기까지",
   demoBody:
-    "여러 메신저 알림이 하나의 대시보드에 모이고, AI가 급한 정도를 가려 집중모드에서 걸러 주는 과정을 시연 영상으로 담을 예정입니다.",
+    "여러 메신저 알림이 하나의 대시보드에 모이고, AI가 급한 정도를 가려 집중모드에서 걸러 주는 과정을 시연 영상으로 담았습니다.",
+  demoVideo: cochatBusinessDemoVideo,
+  demoPoster: cochatBusinessDemoPoster,
   githubUrl: "https://github.com/oznwoo/cochat-for-business-frontend",
   problem: [
     {
