@@ -21,7 +21,7 @@ export function StackSlide({
   const [imgHovered, setImgHovered] = useState(false)
   const wrapClass = isMobile
     ? "min-h-screen w-full flex items-center justify-center px-6 pl-16 py-20"
-    : "h-screen flex items-center justify-center px-8 md:px-20 shrink-0"
+    : "min-h-screen flex items-center justify-center px-8 md:px-20 shrink-0 py-16"
 
   if (stackDiagram) {
     return (
