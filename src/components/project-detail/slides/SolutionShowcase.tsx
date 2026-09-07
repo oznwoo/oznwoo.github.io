@@ -194,7 +194,7 @@ export function SolutionShowcase({
         {/* 이미지 영역 — 탭 컨테이너와 같은 옅은 중립 회색 배경으로 영역을
             암시한다. 스텝 종류(단일/멀티/겹침/없음)와 무관하게 항상 같은
             크기·안쪽 여백. 좌우 스텝 화살표는 영역 바깥(옆)에 뜬다. */}
-        <div className="relative mb-2">
+        <div className="relative">
           <div
             className="relative overflow-hidden rounded-2xl"
             style={{
@@ -398,12 +398,19 @@ export function SolutionShowcase({
             )}
           </div>
 
-        {/* 문제/해결 본문 — 스텝마다 다시 등장한다 */}
+        {/* 이미지 영역과 문제/해결 영역을 나누는 divider */}
+        <div
+          aria-hidden="true"
+          className="my-4 h-px"
+          style={{ background: "rgba(12,15,26,0.1)" }}
+        />
+
+        {/* 문제/해결 본문 — 스텝마다 다시 등장한다. 카드 영역 크기는 스텝과
+            무관하게 통일한다(데스크톱 고정 높이). */}
         <div
           key={step}
           style={{
             animation: "step-in 0.5s cubic-bezier(0.16,1,0.3,1) both",
-            minHeight: isMobile ? undefined : "150px",
           }}
         >
           <div
@@ -422,8 +429,9 @@ export function SolutionShowcase({
               // 한눈에 읽히게
               <div
                 className={
-                  (isMobile ? "flex flex-col" : "flex items-stretch") + " gap-3"
+                  (isMobile ? "flex flex-col" : "flex items-stretch") + " gap-2"
                 }
+                style={{ height: isMobile ? undefined : "232px" }}
               >
                 <ComparisonGroupCard
                   label="문제"
@@ -431,10 +439,6 @@ export function SolutionShowcase({
                   accentColor={accentColor}
                 />
                 <div className="flex flex-col items-center shrink-0">
-                  {/* 카드 위 "문제"/"해결" 라벨만큼 화살표를 아래로 밀어서,
-                        화살표가 라벨을 포함한 전체 높이가 아니라 카드 자체의
-                        세로 중앙에 오게 맞춘다 */}
-                  {!isMobile && <div aria-hidden="true" className="h-6" />}
                   <div
                     aria-hidden="true"
                     className="flex-1 flex items-center justify-center"
@@ -460,6 +464,7 @@ export function SolutionShowcase({
                 style={{
                   background: hexToRgba(mixWithWhite(accentColor, 0.93), 0.62),
                   border: "1px solid rgba(12,15,26,0.06)",
+                  minHeight: isMobile ? undefined : "232px",
                 }}
               >
                 {solution.shortBody ? (
