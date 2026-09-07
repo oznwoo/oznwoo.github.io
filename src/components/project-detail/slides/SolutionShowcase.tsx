@@ -166,7 +166,7 @@ export function SolutionShowcase({
           {/* 탭도 revealed 기반 전환을 쓴다 — 등장할 땐 아래에서 위로
               (12px → 0), 슬라이드를 떠날 땐 위에서 아래로(0 → 12px) 사라진다. */}
           <div
-            className="inline-flex max-w-full items-center overflow-x-auto rounded-lg p-0.5"
+            className="inline-flex max-w-full items-center overflow-x-auto rounded-lg p-1"
             style={{
               background: "rgba(12,15,26,0.045)",
               transform: revealed ? "translateY(0)" : "translateY(12px)",
@@ -198,10 +198,10 @@ export function SolutionShowcase({
                       : "none",
                   }}
                   className={
-                    "cursor-pointer whitespace-nowrap rounded-[7px] px-3 py-1 text-xs transition-all duration-200 active:scale-95 " +
+                    "cursor-pointer whitespace-nowrap rounded-[7px] px-3 py-1 text-xs transition-all duration-200 hover:-translate-y-0.5 hover:scale-105 hover:shadow-md active:translate-y-0 active:scale-95 " +
                     (active
                       ? "font-bold hover:brightness-[1.04]"
-                      : "font-medium hover:bg-[rgba(12,15,26,0.06)] hover:text-[#0C0F1A]/75")
+                      : "font-medium hover:bg-[rgba(12,15,26,0.08)] hover:text-[#0C0F1A]/80")
                   }
                 >
                   {problems[i]?.title ?? s.title}
