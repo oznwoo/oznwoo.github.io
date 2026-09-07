@@ -1,24 +1,27 @@
-import { useState } from "react"
 import type { ProjectDetail } from "@/data/projects"
-import { hexToRgba } from "@/lib/color"
+import type { ProjectAccent } from "@/lib/color"
+import { ZoomableImage } from "../lightbox/ZoomableImage"
 
 interface StackSlideProps {
   tech: ProjectDetail["tech"]
   stackDiagram?: string
+  accent: ProjectAccent | null
   accentColor: string
+  projectId: string
   isMobile: boolean
 }
 
 // 기술 — stackDiagram이 있으면(Fintag) 카테고리 텍스트 목록 대신 아키텍처
 // 다이어그램 이미지 하나만, 다른 이미지 카드와 동일한 border/hover 컨벤션으로
-// 보여준다.
+// 보여준다(클릭하면 확대).
 export function StackSlide({
   tech,
   stackDiagram,
+  accent,
   accentColor,
+  projectId,
   isMobile,
 }: StackSlideProps) {
-  const [imgHovered, setImgHovered] = useState(false)
   const wrapClass = isMobile
     ? "min-h-screen w-full flex items-center justify-center px-6 pl-16 py-20"
     : "min-h-screen flex items-center justify-center px-8 md:px-20 shrink-0 py-16"
@@ -33,32 +36,14 @@ export function StackSlide({
           >
             Stack
           </span>
-          <div
-            onMouseEnter={() => setImgHovered(true)}
-            onMouseLeave={() => setImgHovered(false)}
-            className="rounded-2xl overflow-hidden border cursor-default"
-            style={{
-              borderColor: imgHovered
-                ? hexToRgba(accentColor, 0.35)
-                : "rgba(12,15,26,0.1)",
-              boxShadow: imgHovered
-                ? `0 20px 45px -14px ${hexToRgba(accentColor, 0.35)}, 0 8px 18px -8px rgba(12,15,26,0.28)`
-                : "0 14px 34px -18px rgba(12,15,26,0.24), 0 4px 10px -6px rgba(12,15,26,0.12)",
-              transform: imgHovered
-                ? "translateY(-3px) scale(1.008)"
-                : "translateY(0) scale(1)",
-              transition:
-                "transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease-out, border-color 0.4s ease-out",
-            }}
-          >
-            <img
-              src={stackDiagram}
-              alt=""
-              aria-hidden="true"
-              loading="lazy"
-              className="w-full h-auto block"
-            />
-          </div>
+          <ZoomableImage
+            src={stackDiagram}
+            alt="시스템 아키텍처 다이어그램"
+            accent={accent}
+            accentColor={accentColor}
+            projectId={projectId}
+            isMobile={isMobile}
+          />
         </div>
       </div>
     )

@@ -6,6 +6,7 @@ import { PROJECTS, PROJECT_DETAILS, PROJECT_ACCENT } from "@/data/projects"
 import { DetailNav } from "./DetailNav"
 import { DetailGithubLink } from "./DetailGithubLink"
 import { FitToViewport } from "./FitToViewport"
+import { LightboxProvider } from "./lightbox/LightboxProvider"
 import { OverviewSlide } from "./slides/OverviewSlide"
 import { AboutSlide } from "./slides/AboutSlide"
 import { ProblemSlide } from "./slides/ProblemSlide"
@@ -171,7 +172,9 @@ export function ProjectDetailView({
     <StackSlide
       tech={detail.tech}
       stackDiagram={detail.stackDiagram}
+      accent={accent}
       accentColor={accentColor}
+      projectId={projectId}
       isMobile={isMobile}
     />,
   ]
@@ -197,33 +200,42 @@ export function ProjectDetailView({
       />
 
       {/* 세로 슬라이드 트랙: 모바일은 자연스러운 문서 스크롤, 데스크톱/태블릿은
-          transform 기반 세로 슬라이드 */}
-      <div
-        className="flex flex-col"
-        style={
-          isMobile
-            ? undefined
-            : {
-                transform: `translateY(-${slide * 100}vh)`,
-                transition: "transform 0.75s cubic-bezier(0.77,0,0.18,1)",
-                height: `${TOTAL_D * 100}vh`,
-                willChange: "transform",
-              }
-        }
+          transform 기반 세로 슬라이드. 상세의 모든 이미지가 공유하는 라이트박스
+          하나를 이 안에 두고, 프로젝트/슬라이드가 바뀌면 열려 있던 확대를 닫는다. */}
+      <LightboxProvider
+        accent={accent}
+        accentColor={accentColor}
+        projectId={projectId}
+        isMobile={isMobile}
+        resetKey={`${projectId}:${displaySlide}`}
       >
-        {slides.map((s, i) =>
-          isMobile ? (
-            <div key={i} id={detailSlideIds[i]} className="w-full">
-              {s}
-            </div>
-          ) : (
-            // 데스크톱/태블릿은 슬라이드가 창보다 길면 잘리므로 창 높이에
-            // 맞춰 자동 축소한다. 바깥 래퍼는 FitToViewport 안에서 항상
-            // 정확히 100vh를 유지해 세로 트랙 계산이 어긋나지 않는다.
-            <FitToViewport key={i}>{s}</FitToViewport>
-          ),
-        )}
-      </div>
+        <div
+          className="flex flex-col"
+          style={
+            isMobile
+              ? undefined
+              : {
+                  transform: `translateY(-${slide * 100}vh)`,
+                  transition: "transform 0.75s cubic-bezier(0.77,0,0.18,1)",
+                  height: `${TOTAL_D * 100}vh`,
+                  willChange: "transform",
+                }
+          }
+        >
+          {slides.map((s, i) =>
+            isMobile ? (
+              <div key={i} id={detailSlideIds[i]} className="w-full">
+                {s}
+              </div>
+            ) : (
+              // 데스크톱/태블릿은 슬라이드가 창보다 길면 잘리므로 창 높이에
+              // 맞춰 자동 축소한다. 바깥 래퍼는 FitToViewport 안에서 항상
+              // 정확히 100vh를 유지해 세로 트랙 계산이 어긋나지 않는다.
+              <FitToViewport key={i}>{s}</FitToViewport>
+            ),
+          )}
+        </div>
+      </LightboxProvider>
 
       {/* 하단 카운터 — DetailNav와 같은 이유로 데스크톱에서는 absolute를 써야
           translateX 래퍼와 함께 슬라이드-인 된다. Overview 슬라이드에 배경

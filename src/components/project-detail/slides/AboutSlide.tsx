@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { TabArrowButton } from "@/components/project-detail/TabArrowButton"
 import type { Project, ProjectDetail } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
 import { hexToRgba } from "@/lib/color"
 import { renderWithEmphasis } from "@/lib/emphasis"
 import { MediaPlaceholder } from "@/components/project-detail/MediaPlaceholder"
+import { useLightbox } from "@/components/project-detail/lightbox/LightboxProvider"
+import {
+  ZoomHint,
+  type CursorPos,
+} from "@/components/project-detail/lightbox/ZoomHint"
 import { useHorizontalStepKeys } from "@/hooks/useHorizontalStepKeys"
 
 const SLIDE_TRANSITION_MS = 750
@@ -98,7 +103,10 @@ export function AboutSlide({
 
   const [step, setStep] = useState(0)
   const [shotHovered, setShotHovered] = useState(false)
+  const [shotCursor, setShotCursor] = useState<CursorPos | null>(null)
   const [revealed, setRevealed] = useState(false)
+  const shotFrameRef = useRef<HTMLDivElement>(null)
+  const { open: openLightbox, isOpen: lightboxOpen } = useLightbox()
 
   // 슬라이드를 나갔다 다시 들어와도 보던 스텝을 그대로 유지한다 — step은
   // 여기서 건드리지 않고, 프로젝트 자체가 바뀔 때만(아래 별도 effect) 0으로
@@ -135,6 +143,18 @@ export function AboutSlide({
   })
 
   const current = steps[step]
+  // 시연 영상 탭을 뺀, 실제 스크린샷이 있는 스텝만 클릭해서 확대할 수 있다
+  const isZoomableShot = current.kind !== "video" && !!current.image
+
+  const openShot = () => {
+    const rect = shotFrameRef.current?.getBoundingClientRect()
+    if (!rect || !current.image) return
+    openLightbox(rect, {
+      kind: "single",
+      src: current.image,
+      label: current.imageAlt,
+    })
+  }
 
   return (
     <div
@@ -204,10 +224,46 @@ export function AboutSlide({
                 />
               )}
               <div
-                onMouseEnter={() => setShotHovered(true)}
-                onMouseLeave={() => setShotHovered(false)}
+                ref={shotFrameRef}
+                onMouseEnter={(e) => {
+                  setShotHovered(true)
+                  if (isZoomableShot && !isMobile) {
+                    setShotCursor({ x: e.clientX, y: e.clientY })
+                  }
+                }}
+                onMouseMove={
+                  isZoomableShot && !isMobile
+                    ? (e) => setShotCursor({ x: e.clientX, y: e.clientY })
+                    : undefined
+                }
+                onMouseLeave={() => {
+                  setShotHovered(false)
+                  setShotCursor(null)
+                }}
+                onMouseDown={
+                  isZoomableShot ? (e) => e.preventDefault() : undefined
+                }
+                onClick={isZoomableShot ? openShot : undefined}
+                onKeyDown={
+                  isZoomableShot
+                    ? (e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault()
+                          openShot()
+                        }
+                      }
+                    : undefined
+                }
+                role={isZoomableShot ? "button" : undefined}
+                tabIndex={isZoomableShot ? 0 : undefined}
+                aria-label={
+                  isZoomableShot
+                    ? `${current.imageAlt ?? "화면"} 크게 보기`
+                    : undefined
+                }
                 className={
-                  "w-full rounded-2xl overflow-hidden border cursor-default" +
+                  "w-full rounded-2xl overflow-hidden border " +
+                  (isZoomableShot ? "cursor-zoom-in" : "cursor-default") +
                   (hasTabs ? " bg-white" : "")
                 }
                 style={{
@@ -287,6 +343,14 @@ export function AboutSlide({
                   accentColor={accentColor}
                   projectId={projectId}
                   offsetClassName="-right-16"
+                />
+              )}
+              {isZoomableShot && !isMobile && (
+                <ZoomHint
+                  pos={shotHovered && !lightboxOpen ? shotCursor : null}
+                  accent={accent}
+                  accentColor={accentColor}
+                  projectId={projectId}
                 />
               )}
             </div>

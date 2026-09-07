@@ -2,6 +2,7 @@ import type { Project, ProjectDetail } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
 import { hexToRgba } from "@/lib/color"
 import { DetailIcon } from "../DetailIcon"
+import { ZoomableImage } from "../lightbox/ZoomableImage"
 import { CardGridSlide } from "./CardGridSlide"
 
 interface OutcomeSlideProps {
@@ -97,14 +98,18 @@ export function OutcomeSlide({
           ))}
         </div>
         {detail.outcomeImage && (
-          <div className="relative overflow-hidden rounded-2xl border border-[#0C0F1A]/8 bg-white/50 backdrop-blur-sm mb-6 h-40 md:h-48">
-            <img
+          <div className="mb-6">
+            <ZoomableImage
               src={detail.outcomeImage}
               alt="전처리 및 잔차 보정 적용 후 30일 Walk-forward 예측이 실제 잔액을 촘촘히 따라가는 것을 보여주는 차트"
-              loading="lazy"
+              accent={accent}
+              accentColor={accentColor}
+              projectId={projectId}
+              isMobile={isMobile}
               width={1000}
               height={807}
-              className="w-full h-full object-cover"
+              frameClassName="h-40 md:h-48"
+              imgClassName="w-full h-full object-cover"
             />
           </div>
         )}
