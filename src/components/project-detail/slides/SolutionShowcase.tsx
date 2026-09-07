@@ -251,7 +251,7 @@ export function SolutionShowcase({
                     const isHovered = hoveredImageIndex === i
                     const mid = (solution.images!.length - 1) / 2
                     const restTransform = overlapImages
-                      ? `translateY(${Math.abs(i - mid) * 4}px) rotate(${(i - mid) * 2.2}deg)`
+                      ? `translateY(${Math.abs(i - mid) * 4}px) rotate(${(i - mid) * 2}deg)`
                       : "translateY(0) scale(1)"
                     const hoverTransform = overlapImages
                       ? "translateY(-10px) rotate(0deg) scale(1.04)"
@@ -266,7 +266,12 @@ export function SolutionShowcase({
                         }
                         style={
                           overlapImages && i > 0
-                            ? { marginLeft: "-304px" }
+                            ? {
+                                marginLeft:
+                                  solution.images!.length >= 3
+                                    ? "-110px"
+                                    : "-155px",
+                              }
                             : undefined
                         }
                       >
@@ -306,13 +311,15 @@ export function SolutionShowcase({
                           className="rounded-2xl overflow-hidden border shrink-0 cursor-zoom-in"
                           style={{
                             position: overlapImages ? "relative" : undefined,
-                            // 겹침(부채꼴) 카드는 원본 비율이 제각각이면 부채꼴
-                            // 전체 폭이 들쭉날쭉해져 스텝 화살표 영역까지 침범한다
-                            // — 카드 크기를 고정하고 이미지는 object-cover로 채우며,
-                            // 겹침 간격도 %가 아닌 고정 px로 줘서 부채꼴 폭이 항상
-                            // 컨테이너(max-w-4xl) 안에 들어오고 화살표와 간격이 유지된다
-                            width: overlapImages ? "408px" : undefined,
-                            height: overlapImages ? "272px" : undefined,
+                            // 겹침(부채꼴)은 원본을 자르지 않는다 — 높이만
+                            // 통일하고 폭은 원본 비율대로 두며(object 안 씀),
+                            // 이미지 영역 좌우 여백을 살리도록 겹침을 얕게 준다.
+                            // 3장짜리는 폭 합이 커지므로 높이를 더 낮춰 맞춘다.
+                            height: overlapImages
+                              ? solution.images!.length >= 3
+                                ? "224px"
+                                : "268px"
+                              : undefined,
                             // 평상시엔 왼쪽 카드가 앞(부채꼴을 왼→오로 읽게),
                             // hover한 카드는 항상 맨 위로
                             zIndex: overlapImages
@@ -343,7 +350,7 @@ export function SolutionShowcase({
                             loading="eager"
                             className={
                               overlapImages
-                                ? "block h-full w-full object-cover"
+                                ? "block h-full w-auto"
                                 : "block w-auto"
                             }
                             style={
