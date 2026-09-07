@@ -29,11 +29,12 @@ export function ComparisonGroupCard({
       >
         <span
           style={{
-            fontFamily: "var(--font-mono)",
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
             color: "rgba(255,255,255,0.98)",
             textShadow: "0 1px 2px rgba(12,15,26,0.25)",
           }}
-          className="text-sm font-semibold tracking-[0.06em] uppercase"
+          className="text-sm"
         >
           {label}
         </span>
