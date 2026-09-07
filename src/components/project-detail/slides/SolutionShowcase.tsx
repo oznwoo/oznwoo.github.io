@@ -191,7 +191,7 @@ export function SolutionShowcase({
           </div>
         </div>
 
-        {/* 이미지 영역 — accent 톤의 은은한 배경(하단 카드보다 옅게)으로 영역을
+        {/* 이미지 영역 — 탭 컨테이너와 같은 옅은 중립 회색 배경으로 영역을
             암시한다. 스텝 종류(단일/멀티/겹침/없음)와 무관하게 항상 같은
             크기·안쪽 여백. 좌우 스텝 화살표는 영역 바깥(옆)에 뜬다. */}
         <div className="relative mb-2">
@@ -200,7 +200,7 @@ export function SolutionShowcase({
             style={{
               height: isMobile ? undefined : "340px",
               minHeight: isMobile ? "40vh" : undefined,
-              background: hexToRgba(mixWithWhite(accentColor, 0.95), 0.42),
+              background: "rgba(12,15,26,0.045)",
               border: "1px solid rgba(12,15,26,0.05)",
             }}
           >
