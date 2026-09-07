@@ -140,7 +140,7 @@ export function SolutionShowcase({
       <div className="max-w-4xl w-full">
         <span
           style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-6 block"
+          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-3 block"
         >
           Solution
         </span>
@@ -148,9 +148,9 @@ export function SolutionShowcase({
             네비게이터 dot과 같은 색으로 채워진다. 탭 개수는 항상 solutions
             기준이고, problems와 1:1로 맞으면(Fintag) PROBLEM 쪽 표현을,
             짝이 안 맞으면 solution 자신의 제목을 라벨로 쓴다. */}
-        <div className="mb-7 flex">
+        <div className="mb-4 flex">
           <div
-            className="inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-full p-1.5"
+            className="inline-flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full p-1"
             style={{
               background: "rgba(255,255,255,0.72)",
               border: "1px solid rgba(12,15,26,0.05)",
@@ -180,7 +180,7 @@ export function SolutionShowcase({
                       : "none",
                   }}
                   className={
-                    "whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 " +
+                    "whitespace-nowrap rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-all duration-300 " +
                     (active ? "" : "hover:text-[#0C0F1A]/75")
                   }
                 >
@@ -197,7 +197,7 @@ export function SolutionShowcase({
             animation: "step-in 0.5s cubic-bezier(0.16,1,0.3,1) both",
             // 탭 아래 콘텐츠 영역 크기를 스텝마다 고정해, 이미지 비율이나
             // 설명 길이가 달라져도 탭 위치가 위아래로 밀리지 않게 한다
-            minHeight: isMobile ? undefined : "560px",
+            minHeight: isMobile ? undefined : "500px",
           }}
           className="flex flex-col gap-6"
         >
@@ -207,7 +207,7 @@ export function SolutionShowcase({
               // 스텝 종류(단일 이미지/멀티 이미지/비교 카드/미디어 없음)와
               // 무관하게 항상 같은 높이를 써야 탭을 전환해도 아래 콘텐츠·
               // 페이지 위치가 흔들리지 않는다 — 스텝별로 값을 다르게 주면 안 된다
-              style={{ height: isMobile ? undefined : "350px" }}
+              style={{ height: isMobile ? undefined : "340px" }}
             >
               {!isMobile && step > 0 && (
                 <TabArrowButton
@@ -240,7 +240,7 @@ export function SolutionShowcase({
                     const isHovered = hoveredImageIndex === i
                     const mid = (solution.images!.length - 1) / 2
                     const restTransform = overlapImages
-                      ? `translateY(${Math.abs(i - mid) * 7}px) rotate(${(i - mid) * 3}deg)`
+                      ? `translateY(${Math.abs(i - mid) * 6}px) rotate(${(i - mid) * 2.5}deg)`
                       : "translateY(0) scale(1)"
                     const hoverTransform = overlapImages
                       ? "translateY(-10px) rotate(0deg) scale(1.04)"
@@ -255,7 +255,7 @@ export function SolutionShowcase({
                         }
                         style={
                           overlapImages && i > 0
-                            ? { marginLeft: "-9%" }
+                            ? { marginLeft: "-320px" }
                             : undefined
                         }
                       >
@@ -297,10 +297,11 @@ export function SolutionShowcase({
                             position: overlapImages ? "relative" : undefined,
                             // 겹침(부채꼴) 카드는 원본 비율이 제각각이면 부채꼴
                             // 전체 폭이 들쭉날쭉해져 스텝 화살표 영역까지 침범한다
-                            // — 카드 크기를 고정하고 이미지는 object-cover로 채워
-                            // 부채꼴 폭이 항상 컨테이너 안에 들어오게 한다
-                            width: overlapImages ? "300px" : undefined,
-                            height: overlapImages ? "222px" : undefined,
+                            // — 카드 크기를 고정하고 이미지는 object-cover로 채우며,
+                            // 겹침 간격도 %가 아닌 고정 px로 줘서 부채꼴 폭이 항상
+                            // 컨테이너(max-w-4xl) 안에 들어오고 화살표와 간격이 유지된다
+                            width: overlapImages ? "440px" : undefined,
+                            height: overlapImages ? "300px" : undefined,
                             // 평상시엔 왼쪽 카드가 앞(부채꼴을 왼→오로 읽게),
                             // hover한 카드는 항상 맨 위로
                             zIndex: overlapImages
@@ -344,7 +345,7 @@ export function SolutionShowcase({
                                         // 두면 폭 합이 컨테이너를 넘어간다 —
                                         // 3장 미만일 때는 낮춘 높이로 폭을 맞춘다
                                         solution.images!.length >= 3
-                                        ? "300px"
+                                        ? "320px"
                                         : "240px",
                                   }
                             }
@@ -363,7 +364,7 @@ export function SolutionShowcase({
                   onHoverChange={setImgHovered}
                   frameClassName="inline-block max-w-full"
                   imgClassName="block w-auto h-auto max-w-full"
-                  imgStyle={{ maxHeight: isMobile ? "42vh" : "320px" }}
+                  imgStyle={{ maxHeight: isMobile ? "42vh" : "340px" }}
                 />
               ) : (
                 // 아직 스텝 이미지가 없는 solution — 자리와 카드 톤은
@@ -374,7 +375,7 @@ export function SolutionShowcase({
                   style={{
                     aspectRatio: `${imageWidth} / ${imageHeight}`,
                     maxWidth: "100%",
-                    height: isMobile ? "32vh" : "320px",
+                    height: isMobile ? "32vh" : "340px",
                   }}
                 />
               )}
