@@ -9,7 +9,7 @@ export function PageHome({ isActive = true }: { isActive?: boolean }) {
   // 함께 등장한다.
   const headlineRevealed = useSlideReveal(isActive)
   const bottomRowRevealed = useSlideReveal(isActive, 850)
-  const statusRevealed = useSlideReveal(isActive, 1200)
+  const statusRevealed = useSlideReveal(isActive, 950)
 
   return (
     <Page>
