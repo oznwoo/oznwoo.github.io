@@ -201,9 +201,10 @@ export const fintagDetail: ProjectDetail = {
       icon: "sparkle",
       images: [fintagSolutionExplainShap, fintagSolutionExplainAnomaly],
       // 두 이미지 모두 이미 자체 흐름 화살표가 그려진 독립된 다이어그램
-      // (예측 설명 vs 이상거래 탐지)이라, 우리 쪽에서 그 사이에 인과
-      // 관계를 암시하는 화살표를 추가로 그리지 않는다
+      // (예측 설명 vs 이상거래 탐지)이라 사이 화살표 없이, 부채꼴로 겹쳐
+      // 보여준다(클릭하면 한 장씩 넘겨 보는 캐러셀).
       imagesShowArrows: false,
+      imagesOverlap: true,
     },
   ],
   outcome: [

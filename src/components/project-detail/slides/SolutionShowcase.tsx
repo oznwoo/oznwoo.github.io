@@ -228,7 +228,7 @@ export function SolutionShowcase({
           >
               <div
                 key={step}
-                className="flex h-full w-full items-center justify-center px-6 py-5"
+                className="flex h-full w-full items-center justify-center px-6 py-4"
                 style={{
                   animation: "step-in 0.5s cubic-bezier(0.16,1,0.3,1) both",
                 }}
@@ -251,7 +251,7 @@ export function SolutionShowcase({
                     const isHovered = hoveredImageIndex === i
                     const mid = (solution.images!.length - 1) / 2
                     const restTransform = overlapImages
-                      ? `translateY(${Math.abs(i - mid) * 5}px) rotate(${(i - mid) * 2.5}deg)`
+                      ? `translateY(${Math.abs(i - mid) * 4}px) rotate(${(i - mid) * 2.2}deg)`
                       : "translateY(0) scale(1)"
                     const hoverTransform = overlapImages
                       ? "translateY(-10px) rotate(0deg) scale(1.04)"
@@ -266,7 +266,7 @@ export function SolutionShowcase({
                         }
                         style={
                           overlapImages && i > 0
-                            ? { marginLeft: "-268px" }
+                            ? { marginLeft: "-304px" }
                             : undefined
                         }
                       >
@@ -311,8 +311,8 @@ export function SolutionShowcase({
                             // — 카드 크기를 고정하고 이미지는 object-cover로 채우며,
                             // 겹침 간격도 %가 아닌 고정 px로 줘서 부채꼴 폭이 항상
                             // 컨테이너(max-w-4xl) 안에 들어오고 화살표와 간격이 유지된다
-                            width: overlapImages ? "376px" : undefined,
-                            height: overlapImages ? "256px" : undefined,
+                            width: overlapImages ? "408px" : undefined,
+                            height: overlapImages ? "272px" : undefined,
                             // 평상시엔 왼쪽 카드가 앞(부채꼴을 왼→오로 읽게),
                             // hover한 카드는 항상 맨 위로
                             zIndex: overlapImages
