@@ -144,80 +144,56 @@ export function SolutionShowcase({
         >
           Solution
         </span>
-        {/* 세그먼트형 pill 탭 — 흰 라운드 컨테이너 안에서 선택된 탭만
-            네비게이터 dot과 같은 색으로 채워진다. 탭 개수는 항상 solutions
-            기준이고, problems와 1:1로 맞으면(Fintag) PROBLEM 쪽 표현을,
-            짝이 안 맞으면 solution 자신의 제목을 라벨로 쓴다. */}
-        {/* 탭 + 이미지 스테이지가 하나의 흰 패널로 이어져, 이미지 영역이
-            어디까지인지 분명해진다. 스테이지 크기·배경은 모든 스텝에서 동일하다. */}
-        <div
-          className="mb-6 rounded-3xl p-3 sm:p-4"
-          style={{
-            background: "rgba(255,255,255,0.6)",
-            border: "1px solid rgba(12,15,26,0.06)",
-            boxShadow:
-              "0 24px 60px -28px rgba(12,15,26,0.28), 0 4px 14px -8px rgba(12,15,26,0.12)",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
-          }}
-        >
-          {/* 세그먼트형 pill 탭 — 선택된 탭만 네비게이터 dot과 같은 색으로
-              채워진다. 탭 개수는 항상 solutions 기준이고, problems와 1:1로
-              맞으면(Fintag) PROBLEM 쪽 표현을, 아니면 solution 제목을 쓴다. */}
-          <div className="mb-3 flex">
-            <div
-              className="inline-flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full p-1"
-              style={{
-                background: "rgba(255,255,255,0.78)",
-                border: "1px solid rgba(12,15,26,0.05)",
-                boxShadow:
-                  "0 8px 20px -12px rgba(12,15,26,0.18), 0 1px 4px -2px rgba(12,15,26,0.1)",
-              }}
-            >
-              {solutions.map((s, i) => {
-                const active = i === step
-                return (
-                  <button
-                    key={s.title}
-                    onClick={() => goStep(i)}
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      background: active ? activeTabBackground : "transparent",
-                      color: active
-                        ? "rgba(255,255,255,0.98)"
-                        : "rgba(12,15,26,0.5)",
-                      boxShadow: active
-                        ? `0 8px 18px -8px ${hexToRgba(accentColor, 0.55)}`
-                        : "none",
-                      textShadow: active
-                        ? "0 1px 2px rgba(12,15,26,0.28)"
-                        : "none",
-                    }}
-                    className={
-                      "whitespace-nowrap rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-all duration-300 " +
-                      (active ? "" : "hover:text-[#0C0F1A]/75")
-                    }
-                  >
-                    {problems[i]?.title ?? s.title}
-                  </button>
-                )
-              })}
-            </div>
+        {/* 세그먼트형 pill 탭 — 옅은 중립 회색 컨테이너 안, 선택된 탭만
+            네비게이터 dot과 같은 색으로 채워진다. 탭 라벨은 problems와 1:1로
+            맞으면(Fintag) PROBLEM 쪽 표현을, 아니면 solution 제목을 쓴다. */}
+        <div className="mb-6 flex">
+          <div
+            className="inline-flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full p-1"
+            style={{ background: "rgba(12,15,26,0.045)" }}
+          >
+            {solutions.map((s, i) => {
+              const active = i === step
+              return (
+                <button
+                  key={s.title}
+                  onClick={() => goStep(i)}
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    background: active ? activeTabBackground : "transparent",
+                    color: active
+                      ? "rgba(255,255,255,0.98)"
+                      : "rgba(12,15,26,0.5)",
+                    boxShadow: active
+                      ? `0 6px 14px -6px ${hexToRgba(accentColor, 0.5)}`
+                      : "none",
+                    textShadow: active
+                      ? "0 1px 2px rgba(12,15,26,0.25)"
+                      : "none",
+                  }}
+                  className={
+                    "whitespace-nowrap rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-all duration-300 " +
+                    (active ? "" : "hover:text-[#0C0F1A]/75")
+                  }
+                >
+                  {problems[i]?.title ?? s.title}
+                </button>
+              )
+            })}
           </div>
+        </div>
 
-          {/* 이미지 스테이지 — 스텝 종류(단일/멀티/겹침/없음)와 무관하게 항상
-              같은 크기·배경. 좌우 스텝 화살표는 스테이지 바깥(패널 옆)에 뜬다. */}
-          <div className="relative">
-            <div
-              className="relative rounded-2xl"
-              style={{
-                height: isMobile ? undefined : "360px",
-                minHeight: isMobile ? "44vh" : undefined,
-                background: hexToRgba(mixWithWhite(accentColor, 0.8), 0.6),
-                border: `1px solid ${hexToRgba(accentColor, 0.1)}`,
-                boxShadow: "inset 0 1px 4px rgba(12,15,26,0.08)",
-              }}
-            >
+        {/* 이미지 영역 — 배경 없이, 스텝 종류(단일/멀티/겹침/없음)와 무관하게
+            항상 같은 크기의 영역을 차지해 탭을 바꿔도 레이아웃이 흔들리지
+            않는다. 좌우 스텝 화살표는 이미지 옆에 뜬다. */}
+        <div className="relative mb-6">
+          <div
+            className="relative"
+            style={{
+              height: isMobile ? undefined : "360px",
+              minHeight: isMobile ? "44vh" : undefined,
+            }}
+          >
               <div
                 key={step}
                 className="flex h-full w-full items-center justify-center"
@@ -243,7 +219,7 @@ export function SolutionShowcase({
                     const isHovered = hoveredImageIndex === i
                     const mid = (solution.images!.length - 1) / 2
                     const restTransform = overlapImages
-                      ? `translateY(${Math.abs(i - mid) * 6}px) rotate(${(i - mid) * 2.5}deg)`
+                      ? `translateY(${Math.abs(i - mid) * 5}px) rotate(${(i - mid) * 2.5}deg)`
                       : "translateY(0) scale(1)"
                     const hoverTransform = overlapImages
                       ? "translateY(-10px) rotate(0deg) scale(1.04)"
@@ -258,7 +234,7 @@ export function SolutionShowcase({
                         }
                         style={
                           overlapImages && i > 0
-                            ? { marginLeft: "-348px" }
+                            ? { marginLeft: "-320px" }
                             : undefined
                         }
                       >
@@ -303,8 +279,8 @@ export function SolutionShowcase({
                             // — 카드 크기를 고정하고 이미지는 object-cover로 채우며,
                             // 겹침 간격도 %가 아닌 고정 px로 줘서 부채꼴 폭이 항상
                             // 컨테이너(max-w-4xl) 안에 들어오고 화살표와 간격이 유지된다
-                            width: overlapImages ? "468px" : undefined,
-                            height: overlapImages ? "320px" : undefined,
+                            width: overlapImages ? "440px" : undefined,
+                            height: overlapImages ? "300px" : undefined,
                             // 평상시엔 왼쪽 카드가 앞(부채꼴을 왼→오로 읽게),
                             // hover한 카드는 항상 맨 위로
                             zIndex: overlapImages
@@ -348,8 +324,8 @@ export function SolutionShowcase({
                                         // 두면 폭 합이 컨테이너를 넘어간다 —
                                         // 3장 미만일 때는 낮춘 높이로 폭을 맞춘다
                                         solution.images!.length >= 3
-                                        ? "280px"
-                                        : "225px",
+                                        ? "300px"
+                                        : "240px",
                                   }
                             }
                           />
@@ -367,7 +343,7 @@ export function SolutionShowcase({
                   onHoverChange={setImgHovered}
                   frameClassName="inline-block max-w-full"
                   imgClassName="block w-auto h-auto max-w-full"
-                  imgStyle={{ maxHeight: isMobile ? "42vh" : "350px" }}
+                  imgStyle={{ maxHeight: isMobile ? "42vh" : "340px" }}
                 />
               ) : (
                 // 아직 스텝 이미지가 없는 solution — 자리와 카드 톤은
@@ -378,7 +354,7 @@ export function SolutionShowcase({
                   style={{
                     aspectRatio: `${imageWidth} / ${imageHeight}`,
                     maxWidth: "100%",
-                    height: isMobile ? "32vh" : "340px",
+                    height: isMobile ? "32vh" : "320px",
                   }}
                 />
               )}
@@ -411,9 +387,8 @@ export function SolutionShowcase({
               />
             )}
           </div>
-        </div>
 
-        {/* 문제/해결 본문 — 패널 밖, 스텝마다 다시 등장한다 */}
+        {/* 문제/해결 본문 — 스텝마다 다시 등장한다 */}
         <div
           key={step}
           style={{
