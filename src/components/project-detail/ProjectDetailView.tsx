@@ -12,7 +12,7 @@ import { AboutSlide } from "./slides/AboutSlide"
 import { ProblemSlide } from "./slides/ProblemSlide"
 import { SolutionSlide } from "./slides/SolutionSlide"
 import { OutcomeSlide } from "./slides/OutcomeSlide"
-import { StackSlide } from "./slides/StackSlide"
+import { DemoSlide } from "./slides/DemoSlide"
 
 export function ProjectDetailView({
   projectId,
@@ -169,11 +169,11 @@ export function ProjectDetailView({
       isMobile={isMobile}
       isActive={displaySlide === 4}
     />,
-    <StackSlide
-      tech={detail.tech}
-      stackDiagram={detail.stackDiagram}
+    <DemoSlide
+      detail={detail}
       accentColor={accentColor}
       isMobile={isMobile}
+      isActive={displaySlide === 5}
     />,
   ]
 

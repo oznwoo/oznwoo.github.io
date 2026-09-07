@@ -27,7 +27,7 @@ interface ZoomableImageProps {
 
 // 프로젝트 상세의 표준 이미지 카드 — 테두리 + 이중 그림자 + hover 리프트라는
 // 기존 컨벤션을 한곳에 모으고, 클릭하면 라이트박스로 확대한다(커서는 zoom-in).
-// RevealCard / StackSlide / OutcomeSlide / SOLUTION 단일 이미지가 공유한다.
+// RevealCard / OutcomeSlide / SOLUTION 단일 이미지가 공유한다.
 export function ZoomableImage({
   src,
   alt,

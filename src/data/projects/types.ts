@@ -79,9 +79,9 @@ export interface ProjectDetail {
   roleHeadline?: string
   roleBody?: string
   roleImage?: string
-  // 시연 영상(선택) — demoHeadline이 있으면 About 슬라이드에 "시연 영상"
-  // 탭이 하나 더 생긴다. demoVideo가 아직 없어도 탭은 생기고 자리표시자로
-  // 채워진다. demoPoster는 영상 재생 전 보여줄 정지 프레임.
+  // 시연 영상(선택) — 상세 맨 끝 "Demo" 슬라이드에서 보여준다. demoVideo가
+  // 아직 없어도 슬라이드는 있고 자리표시자로 채워진다. demoPoster는 영상
+  // 재생 전 보여줄 정지 프레임.
   demoHeadline?: string
   demoBody?: string
   demoVideo?: string
@@ -105,7 +105,7 @@ export interface ProjectDetail {
   // 구조(타이틀+이미지 카드 그리드)로 렌더링된다.
   outcomeGallery?: ProjectDetailCardItem[]
   tech: ProjectTechGroup[]
-  // 시스템 아키텍처 다이어그램(선택) — 있으면 STACK 슬라이드가 카테고리별
-  // 텍스트 목록 대신 이 이미지 하나만 보여준다.
+  // 시스템 아키텍처 다이어그램(선택) — 있으면 About 슬라이드에 "기술 스택"
+  // 탭이 하나 더 생기고 이 이미지를 보여준다(클릭하면 확대).
   stackDiagram?: string
 }

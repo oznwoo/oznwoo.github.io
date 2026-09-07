@@ -85,14 +85,14 @@ export function AboutSlide({
       imageHeight: 1014,
     })
   }
-  if (detail.demoHeadline) {
+  if (detail.stackDiagram) {
     steps.push({
-      tabLabel: "시연 영상",
-      headline: detail.demoHeadline,
-      body: detail.demoBody ?? "",
-      kind: "video",
-      video: detail.demoVideo,
-      videoPoster: detail.demoPoster,
+      tabLabel: "기술 스택",
+      headline: "전체 시스템 구성",
+      body: "",
+      kind: "image",
+      image: detail.stackDiagram,
+      imageAlt: "시스템 아키텍처 다이어그램",
     })
   }
   const hasTabs = steps.length > 1
@@ -351,19 +351,21 @@ export function AboutSlide({
                 줄바꿈되도록 문장 단위로 나눠 각각 한 줄로 보여준다. 크기·명도를
                 올리는 대신, 핵심 단어만 **강조**로 굵게 표시해 옅은 텍스트
                 안에서도 눈에 잘 들어오는 지점을 만든다 */}
-            <p
-              style={{ fontFamily: "var(--font-body)" }}
-              className="text-sm sm:text-base text-[#0C0F1A]/55 leading-relaxed font-normal"
-            >
-              {splitSentences(current.body).map((sentence, i) => (
-                <span
-                  key={i}
-                  className="block w-fit mx-auto sm:whitespace-nowrap"
-                >
-                  {renderWithEmphasis(sentence)}
-                </span>
-              ))}
-            </p>
+            {current.body && (
+              <p
+                style={{ fontFamily: "var(--font-body)" }}
+                className="text-sm sm:text-base text-[#0C0F1A]/55 leading-relaxed font-normal"
+              >
+                {splitSentences(current.body).map((sentence, i) => (
+                  <span
+                    key={i}
+                    className="block w-fit mx-auto sm:whitespace-nowrap"
+                  >
+                    {renderWithEmphasis(sentence)}
+                  </span>
+                ))}
+              </p>
+            )}
           </div>
         </div>
       </div>
