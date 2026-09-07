@@ -440,7 +440,7 @@ export function SolutionShowcase({
                   (isMobile ? "flex flex-col" : "flex items-stretch mx-auto") +
                   " gap-4 max-w-2xl"
                 }
-                style={{ minHeight: isMobile ? undefined : "264px" }}
+                style={{ minHeight: isMobile ? undefined : "288px" }}
               >
                 <ComparisonGroupCard
                   label="문제"
