@@ -25,7 +25,7 @@ export function ComparisonGroupCard({
       className="flex-1 rounded-2xl backdrop-blur-sm overflow-hidden"
       style={{
         background: hexToRgba(mixWithWhite(accentColor, 0.93), 0.62),
-        border: "1px solid rgba(12,15,26,0.06)",
+        border: `1px solid ${hexToRgba(accentColor, 0.15)}`,
         boxShadow: "0 12px 32px -14px rgba(12,15,26,0.2)",
       }}
     >
