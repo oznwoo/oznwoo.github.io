@@ -30,7 +30,7 @@ export function ComparisonLabelPill({
         background: softPillGradient(pillAccent, pillWhiteMix),
         boxShadow: `0 6px 16px ${hexToRgba(accentColor, 0.2)}, 0 1px 3px rgba(12,15,26,0.1)`,
       }}
-      className="flex items-center rounded-full px-4 py-1.5 text-base font-bold tracking-[0.04em]"
+      className="flex items-center rounded-[7px] px-4 py-1.5 text-base font-bold tracking-[0.04em]"
     >
       {label}
     </span>
