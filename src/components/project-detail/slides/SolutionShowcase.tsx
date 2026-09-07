@@ -138,17 +138,24 @@ export function SolutionShowcase({
       }
     >
       <div className="max-w-4xl w-full">
-        <span
-          style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-2 block"
+        {/* eyebrow(왼쪽) + 세그먼트 탭(오른쪽)을 한 줄에 둬서 상단 우측의 남는
+            공간을 쓰고 이미지를 위로 끌어올린다. 모바일은 세로로 쌓는다.
+            탭: 옅은 중립 회색 컨테이너, 선택된 탭만 네비게이터 dot과 같은 색,
+            둥글기는 페이지 카드 톤에 맞춤. 라벨은 problems와 1:1로 맞으면
+            (Fintag) PROBLEM 쪽 표현을, 아니면 solution 제목을 쓴다. */}
+        <div
+          className={
+            isMobile
+              ? "mb-3 flex flex-col gap-2"
+              : "mb-3 flex items-center justify-between gap-4"
+          }
         >
-          Solution
-        </span>
-        {/* 세그먼트 탭 — 옅은 중립 회색 컨테이너 안, 선택된 탭만 네비게이터
-            dot과 같은 색으로 채워진다. 모서리 둥글기는 하단 카드·이미지 프레임
-            (rounded-2xl)에 맞춘다. 탭 라벨은 problems와 1:1로 맞으면(Fintag)
-            PROBLEM 쪽 표현을, 아니면 solution 제목을 쓴다. */}
-        <div className="mb-2 flex">
+          <span
+            style={{ fontFamily: "var(--font-mono)" }}
+            className="shrink-0 text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase"
+          >
+            Solution
+          </span>
           <div
             className="inline-flex max-w-full items-center gap-0.5 overflow-x-auto rounded-xl p-1"
             style={{ background: "rgba(12,15,26,0.045)" }}
