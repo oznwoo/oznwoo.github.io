@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { TabArrowButton } from "@/components/project-detail/TabArrowButton"
 import type { ProjectDetailCardItem } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
-import { hexToRgba, mixWithWhite } from "@/lib/color"
+import { accentGradient, hexToRgba, mixWithWhite } from "@/lib/color"
 import { renderWithEmphasis } from "@/lib/emphasis"
 import { MediaPlaceholder } from "@/components/project-detail/MediaPlaceholder"
 import { getArrowColors } from "@/components/project-detail/lightbox/arrowColors"
@@ -125,6 +125,10 @@ export function SolutionShowcase({
     projectId,
   )
 
+  // 선택된 탭 pill 배경 — 좌측 네비게이터의 선택된 dot과 완전히 같은 색
+  // (DetailNav의 dotBackground와 동일 규칙)
+  const activeTabBackground = accent ? accentGradient(accent) : "#4F6EF7"
+
   return (
     <div
       className={
@@ -140,28 +144,50 @@ export function SolutionShowcase({
         >
           Solution
         </span>
-        <div
-          className="flex flex-wrap items-center justify-between gap-6 mb-4"
-          style={{ borderBottom: "1px solid rgba(12,15,26,0.08)" }}
-        >
-          <div className="flex flex-wrap items-center gap-6">
-            {/* 탭 개수는 항상 solutions 기준 — problems와 1:1로 맞는 경우
-                  (Fintag) PROBLEM 쪽 표현으로 어떤 문제를 해결하는 스텝인지
-                  보여주고, 짝이 안 맞는 항목은 solution 자신의 제목으로 대체한다 */}
-            {solutions.map((s, i) => (
-              <button
-                key={s.title}
-                onClick={() => goStep(i)}
-                style={{
-                  fontFamily: "var(--font-body)",
-                  color: i === step ? "#0C0F1A" : "rgba(12,15,26,0.4)",
-                  borderBottomColor: i === step ? accentColor : "transparent",
-                }}
-                className="text-sm font-medium pb-3 border-b-2 transition-colors duration-300"
-              >
-                {problems[i]?.title ?? s.title}
-              </button>
-            ))}
+        {/* 세그먼트형 pill 탭 — 흰 라운드 컨테이너 안에서 선택된 탭만
+            네비게이터 dot과 같은 색으로 채워진다. 탭 개수는 항상 solutions
+            기준이고, problems와 1:1로 맞으면(Fintag) PROBLEM 쪽 표현을,
+            짝이 안 맞으면 solution 자신의 제목을 라벨로 쓴다. */}
+        <div className="mb-7 flex">
+          <div
+            className="inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-full p-1.5"
+            style={{
+              background: "rgba(255,255,255,0.72)",
+              border: "1px solid rgba(12,15,26,0.05)",
+              boxShadow:
+                "0 10px 28px -14px rgba(12,15,26,0.2), 0 2px 6px -3px rgba(12,15,26,0.1)",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+            }}
+          >
+            {solutions.map((s, i) => {
+              const active = i === step
+              return (
+                <button
+                  key={s.title}
+                  onClick={() => goStep(i)}
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    background: active ? activeTabBackground : "transparent",
+                    color: active
+                      ? "rgba(255,255,255,0.98)"
+                      : "rgba(12,15,26,0.5)",
+                    boxShadow: active
+                      ? `0 8px 18px -8px ${hexToRgba(accentColor, 0.55)}`
+                      : "none",
+                    textShadow: active
+                      ? "0 1px 2px rgba(12,15,26,0.28)"
+                      : "none",
+                  }}
+                  className={
+                    "whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 " +
+                    (active ? "" : "hover:text-[#0C0F1A]/75")
+                  }
+                >
+                  {problems[i]?.title ?? s.title}
+                </button>
+              )
+            })}
           </div>
         </div>
 
@@ -171,7 +197,7 @@ export function SolutionShowcase({
             animation: "step-in 0.5s cubic-bezier(0.16,1,0.3,1) both",
             // 탭 아래 콘텐츠 영역 크기를 스텝마다 고정해, 이미지 비율이나
             // 설명 길이가 달라져도 탭 위치가 위아래로 밀리지 않게 한다
-            minHeight: isMobile ? undefined : "520px",
+            minHeight: isMobile ? undefined : "600px",
           }}
           className="flex flex-col gap-6"
         >
@@ -181,7 +207,7 @@ export function SolutionShowcase({
               // 스텝 종류(단일 이미지/멀티 이미지/비교 카드/미디어 없음)와
               // 무관하게 항상 같은 높이를 써야 탭을 전환해도 아래 콘텐츠·
               // 페이지 위치가 흔들리지 않는다 — 스텝별로 값을 다르게 주면 안 된다
-              style={{ height: isMobile ? undefined : "300px" }}
+              style={{ height: isMobile ? undefined : "380px" }}
             >
               {!isMobile && step > 0 && (
                 <TabArrowButton
@@ -300,15 +326,15 @@ export function SolutionShowcase({
                             className="block w-auto"
                             style={{
                               height: isMobile
-                                ? "28vh"
+                                ? "32vh"
                                 : overlapImages
-                                  ? "240px"
-                                  : // 가로로 넓은 다이어그램 2장을 260px 높이로
-                                    // 나란히 두면 폭 합이 컨테이너를 넘어간다 —
-                                    // 3장 미만일 때는 낮춘 높이로 폭을 맞춘다
+                                  ? "290px"
+                                  : // 가로로 넓은 다이어그램 2장을 나란히 두면
+                                    // 폭 합이 컨테이너를 넘어간다 — 3장 미만일
+                                    // 때는 낮춘 높이로 폭을 맞춘다
                                     solution.images!.length >= 3
-                                    ? "260px"
-                                    : "220px",
+                                    ? "320px"
+                                    : "240px",
                             }}
                           />
                         </div>
@@ -325,7 +351,7 @@ export function SolutionShowcase({
                   onHoverChange={setImgHovered}
                   frameClassName="inline-block max-w-full"
                   imgClassName="block w-auto h-auto max-w-full"
-                  imgStyle={{ maxHeight: isMobile ? "38vh" : "260px" }}
+                  imgStyle={{ maxHeight: isMobile ? "42vh" : "340px" }}
                 />
               ) : (
                 // 아직 스텝 이미지가 없는 solution — 자리와 카드 톤은
@@ -336,7 +362,7 @@ export function SolutionShowcase({
                   style={{
                     aspectRatio: `${imageWidth} / ${imageHeight}`,
                     maxWidth: "100%",
-                    height: isMobile ? "28vh" : "260px",
+                    height: isMobile ? "32vh" : "340px",
                   }}
                 />
               )}
