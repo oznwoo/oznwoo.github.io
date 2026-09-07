@@ -157,7 +157,7 @@ export function SolutionShowcase({
             Solution
           </span>
           <div
-            className="inline-flex max-w-full items-center gap-0.5 overflow-x-auto rounded-xl p-1"
+            className="inline-flex max-w-full items-center overflow-x-auto rounded-lg p-0.5"
             style={{ background: "rgba(12,15,26,0.045)" }}
           >
             {solutions.map((s, i) => {
@@ -180,7 +180,7 @@ export function SolutionShowcase({
                       : "none",
                   }}
                   className={
-                    "whitespace-nowrap rounded-lg px-3.5 py-1.5 text-[13px] font-medium transition-all duration-300 " +
+                    "whitespace-nowrap rounded-[7px] px-3 py-1 text-xs font-medium transition-all duration-300 " +
                     (active ? "" : "hover:text-[#0C0F1A]/75")
                   }
                 >
@@ -191,20 +191,22 @@ export function SolutionShowcase({
           </div>
         </div>
 
-        {/* 이미지 영역 — 배경 없이, 스텝 종류(단일/멀티/겹침/없음)와 무관하게
-            항상 같은 크기의 영역을 차지해 탭을 바꿔도 레이아웃이 흔들리지
-            않는다. 좌우 스텝 화살표는 이미지 옆에 뜬다. */}
+        {/* 이미지 영역 — accent 톤의 은은한 배경(하단 카드보다 옅게)으로 영역을
+            암시한다. 스텝 종류(단일/멀티/겹침/없음)와 무관하게 항상 같은
+            크기·안쪽 여백. 좌우 스텝 화살표는 영역 바깥(옆)에 뜬다. */}
         <div className="relative mb-2">
           <div
-            className="relative"
+            className="relative overflow-hidden rounded-2xl"
             style={{
-              height: isMobile ? undefined : "300px",
-              minHeight: isMobile ? "38vh" : undefined,
+              height: isMobile ? undefined : "340px",
+              minHeight: isMobile ? "40vh" : undefined,
+              background: hexToRgba(mixWithWhite(accentColor, 0.95), 0.42),
+              border: "1px solid rgba(12,15,26,0.05)",
             }}
           >
               <div
                 key={step}
-                className="flex h-full w-full items-center justify-center"
+                className="flex h-full w-full items-center justify-center px-6 py-5"
                 style={{
                   animation: "step-in 0.5s cubic-bezier(0.16,1,0.3,1) both",
                 }}
@@ -242,7 +244,7 @@ export function SolutionShowcase({
                         }
                         style={
                           overlapImages && i > 0
-                            ? { marginLeft: "-280px" }
+                            ? { marginLeft: "-268px" }
                             : undefined
                         }
                       >
@@ -287,8 +289,8 @@ export function SolutionShowcase({
                             // — 카드 크기를 고정하고 이미지는 object-cover로 채우며,
                             // 겹침 간격도 %가 아닌 고정 px로 줘서 부채꼴 폭이 항상
                             // 컨테이너(max-w-4xl) 안에 들어오고 화살표와 간격이 유지된다
-                            width: overlapImages ? "392px" : undefined,
-                            height: overlapImages ? "268px" : undefined,
+                            width: overlapImages ? "376px" : undefined,
+                            height: overlapImages ? "256px" : undefined,
                             // 평상시엔 왼쪽 카드가 앞(부채꼴을 왼→오로 읽게),
                             // hover한 카드는 항상 맨 위로
                             zIndex: overlapImages
@@ -332,8 +334,8 @@ export function SolutionShowcase({
                                         // 두면 폭 합이 컨테이너를 넘어간다 —
                                         // 3장 미만일 때는 낮춘 높이로 폭을 맞춘다
                                         solution.images!.length >= 3
-                                        ? "270px"
-                                        : "220px",
+                                        ? "258px"
+                                        : "210px",
                                   }
                             }
                           />
@@ -351,7 +353,7 @@ export function SolutionShowcase({
                   onHoverChange={setImgHovered}
                   frameClassName="inline-block max-w-full"
                   imgClassName="block w-auto h-auto max-w-full"
-                  imgStyle={{ maxHeight: isMobile ? "38vh" : "290px" }}
+                  imgStyle={{ maxHeight: isMobile ? "36vh" : "288px" }}
                 />
               ) : (
                 // 아직 스텝 이미지가 없는 solution — 자리와 카드 톤은
@@ -362,7 +364,7 @@ export function SolutionShowcase({
                   style={{
                     aspectRatio: `${imageWidth} / ${imageHeight}`,
                     maxWidth: "100%",
-                    height: isMobile ? "28vh" : "280px",
+                    height: isMobile ? "26vh" : "270px",
                   }}
                 />
               )}
