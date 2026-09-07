@@ -9,10 +9,6 @@ import { getArrowColors } from "@/components/project-detail/lightbox/arrowColors
 import type { LightboxContent } from "@/components/project-detail/lightbox/ImageLightbox"
 import { useLightbox } from "@/components/project-detail/lightbox/LightboxProvider"
 import { ZoomableImage } from "@/components/project-detail/lightbox/ZoomableImage"
-import {
-  ZoomHint,
-  type CursorPos,
-} from "@/components/project-detail/lightbox/ZoomHint"
 import { ComparisonGroupCard } from "./solution-showcase/ComparisonGroupCard"
 import { FlowArrow } from "./solution-showcase/FlowArrow"
 import { useHorizontalStepKeys } from "@/hooks/useHorizontalStepKeys"
@@ -50,8 +46,6 @@ export function SolutionShowcase({
   const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(
     null,
   )
-  // 멀티 이미지 카드 위에서의 커서 위치 — "클릭하면 확대" 툴팁이 따라다닌다
-  const [imageCursor, setImageCursor] = useState<CursorPos | null>(null)
   const [revealed, setRevealed] = useState(false)
   const {
     open: openLightbox,
@@ -169,14 +163,6 @@ export function SolutionShowcase({
               </button>
             ))}
           </div>
-          {(solution.image || solution.images) && (
-            <span
-              style={{ fontFamily: "var(--font-mono)" }}
-              className="pb-3 text-[10px] leading-tight text-[#0C0F1A]/35 tracking-[0.02em] whitespace-nowrap"
-            >
-              이미지를 클릭하면 확대해서 볼 수 있습니다
-            </span>
-          )}
         </div>
 
         <div
@@ -262,25 +248,8 @@ export function SolutionShowcase({
                           role="button"
                           tabIndex={0}
                           aria-label={`${solution.title} 이미지 크게 보기`}
-                          onMouseEnter={(e) => {
-                            setHoveredImageIndex(i)
-                            if (!isMobile) {
-                              setImageCursor({ x: e.clientX, y: e.clientY })
-                            }
-                          }}
-                          onMouseMove={
-                            isMobile
-                              ? undefined
-                              : (e) =>
-                                  setImageCursor({
-                                    x: e.clientX,
-                                    y: e.clientY,
-                                  })
-                          }
-                          onMouseLeave={() => {
-                            setHoveredImageIndex(null)
-                            setImageCursor(null)
-                          }}
+                          onMouseEnter={() => setHoveredImageIndex(i)}
+                          onMouseLeave={() => setHoveredImageIndex(null)}
                           onMouseDown={(e) => e.preventDefault()}
                           onClick={(e) =>
                             openLightbox(
@@ -350,10 +319,7 @@ export function SolutionShowcase({
               ) : solution.image ? (
                 <ZoomableImage
                   src={solution.image}
-                  accent={accent}
                   accentColor={accentColor}
-                  projectId={projectId}
-                  isMobile={isMobile}
                   width={imageWidth}
                   height={imageHeight}
                   onHoverChange={setImgHovered}
@@ -385,18 +351,6 @@ export function SolutionShowcase({
                   accentColor={accentColor}
                   projectId={projectId}
                   offsetClassName="-right-14"
-                />
-              )}
-              {!isMobile && solution.images && (
-                <ZoomHint
-                  pos={
-                    hoveredImageIndex !== null && !lightboxOpen
-                      ? imageCursor
-                      : null
-                  }
-                  accent={accent}
-                  accentColor={accentColor}
-                  projectId={projectId}
                 />
               )}
             </div>

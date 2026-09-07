@@ -6,10 +6,6 @@ import { hexToRgba } from "@/lib/color"
 import { renderWithEmphasis } from "@/lib/emphasis"
 import { MediaPlaceholder } from "@/components/project-detail/MediaPlaceholder"
 import { useLightbox } from "@/components/project-detail/lightbox/LightboxProvider"
-import {
-  ZoomHint,
-  type CursorPos,
-} from "@/components/project-detail/lightbox/ZoomHint"
 import { useHorizontalStepKeys } from "@/hooks/useHorizontalStepKeys"
 
 const SLIDE_TRANSITION_MS = 750
@@ -103,10 +99,9 @@ export function AboutSlide({
 
   const [step, setStep] = useState(0)
   const [shotHovered, setShotHovered] = useState(false)
-  const [shotCursor, setShotCursor] = useState<CursorPos | null>(null)
   const [revealed, setRevealed] = useState(false)
   const shotFrameRef = useRef<HTMLDivElement>(null)
-  const { open: openLightbox, isOpen: lightboxOpen } = useLightbox()
+  const { open: openLightbox } = useLightbox()
 
   // 슬라이드를 나갔다 다시 들어와도 보던 스텝을 그대로 유지한다 — step은
   // 여기서 건드리지 않고, 프로젝트 자체가 바뀔 때만(아래 별도 effect) 0으로
@@ -225,21 +220,8 @@ export function AboutSlide({
               )}
               <div
                 ref={shotFrameRef}
-                onMouseEnter={(e) => {
-                  setShotHovered(true)
-                  if (isZoomableShot && !isMobile) {
-                    setShotCursor({ x: e.clientX, y: e.clientY })
-                  }
-                }}
-                onMouseMove={
-                  isZoomableShot && !isMobile
-                    ? (e) => setShotCursor({ x: e.clientX, y: e.clientY })
-                    : undefined
-                }
-                onMouseLeave={() => {
-                  setShotHovered(false)
-                  setShotCursor(null)
-                }}
+                onMouseEnter={() => setShotHovered(true)}
+                onMouseLeave={() => setShotHovered(false)}
                 onMouseDown={
                   isZoomableShot ? (e) => e.preventDefault() : undefined
                 }
@@ -343,14 +325,6 @@ export function AboutSlide({
                   accentColor={accentColor}
                   projectId={projectId}
                   offsetClassName="-right-16"
-                />
-              )}
-              {isZoomableShot && !isMobile && (
-                <ZoomHint
-                  pos={shotHovered && !lightboxOpen ? shotCursor : null}
-                  accent={accent}
-                  accentColor={accentColor}
-                  projectId={projectId}
                 />
               )}
             </div>

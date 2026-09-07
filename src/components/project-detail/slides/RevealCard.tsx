@@ -18,7 +18,6 @@ interface RevealCardProps {
   projectId: string
   imageWidth: number
   imageHeight: number
-  isMobile: boolean
   // 이 카드가 속한 슬라이드(Problem/Solution)가 지금 화면에 보이는지 —
   // true가 되고 슬라이드 전환이 끝나면 설명이 이미지 아래에서 내려오며 나타난다.
   isActive: boolean
@@ -35,7 +34,6 @@ export function RevealCard({
   projectId,
   imageWidth,
   imageHeight,
-  isMobile,
   isActive,
 }: RevealCardProps) {
   const [revealed, setRevealed] = useState(false)
@@ -62,10 +60,7 @@ export function RevealCard({
       {item.image ? (
         <ZoomableImage
           src={item.image}
-          accent={accent}
           accentColor={accentColor}
-          projectId={projectId}
-          isMobile={isMobile}
           width={imageWidth}
           height={imageHeight}
         />

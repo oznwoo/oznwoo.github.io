@@ -56,7 +56,6 @@ export function CardGridSlide({
               projectId={projectId}
               imageWidth={imageWidth}
               imageHeight={imageHeight}
-              isMobile={isMobile}
               isActive={isActive}
             />
           ))}

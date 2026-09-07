@@ -1,18 +1,13 @@
 import { useRef, useState } from "react"
 import type { CSSProperties } from "react"
-import type { ProjectAccent } from "@/lib/color"
 import { hexToRgba } from "@/lib/color"
 import { useLightbox } from "./LightboxProvider"
-import { ZoomHint, type CursorPos } from "./ZoomHint"
 import type { LightboxContent } from "./ImageLightbox"
 
 interface ZoomableImageProps {
   src: string
   alt?: string
-  accent: ProjectAccent | null
   accentColor: string
-  projectId: string
-  isMobile: boolean
   width?: number
   height?: number
   loading?: "eager" | "lazy"
@@ -31,16 +26,12 @@ interface ZoomableImageProps {
 }
 
 // 프로젝트 상세의 표준 이미지 카드 — 테두리 + 이중 그림자 + hover 리프트라는
-// 기존 컨벤션을 한곳에 모으고, 여기에 "클릭하면 확대" 동작(커서 툴팁 + 클릭 시
-// 라이트박스)을 붙였다. RevealCard / StackSlide / OutcomeSlide / SOLUTION
-// 단일 이미지가 공유한다.
+// 기존 컨벤션을 한곳에 모으고, 클릭하면 라이트박스로 확대한다(커서는 zoom-in).
+// RevealCard / StackSlide / OutcomeSlide / SOLUTION 단일 이미지가 공유한다.
 export function ZoomableImage({
   src,
   alt,
-  accent,
   accentColor,
-  projectId,
-  isMobile,
   width,
   height,
   loading = "lazy",
@@ -53,14 +44,11 @@ export function ZoomableImage({
   emphasis = false,
 }: ZoomableImageProps) {
   const [hovered, setHovered] = useState(false)
-  // 커서 툴팁 위치 — hover 중 마우스가 움직일 때마다 갱신한다
-  const [cursor, setCursor] = useState<CursorPos | null>(null)
   const frameRef = useRef<HTMLDivElement>(null)
-  const { open, isOpen } = useLightbox()
+  const { open } = useLightbox()
 
   const setHover = (next: boolean) => {
     setHovered(next)
-    if (!next) setCursor(null)
     onHoverChange?.(next)
   }
 
@@ -81,64 +69,46 @@ export function ZoomableImage({
     : "translateY(-3px) scale(1.012)"
 
   return (
-    <>
-      <div
-        ref={frameRef}
-        role="button"
-        tabIndex={0}
-        aria-label={alt ? `${alt} 크게 보기` : "이미지 크게 보기"}
-        onMouseEnter={(e) => {
-          setHover(true)
-          if (!isMobile) setCursor({ x: e.clientX, y: e.clientY })
-        }}
-        onMouseMove={
-          isMobile
-            ? undefined
-            : (e) => setCursor({ x: e.clientX, y: e.clientY })
+    <div
+      ref={frameRef}
+      role="button"
+      tabIndex={0}
+      aria-label={alt ? `${alt} 크게 보기` : "이미지 크게 보기"}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      // 마우스 클릭으로는 포커스 링이 남지 않게 한다(키보드 Tab 포커스는 유지)
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={openZoom}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          openZoom()
         }
-        onMouseLeave={() => setHover(false)}
-        // 마우스 클릭으로는 포커스 링이 남지 않게 한다(키보드 Tab 포커스는 유지)
-        onMouseDown={(e) => e.preventDefault()}
-        onClick={openZoom}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault()
-            openZoom()
-          }
-        }}
-        className={
-          "rounded-2xl overflow-hidden border cursor-zoom-in " + frameClassName
-        }
-        style={{
-          borderColor: hovered
-            ? hexToRgba(accentColor, 0.35)
-            : "rgba(12,15,26,0.1)",
-          boxShadow: hovered ? hoverShadow : restShadow,
-          transform: hovered ? hoverLift : "translateY(0) scale(1)",
-          transition:
-            "transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease-out, border-color 0.4s ease-out",
-          ...frameStyle,
-        }}
-      >
-        <img
-          src={src}
-          alt={alt ?? ""}
-          aria-hidden={alt ? undefined : "true"}
-          loading={loading}
-          width={width}
-          height={height}
-          className={imgClassName}
-          style={imgStyle}
-        />
-      </div>
-      {!isMobile && (
-        <ZoomHint
-          pos={hovered && !isOpen ? cursor : null}
-          accent={accent}
-          accentColor={accentColor}
-          projectId={projectId}
-        />
-      )}
-    </>
+      }}
+      className={
+        "rounded-2xl overflow-hidden border cursor-zoom-in " + frameClassName
+      }
+      style={{
+        borderColor: hovered
+          ? hexToRgba(accentColor, 0.35)
+          : "rgba(12,15,26,0.1)",
+        boxShadow: hovered ? hoverShadow : restShadow,
+        transform: hovered ? hoverLift : "translateY(0) scale(1)",
+        transition:
+          "transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease-out, border-color 0.4s ease-out",
+        ...frameStyle,
+      }}
+    >
+      <img
+        src={src}
+        alt={alt ?? ""}
+        aria-hidden={alt ? undefined : "true"}
+        loading={loading}
+        width={width}
+        height={height}
+        className={imgClassName}
+        style={imgStyle}
+      />
+    </div>
   )
 }

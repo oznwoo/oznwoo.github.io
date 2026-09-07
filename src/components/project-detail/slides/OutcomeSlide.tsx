@@ -102,10 +102,7 @@ export function OutcomeSlide({
             <ZoomableImage
               src={detail.outcomeImage}
               alt="전처리 및 잔차 보정 적용 후 30일 Walk-forward 예측이 실제 잔액을 촘촘히 따라가는 것을 보여주는 차트"
-              accent={accent}
               accentColor={accentColor}
-              projectId={projectId}
-              isMobile={isMobile}
               width={1000}
               height={807}
               frameClassName="h-40 md:h-48"

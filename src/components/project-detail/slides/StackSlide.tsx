@@ -1,13 +1,10 @@
 import type { ProjectDetail } from "@/data/projects"
-import type { ProjectAccent } from "@/lib/color"
 import { ZoomableImage } from "../lightbox/ZoomableImage"
 
 interface StackSlideProps {
   tech: ProjectDetail["tech"]
   stackDiagram?: string
-  accent: ProjectAccent | null
   accentColor: string
-  projectId: string
   isMobile: boolean
 }
 
@@ -17,9 +14,7 @@ interface StackSlideProps {
 export function StackSlide({
   tech,
   stackDiagram,
-  accent,
   accentColor,
-  projectId,
   isMobile,
 }: StackSlideProps) {
   const wrapClass = isMobile
@@ -39,10 +34,7 @@ export function StackSlide({
           <ZoomableImage
             src={stackDiagram}
             alt="시스템 아키텍처 다이어그램"
-            accent={accent}
             accentColor={accentColor}
-            projectId={projectId}
-            isMobile={isMobile}
           />
         </div>
       </div>
