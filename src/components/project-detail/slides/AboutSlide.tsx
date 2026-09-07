@@ -89,7 +89,7 @@ export function AboutSlide({
     steps.push({
       tabLabel: "기술 스택",
       headline: "전체 시스템 구성",
-      body: "",
+      body: "요청부터 응답까지 각 구성요소가 어떻게 연결돼 동작하는지 한 장으로 정리했습니다.",
       kind: "image",
       image: detail.stackDiagram,
       imageAlt: "시스템 아키텍처 다이어그램",
