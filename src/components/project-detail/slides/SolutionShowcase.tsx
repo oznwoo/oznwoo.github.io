@@ -166,7 +166,7 @@ export function SolutionShowcase({
           {/* 탭도 revealed 기반 전환을 쓴다 — 등장할 땐 아래에서 위로
               (12px → 0), 슬라이드를 떠날 땐 위에서 아래로(0 → 12px) 사라진다. */}
           <div
-            className="inline-flex max-w-full items-center overflow-x-auto rounded-lg p-1"
+            className="inline-flex max-w-full flex-wrap items-center justify-end gap-y-1 rounded-lg p-1"
             style={{
               background: "rgba(12,15,26,0.045)",
               transform: revealed ? "translateY(0)" : "translateY(12px)",
@@ -183,7 +183,9 @@ export function SolutionShowcase({
                   onClick={() => goStep(i)}
                   style={{
                     fontFamily: "var(--font-body)",
-                    background: active ? activeTabBackground : "transparent",
+                    // 비활성은 inline background를 비워 hover:bg 클래스(회색)가
+                    // 먹히게 한다 — inline style은 클래스보다 우선하기 때문.
+                    background: active ? activeTabBackground : undefined,
                     color: active
                       ? "rgba(255,255,255,0.98)"
                       : "rgba(12,15,26,0.5)",
@@ -198,10 +200,10 @@ export function SolutionShowcase({
                       : "none",
                   }}
                   className={
-                    "cursor-pointer whitespace-nowrap rounded-[7px] px-3 py-1 text-xs transition-all duration-200 hover:-translate-y-0.5 hover:scale-105 hover:shadow-md active:translate-y-0 active:scale-95 " +
+                    "cursor-pointer whitespace-nowrap rounded-[7px] px-3 py-1 text-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 " +
                     (active
                       ? "font-bold hover:brightness-[1.04]"
-                      : "font-medium hover:bg-[rgba(12,15,26,0.08)] hover:text-[#0C0F1A]/80")
+                      : "font-medium hover:bg-black/10 hover:text-[#0C0F1A]/80")
                   }
                 >
                   {problems[i]?.title ?? s.title}
