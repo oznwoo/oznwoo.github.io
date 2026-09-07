@@ -34,7 +34,7 @@ export const cochatDetail: ProjectDetail = {
   logoShowName: true,
   overviewHeadline: "Co(함께) + Chat(대화하자)",
   overviewBody:
-    "여러 메신저에 흩어진 알림을 한 곳에 모으고, AI가 취향에 맞는 메시지만 골라 요약해 주는 메신저 통합 앱",
+    "일상에서 쓰는 여러 메신저의 알림을 한 곳에 모으고, AI가 취향에 맞는 메시지만 골라 요약해 주는 개인용(B2C) 모바일 메신저 통합 앱",
   // About '프로젝트 소개' 탭 히어로 — Gopssl about-hero와 동일 포맷(폰 목업 + 큐브
   // 로고 + "Co-Chat" 워드마크 + 태그라인). About 탭 컨테이너 비율에 맞춰 1830×1014
   aboutImage: cochatAboutHero,
