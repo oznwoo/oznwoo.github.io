@@ -197,7 +197,7 @@ export function SolutionShowcase({
             animation: "step-in 0.5s cubic-bezier(0.16,1,0.3,1) both",
             // 탭 아래 콘텐츠 영역 크기를 스텝마다 고정해, 이미지 비율이나
             // 설명 길이가 달라져도 탭 위치가 위아래로 밀리지 않게 한다
-            minHeight: isMobile ? undefined : "600px",
+            minHeight: isMobile ? undefined : "560px",
           }}
           className="flex flex-col gap-6"
         >
@@ -207,7 +207,7 @@ export function SolutionShowcase({
               // 스텝 종류(단일 이미지/멀티 이미지/비교 카드/미디어 없음)와
               // 무관하게 항상 같은 높이를 써야 탭을 전환해도 아래 콘텐츠·
               // 페이지 위치가 흔들리지 않는다 — 스텝별로 값을 다르게 주면 안 된다
-              style={{ height: isMobile ? undefined : "380px" }}
+              style={{ height: isMobile ? undefined : "350px" }}
             >
               {!isMobile && step > 0 && (
                 <TabArrowButton
@@ -295,6 +295,12 @@ export function SolutionShowcase({
                           className="rounded-2xl overflow-hidden border shrink-0 cursor-zoom-in"
                           style={{
                             position: overlapImages ? "relative" : undefined,
+                            // 겹침(부채꼴) 카드는 원본 비율이 제각각이면 부채꼴
+                            // 전체 폭이 들쭉날쭉해져 스텝 화살표 영역까지 침범한다
+                            // — 카드 크기를 고정하고 이미지는 object-cover로 채워
+                            // 부채꼴 폭이 항상 컨테이너 안에 들어오게 한다
+                            width: overlapImages ? "300px" : undefined,
+                            height: overlapImages ? "222px" : undefined,
                             // 평상시엔 왼쪽 카드가 앞(부채꼴을 왼→오로 읽게),
                             // hover한 카드는 항상 맨 위로
                             zIndex: overlapImages
@@ -323,19 +329,25 @@ export function SolutionShowcase({
                             alt=""
                             aria-hidden="true"
                             loading="eager"
-                            className="block w-auto"
-                            style={{
-                              height: isMobile
-                                ? "32vh"
-                                : overlapImages
-                                  ? "290px"
-                                  : // 가로로 넓은 다이어그램 2장을 나란히 두면
-                                    // 폭 합이 컨테이너를 넘어간다 — 3장 미만일
-                                    // 때는 낮춘 높이로 폭을 맞춘다
-                                    solution.images!.length >= 3
-                                    ? "320px"
-                                    : "240px",
-                            }}
+                            className={
+                              overlapImages
+                                ? "block h-full w-full object-cover"
+                                : "block w-auto"
+                            }
+                            style={
+                              overlapImages
+                                ? undefined
+                                : {
+                                    height: isMobile
+                                      ? "32vh"
+                                      : // 가로로 넓은 다이어그램 2장을 나란히
+                                        // 두면 폭 합이 컨테이너를 넘어간다 —
+                                        // 3장 미만일 때는 낮춘 높이로 폭을 맞춘다
+                                        solution.images!.length >= 3
+                                        ? "300px"
+                                        : "240px",
+                                  }
+                            }
                           />
                         </div>
                       </div>
@@ -351,7 +363,7 @@ export function SolutionShowcase({
                   onHoverChange={setImgHovered}
                   frameClassName="inline-block max-w-full"
                   imgClassName="block w-auto h-auto max-w-full"
-                  imgStyle={{ maxHeight: isMobile ? "42vh" : "340px" }}
+                  imgStyle={{ maxHeight: isMobile ? "42vh" : "320px" }}
                 />
               ) : (
                 // 아직 스텝 이미지가 없는 solution — 자리와 카드 톤은
@@ -362,7 +374,7 @@ export function SolutionShowcase({
                   style={{
                     aspectRatio: `${imageWidth} / ${imageHeight}`,
                     maxWidth: "100%",
-                    height: isMobile ? "32vh" : "340px",
+                    height: isMobile ? "32vh" : "320px",
                   }}
                 />
               )}
