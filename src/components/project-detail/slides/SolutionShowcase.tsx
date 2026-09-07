@@ -442,16 +442,18 @@ export function SolutionShowcase({
                     <div className="flex flex-1 justify-center">
                       <ComparisonLabelPill
                         label="문제"
-                        background={activeTabBackground}
+                        accent={accent}
                         accentColor={accentColor}
+                        projectId={projectId}
                       />
                     </div>
                     <div className="w-10 shrink-0" aria-hidden="true" />
                     <div className="flex flex-1 justify-center">
                       <ComparisonLabelPill
                         label="해결"
-                        background={activeTabBackground}
+                        accent={accent}
                         accentColor={accentColor}
+                        projectId={projectId}
                       />
                     </div>
                   </div>
@@ -468,8 +470,9 @@ export function SolutionShowcase({
                       <div className="flex justify-center">
                         <ComparisonLabelPill
                           label="문제"
-                          background={activeTabBackground}
+                          accent={accent}
                           accentColor={accentColor}
+                          projectId={projectId}
                         />
                       </div>
                     )}
@@ -495,8 +498,9 @@ export function SolutionShowcase({
                       <div className="flex justify-center">
                         <ComparisonLabelPill
                           label="해결"
-                          background={activeTabBackground}
+                          accent={accent}
                           accentColor={accentColor}
+                          projectId={projectId}
                         />
                       </div>
                     )}

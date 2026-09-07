@@ -1,32 +1,44 @@
-import { hexToRgba } from "@/lib/color"
+import { DEFAULT_ACCENT } from "@/data/projects"
+import type { ProjectAccent } from "@/lib/color"
+import { hexToRgba, mixWithWhite } from "@/lib/color"
 
 interface ComparisonLabelPillProps {
   label: string
-  // 선택된 세그먼트 탭과 같은 accent 그라디언트.
-  background: string
+  accent: ProjectAccent | null
   accentColor: string
+  projectId: string
 }
 
-// "문제"/"해결" 라벨 pill — 스타일을 선택된 세그먼트 탭 버튼과 똑같이 맞춘다
-// (같은 폰트·크기·그림자). 폭은 텍스트에 맞춰 가운데 정렬 래퍼 안에서
-// 자연 축소된다.
+// "문제"/"해결" 라벨 — 카드 태그(AccentPill)와 같은 은은한 그라디언트 배경에
+// 흰 글씨. 단 태그보다 크고 굵게 잡아 섹션 라벨로 읽히게 한다.
 export function ComparisonLabelPill({
   label,
-  background,
+  accent,
   accentColor,
+  projectId,
 }: ComparisonLabelPillProps) {
+  const pillAccent = accent ?? DEFAULT_ACCENT
+  // CoChat for Business(id "02")는 배경처럼 흰색 혼합을 덜 써서 톤을 진하게 둔다
+  const pillWhiteMix = projectId === "02" ? 0.2 : 0.5
+
   return (
-    <div
+    <span
       style={{
-        fontFamily: "var(--font-body)",
-        background,
+        fontFamily: "var(--font-mono)",
         color: "rgba(255,255,255,0.98)",
-        boxShadow: `0 6px 14px -6px ${hexToRgba(accentColor, 0.5)}`,
-        textShadow: "0 1px 2px rgba(12,15,26,0.25)",
+        WebkitTextStroke: "0.4px currentColor",
+        boxShadow: `0 6px 16px ${hexToRgba(accentColor, 0.2)}, 0 1px 3px rgba(12,15,26,0.1)`,
       }}
-      className="rounded-lg px-3 py-1 text-xs font-medium"
+      className="relative flex items-center rounded-full px-4 py-1.5 text-base font-bold tracking-[0.04em]"
     >
-      {label}
-    </div>
+      <span
+        aria-hidden="true"
+        className="absolute inset-0 rounded-full"
+        style={{
+          background: `radial-gradient(ellipse at center, ${hexToRgba(pillAccent.primary, 0.3)} 0%, transparent 72%), linear-gradient(135deg, ${mixWithWhite(pillAccent.blobs[0], pillWhiteMix)}, ${mixWithWhite(pillAccent.blobs[1], pillWhiteMix)}, ${mixWithWhite(pillAccent.blobs[2], pillWhiteMix)})`,
+        }}
+      />
+      <span className="relative">{label}</span>
+    </span>
   )
 }
