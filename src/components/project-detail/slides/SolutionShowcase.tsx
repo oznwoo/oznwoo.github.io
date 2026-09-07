@@ -438,7 +438,7 @@ export function SolutionShowcase({
               <div
                 className={
                   (isMobile ? "flex flex-col" : "flex items-stretch mx-auto") +
-                  " gap-2 max-w-3xl"
+                  " gap-4 max-w-2xl"
                 }
                 style={{ minHeight: isMobile ? undefined : "264px" }}
               >
@@ -446,6 +446,7 @@ export function SolutionShowcase({
                   label="문제"
                   items={solution.comparison.before}
                   accentColor={accentColor}
+                  headerBackground={activeTabBackground}
                 />
                 <div className="flex flex-col items-center shrink-0">
                   <div
@@ -465,6 +466,7 @@ export function SolutionShowcase({
                   label="해결"
                   items={solution.comparison.after}
                   accentColor={accentColor}
+                  headerBackground={activeTabBackground}
                 />
               </div>
             ) : (

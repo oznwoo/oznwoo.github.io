@@ -6,15 +6,19 @@ interface ComparisonGroupCardProps {
   label: string
   items: ComparisonEntry[]
   accentColor: string
+  // 헤더 배경 — 선택된 세그먼트 탭과 같은 accent 그라디언트를 받는다.
+  headerBackground: string
 }
 
 // AS-IS 항목 전체(또는 TO-BE 항목 전체)를 한 카드에 묶어 보여준다 — "문제"/
-// "해결" 라벨은 카드 맨 위(하단 구분선 포함)에 크게 넣고, 본문은 가운데
-// 정렬한다. 항목이 여러 개면 카드 내부를 구분선으로만 나눈다.
+// "해결" 라벨은 카드 맨 위 헤더(선택된 탭과 같은 accent 그라디언트 배경 +
+// 흰 글씨)에 크게 넣고, 본문은 가운데 정렬한다. 항목이 여러 개면 카드
+// 내부를 구분선으로만 나눈다.
 export function ComparisonGroupCard({
   label,
   items,
   accentColor,
+  headerBackground,
 }: ComparisonGroupCardProps) {
   return (
     <div
@@ -22,14 +26,19 @@ export function ComparisonGroupCard({
       style={{
         background: hexToRgba(mixWithWhite(accentColor, 0.93), 0.62),
         border: "1px solid rgba(12,15,26,0.06)",
+        boxShadow: "0 12px 32px -14px rgba(12,15,26,0.2)",
       }}
     >
       <div
         className="px-3 pt-3 pb-2.5 text-center"
-        style={{ borderBottom: "1px solid rgba(12,15,26,0.08)" }}
+        style={{ background: headerBackground }}
       >
         <span
-          style={{ fontFamily: "var(--font-mono)", color: accentColor }}
+          style={{
+            fontFamily: "var(--font-mono)",
+            color: "rgba(255,255,255,0.98)",
+            textShadow: "0 1px 2px rgba(12,15,26,0.25)",
+          }}
           className="text-sm font-semibold tracking-[0.06em] uppercase"
         >
           {label}
