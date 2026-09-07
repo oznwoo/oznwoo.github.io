@@ -156,9 +156,17 @@ export function SolutionShowcase({
           >
             Solution
           </span>
+          {/* 탭도 revealed 기반 전환을 쓴다 — 등장할 땐 아래에서 위로
+              (12px → 0), 슬라이드를 떠날 땐 위에서 아래로(0 → 12px) 사라진다. */}
           <div
             className="inline-flex max-w-full items-center overflow-x-auto rounded-lg p-0.5"
-            style={{ background: "rgba(12,15,26,0.045)" }}
+            style={{
+              background: "rgba(12,15,26,0.045)",
+              transform: revealed ? "translateY(0)" : "translateY(12px)",
+              opacity: revealed ? 1 : 0,
+              transition:
+                "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
+            }}
           >
             {solutions.map((s, i) => {
               const active = i === step
