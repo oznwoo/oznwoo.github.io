@@ -24,16 +24,11 @@ interface AboutStep {
   tabLabel: string
   headline: string
   body: string
-  // 이 스텝의 미디어 종류 — 실제 image/video 값이 아직 없어도 이 값으로
-  // 어떤 종류의 자리표시자를 보여줄지 정한다
-  kind: "image" | "video"
+  // 스크린샷/다이어그램(선택). 아직 없으면 자리표시자를 보여준다.
   image?: string
   imageAlt?: string
   imageWidth?: number
   imageHeight?: number
-  // 이미지 대신 시연 영상을 보여줄 스텝(선택) — image와 함께 쓰지 않는다
-  video?: string
-  videoPoster?: string
 }
 
 // 본문을 문장 단위로 쪼갠다 — 문장 중간이 아니라 문장 경계에서만
@@ -43,10 +38,10 @@ function splitSentences(text: string): string[] {
 }
 
 // 소개 — Overview 히어로 다음, 프로젝트를 실제로 설명하는 전용 화면.
-// roleImage·demoVideo가 있는 만큼 SOLUTION 쇼케이스와 같은 탭+화살표
-// 패턴으로 "무엇을 만들었나"/"내가 맡은 역할"/"시연 영상" 스텝이 늘어나고,
-// 아무것도 없는 프로젝트는 기존처럼 탭 없이 소개 문단(+about 이미지)
-// 하나만 보여준다.
+// roleHeadline·stackDiagram이 있는 만큼 탭+화살표 패턴으로 "프로젝트
+// 소개"/"담당 업무"/"기술 스택" 스텝이 늘어나고, 아무것도 없는 프로젝트는
+// 탭 없이 소개 문단(+about 이미지) 하나만 보여준다. 시연 영상은 별도
+// DemoSlide(맨 끝)로 분리돼 있다.
 export function AboutSlide({
   project,
   detail,
@@ -66,7 +61,6 @@ export function AboutSlide({
       tabLabel: "프로젝트 소개",
       headline: detail.overviewHeadline,
       body: detail.overviewBody,
-      kind: "image",
       image: detail.aboutImage,
       imageAlt: `${project.title} 홈페이지 히어로 화면`,
       imageWidth: 1590,
@@ -78,7 +72,6 @@ export function AboutSlide({
       tabLabel: "담당 업무",
       headline: detail.roleHeadline,
       body: detail.roleBody ?? "",
-      kind: "image",
       image: detail.roleImage,
       imageAlt: `${project.title} 담당 기능 화면`,
       imageWidth: 1830,
@@ -90,7 +83,6 @@ export function AboutSlide({
       tabLabel: "기술 스택",
       headline: "전체 시스템 구성",
       body: "요청부터 응답까지 각 구성요소가 어떻게 연결돼 동작하는지 한 장으로 정리했습니다.",
-      kind: "image",
       image: detail.stackDiagram,
       imageAlt: "시스템 아키텍처 다이어그램",
     })
@@ -138,8 +130,8 @@ export function AboutSlide({
   })
 
   const current = steps[step]
-  // 시연 영상 탭을 뺀, 실제 스크린샷이 있는 스텝만 클릭해서 확대할 수 있다
-  const isZoomableShot = current.kind !== "video" && !!current.image
+  // 실제 스크린샷/다이어그램이 들어온 스텝만 클릭해서 확대할 수 있다
+  const isZoomableShot = !!current.image
 
   const openShot = () => {
     const rect = shotFrameRef.current?.getBoundingClientRect()
@@ -203,7 +195,7 @@ export function AboutSlide({
           }}
           className="flex flex-col items-center gap-8 w-full"
         >
-          {(hasTabs || current.image || current.video) && (
+          {(hasTabs || current.image) && (
             <div className="relative flex items-center justify-center w-full">
               {hasTabs && !isMobile && step > 0 && (
                 <TabArrowButton
@@ -269,27 +261,7 @@ export function AboutSlide({
                   aspectRatio: hasTabs ? "1830 / 1014" : undefined,
                 }}
               >
-                {current.kind === "video" ? (
-                  current.video ? (
-                    // 시연 영상 — 포스터 프레임만 먼저 보여주고, 실제로 재생
-                    // 버튼을 눌러야 영상 바이트를 받아오게 해 초기 로드에
-                    // 영향을 주지 않는다(preload="none")
-                    <video
-                      key={current.video}
-                      src={current.video}
-                      poster={current.videoPoster}
-                      controls
-                      preload="none"
-                      className="w-full h-full block object-contain"
-                    />
-                  ) : (
-                    <MediaPlaceholder
-                      kind="video"
-                      accentColor={accentColor}
-                      className="w-full h-full"
-                    />
-                  )
-                ) : current.image ? (
+                {current.image ? (
                   <img
                     src={current.image}
                     alt={current.imageAlt}

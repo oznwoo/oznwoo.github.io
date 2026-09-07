@@ -3,8 +3,7 @@ import type { ProjectDetail } from "@/data/projects"
 import { hexToRgba } from "@/lib/color"
 import { renderWithEmphasis } from "@/lib/emphasis"
 import { MediaPlaceholder } from "@/components/project-detail/MediaPlaceholder"
-
-const SLIDE_TRANSITION_MS = 750
+import { useSlideReveal } from "@/hooks/useSlideReveal"
 
 interface DemoSlideProps {
   detail: ProjectDetail
@@ -23,17 +22,11 @@ export function DemoSlide({
   isMobile,
   isActive,
 }: DemoSlideProps) {
-  const [revealed, setRevealed] = useState(false)
+  const revealed = useSlideReveal(isActive)
   const [hovered, setHovered] = useState(false)
 
   useEffect(() => {
-    if (!isActive) {
-      setRevealed(false)
-      setHovered(false)
-      return
-    }
-    const timer = setTimeout(() => setRevealed(true), SLIDE_TRANSITION_MS)
-    return () => clearTimeout(timer)
+    if (!isActive) setHovered(false)
   }, [isActive])
 
   return (
