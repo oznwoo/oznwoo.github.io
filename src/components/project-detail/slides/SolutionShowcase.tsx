@@ -443,6 +443,7 @@ export function SolutionShowcase({
                       <ComparisonLabelPill
                         label="문제"
                         background={activeTabBackground}
+                        accentColor={accentColor}
                       />
                     </div>
                     <div className="w-10 shrink-0" aria-hidden="true" />
@@ -450,6 +451,7 @@ export function SolutionShowcase({
                       <ComparisonLabelPill
                         label="해결"
                         background={activeTabBackground}
+                        accentColor={accentColor}
                       />
                     </div>
                   </div>
@@ -467,6 +469,7 @@ export function SolutionShowcase({
                         <ComparisonLabelPill
                           label="문제"
                           background={activeTabBackground}
+                          accentColor={accentColor}
                         />
                       </div>
                     )}
@@ -493,6 +496,7 @@ export function SolutionShowcase({
                         <ComparisonLabelPill
                           label="해결"
                           background={activeTabBackground}
+                          accentColor={accentColor}
                         />
                       </div>
                     )}
