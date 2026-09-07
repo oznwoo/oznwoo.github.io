@@ -4,10 +4,12 @@ import { Reveal } from "@/components/ui/Reveal"
 import { useSlideReveal } from "@/hooks/useSlideReveal"
 
 export function PageHome({ isActive = true }: { isActive?: boolean }) {
-  // 페이지 전환이 끝나면 헤드라인 → 하단 행(이름·링크)이 차례로 나타난다.
-  // 이어브로우는 고정. 이름과 링크는 같은 가로 행이라 한 타이밍에 함께 등장한다.
+  // 페이지 전환이 끝나면 헤드라인 → 하단 행(이름·링크) → 상태 티커가 차례로
+  // 나타난다. 이어브로우는 고정. 이름과 링크는 같은 가로 행이라 한 타이밍에
+  // 함께 등장한다.
   const headlineRevealed = useSlideReveal(isActive)
   const bottomRowRevealed = useSlideReveal(isActive, 850)
+  const statusRevealed = useSlideReveal(isActive, 950)
 
   return (
     <Page>
@@ -63,10 +65,10 @@ export function PageHome({ isActive = true }: { isActive?: boolean }) {
             ))}
           </Reveal>
         </div>
-        <div className="flex items-center gap-3 mt-2">
+        <Reveal show={statusRevealed} className="flex items-center gap-3 mt-2">
           <div className="w-1.5 h-1.5 rounded-full bg-[#4F6EF7] animate-pulse shrink-0" />
-          <StatusTicker />
-        </div>
+          <StatusTicker active={statusRevealed} />
+        </Reveal>
       </div>
     </Page>
   )

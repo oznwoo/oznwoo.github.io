@@ -28,9 +28,10 @@ export const cochatBusinessDetail: ProjectDetail = {
   logoClassName: "h-24 sm:h-28 w-auto",
   // 심볼에 서비스명이 포함되어 있지 않아 로고 아래에 별도로 표시한다
   logoShowName: true,
-  overviewHeadline: "Co(함께) + Chat(대화하자)",
+  overviewHeadline:
+    "개인용 앱 CoChat을 업무용(B2B) 메신저 통합 플랫폼으로 피벗한 프로젝트",
   overviewBody:
-    "여러 메신저에 흩어진 알림을 한 곳에 모으고, AI가 급한 정도를 가려 알려주는 업무용 메신저 통합 플랫폼",
+    "여러 업무 메신저에 흩어진 알림을 한 곳에 모아 주는 팀 단위 **웹 서비스**입니다. AI가 급한 정도를 가려 집중모드에서 중요한 알림만 남깁니다.",
   aboutImage: cochatBusinessAboutHero,
   roleHeadline: "[2026 구름 해커톤]에서 팀 리더를 맡고 풀스택 개발에 직접 참여",
   roleBody:

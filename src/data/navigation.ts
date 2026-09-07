@@ -6,5 +6,5 @@ export const DETAIL_PAGE_LABELS = [
   "Problem",
   "Solution",
   "Outcome",
-  "Stack",
+  "Demo",
 ]

@@ -5,6 +5,7 @@ import { hexToRgba, mixWithWhite } from "@/lib/color"
 import { renderWithEmphasis } from "@/lib/emphasis"
 import { AccentPill } from "../AccentPill"
 import { MediaPlaceholder } from "../MediaPlaceholder"
+import { ZoomableImage } from "../lightbox/ZoomableImage"
 
 // 세로 슬라이드 트랙 전환(ProjectDetailView, 0.75s)이 끝난 뒤에야 설명이
 // 내려오며 나타난다.
@@ -35,9 +36,6 @@ export function RevealCard({
   imageHeight,
   isActive,
 }: RevealCardProps) {
-  // 이미지 자체의 hover 살짝 뜨는 효과 — 설명 노출과는 별개로 마우스
-  // 호버에만 반응한다.
-  const [imgHovered, setImgHovered] = useState(false)
   const [revealed, setRevealed] = useState(false)
 
   useEffect(() => {
@@ -60,34 +58,12 @@ export function RevealCard({
         {item.title}
       </h3>
       {item.image ? (
-        <div
-          onMouseEnter={() => setImgHovered(true)}
-          onMouseLeave={() => setImgHovered(false)}
-          className="rounded-2xl overflow-hidden border cursor-default"
-          style={{
-            borderColor: imgHovered
-              ? hexToRgba(accentColor, 0.35)
-              : "rgba(12,15,26,0.1)",
-            boxShadow: imgHovered
-              ? `0 20px 45px -14px ${hexToRgba(accentColor, 0.35)}, 0 8px 18px -8px rgba(12,15,26,0.28)`
-              : "0 14px 34px -18px rgba(12,15,26,0.24), 0 4px 10px -6px rgba(12,15,26,0.12)",
-            transform: imgHovered
-              ? "translateY(-3px) scale(1.012)"
-              : "translateY(0) scale(1)",
-            transition:
-              "transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease-out, border-color 0.4s ease-out",
-          }}
-        >
-          <img
-            src={item.image}
-            alt=""
-            aria-hidden="true"
-            loading="lazy"
-            width={imageWidth}
-            height={imageHeight}
-            className="w-full h-auto block"
-          />
-        </div>
+        <ZoomableImage
+          src={item.image}
+          accentColor={accentColor}
+          width={imageWidth}
+          height={imageHeight}
+        />
       ) : (
         // 아직 실제 스크린샷을 받지 못한 카드 — 영역을 접지 않고 같은
         // 비율의 자리표시자를 보여줘 이후 이미지만 채워 넣으면 되게 한다

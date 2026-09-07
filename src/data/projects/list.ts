@@ -35,9 +35,9 @@ export const PROJECTS = [
   {
     id: "04",
     title: "CoChat",
-    subtitle: "메신저 통합 플랫폼",
+    subtitle: "B2C 메신저 통합 앱",
     description:
-      "여러 메신저의 알림을 모아 AI가 취향에 맞는 것만 요약해 주는 앱",
+      "일상 속 여러 메신저의 알림을 모아 AI가 취향에 맞는 것만 요약해 주는 개인용 모바일 앱",
     // AI 요약·분류에 RAG 파이프라인을 활용해서 예외적으로 5개
     tags: ["Mobile", "Fullstack", "React Native", "FastAPI", "RAG"],
     year: "2024",

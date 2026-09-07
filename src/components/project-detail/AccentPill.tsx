@@ -1,6 +1,6 @@
 import { DEFAULT_ACCENT } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
-import { hexToRgba, mixWithWhite } from "@/lib/color"
+import { hexToRgba, softPillGradient } from "@/lib/color"
 
 interface AccentPillProps {
   label: string
@@ -38,9 +38,7 @@ export function AccentPill({
       <span
         aria-hidden="true"
         className="absolute inset-0 rounded-full"
-        style={{
-          background: `radial-gradient(ellipse at center, ${hexToRgba(pillAccent.primary, 0.3)} 0%, transparent 72%), linear-gradient(135deg, ${mixWithWhite(pillAccent.blobs[0], pillWhiteMix)}, ${mixWithWhite(pillAccent.blobs[1], pillWhiteMix)}, ${mixWithWhite(pillAccent.blobs[2], pillWhiteMix)})`,
-        }}
+        style={{ background: softPillGradient(pillAccent, pillWhiteMix) }}
       />
       <span className="relative">{label}</span>
     </span>

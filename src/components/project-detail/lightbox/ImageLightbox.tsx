@@ -1,10 +1,32 @@
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 import type { RefObject } from "react"
-import type { ProjectDetailCardItem } from "@/data/projects"
 import { hexToRgba } from "@/lib/color"
-import { FlowArrow } from "./FlowArrow"
+import { FlowArrow } from "../slides/solution-showcase/FlowArrow"
 import type { LightboxPhase } from "./flip"
+
+// 라이트박스로 크게 볼 내용 — 트리거(ZoomableImage / SOLUTION 쇼케이스)가
+// 이미 정규화해서 넘겨준다.
+// - single: 이미지 한 장
+// - row: 파이프라인 스텝 스크린샷 여러 장을 나란히(사이에 화살표)
+// - carousel: 서로 독립된 스크린샷 여러 장을 한 장씩, 좌우 화살표로 넘김
+export type LightboxContent =
+  | {
+      kind: "single"
+      src: string
+      label?: string
+    }
+  | {
+      kind: "row"
+      images: string[]
+      showArrows: boolean
+      label?: string
+    }
+  | {
+      kind: "carousel"
+      images: string[]
+      label?: string
+    }
 
 // 캐러셀 좌우 넘김 버튼 — 이미지 위가 아니라 백드롭 가장자리에 둔다.
 // SOLUTION 탭 화살표(TabArrowButton)와 같은 흰 카드형 버튼. 그림자는 hover와
@@ -68,7 +90,7 @@ function LightboxNav({
 }
 
 interface ImageLightboxProps {
-  solution: ProjectDetailCardItem
+  content: LightboxContent | null
   isMobile: boolean
   lightboxPhase: LightboxPhase
   zoomContentRef: RefObject<HTMLDivElement | null>
@@ -79,10 +101,10 @@ interface ImageLightboxProps {
   arrowShadowColor: string
 }
 
-// "이미지 크게 보기" 라이트박스의 실제 화면 — FLIP transform은 useImageLightbox
-// 훅이 zoomContentRef에 직접 걸어주므로, 여기서는 순수하게 마크업만 그린다.
+// "이미지 크게 보기" 라이트박스의 실제 화면 — FLIP transform은 LightboxProvider
+// 가 zoomContentRef에 직접 걸어주므로, 여기서는 순수하게 마크업만 그린다.
 export function ImageLightbox({
-  solution,
+  content,
   isMobile,
   lightboxPhase,
   zoomContentRef,
@@ -92,23 +114,20 @@ export function ImageLightbox({
   arrowGradientStops,
   arrowShadowColor,
 }: ImageLightboxProps) {
-  const images = solution.images
-  // 겹쳐 보여주던 독립 스크린샷들은 크게 볼 때 나란히 두면 각 장이 너무
-  // 작아진다 — 한 장씩 꽉 차게 보여주고 좌우 화살표로 넘긴다.
-  const carousel =
-    solution.imagesOverlap === true && !!images && images.length > 1
+  const carousel = content?.kind === "carousel"
+  const images = content && content.kind !== "single" ? content.images : null
   const count = images?.length ?? 0
   const [index, setIndex] = useState(0)
 
-  // 라이트박스를 닫거나 다른 스텝으로 넘어가면 항상 첫 장부터 다시 시작
+  // 라이트박스를 닫거나 다른 내용으로 바뀌면 항상 첫 장부터 다시 시작
   useEffect(() => {
     if (lightboxPhase === "closed") setIndex(0)
   }, [lightboxPhase])
   useEffect(() => {
     setIndex(0)
-  }, [solution])
+  }, [content])
 
-  // 열려 있는 동안 좌우 방향키로도 전환 (Esc는 훅에서 이미 처리).
+  // 열려 있는 동안 좌우 방향키로도 전환 (Esc는 Provider에서 이미 처리).
   // 양 끝에서는 더 넘어가지 않는다(순환 X) — 경계 화살표도 함께 숨긴다.
   useEffect(() => {
     if (!carousel || lightboxPhase === "closed") return
@@ -120,8 +139,7 @@ export function ImageLightbox({
     return () => window.removeEventListener("keydown", onKey)
   }, [carousel, lightboxPhase, count])
 
-  if (lightboxPhase === "closed" || !(solution.image || solution.images))
-    return null
+  if (lightboxPhase === "closed" || !content) return null
 
   const goPrev = () => setIndex((i) => Math.max(0, i - 1))
   const goNext = () => setIndex((i) => Math.min(count - 1, i + 1))
@@ -131,7 +149,7 @@ export function ImageLightbox({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={`${solution.title} 크게 보기`}
+      aria-label={`${content.label ?? "이미지"} 크게 보기`}
       onClick={closeZoom}
       className="fixed inset-0 z-50 flex items-center justify-center p-6 md:p-14"
       style={{
@@ -153,11 +171,11 @@ export function ImageLightbox({
           }
         }}
       >
-        {carousel ? (
+        {content.kind === "carousel" ? (
           <div className="relative flex items-center justify-center">
             <img
               key={index}
-              src={images![index]}
+              src={content.images[index]}
               alt=""
               className="rounded-2xl"
               style={{
@@ -182,7 +200,7 @@ export function ImageLightbox({
               {index + 1} / {count}
             </div>
           </div>
-        ) : solution.images ? (
+        ) : content.kind === "row" ? (
           <div
             className={
               isMobile
@@ -190,7 +208,7 @@ export function ImageLightbox({
                 : "flex items-center gap-8 max-h-full"
             }
           >
-            {solution.images.map((img, i) => (
+            {content.images.map((img, i) => (
               <div
                 key={i}
                 className={
@@ -199,7 +217,7 @@ export function ImageLightbox({
                     : "flex items-center gap-8"
                 }
               >
-                {i > 0 && solution.imagesShowArrows !== false && (
+                {i > 0 && content.showArrows && (
                   <FlowArrow
                     gradientId={`solution-arrow-gradient-zoom-${i}`}
                     gradientStops={arrowGradientStops}
@@ -219,7 +237,7 @@ export function ImageLightbox({
                     // 않는다 — 장수로 나눠 여유(화살표·gap)를 뺀 값
                     maxWidth: isMobile
                       ? "88vw"
-                      : `${Math.floor(80 / solution.images!.length)}vw`,
+                      : `${Math.floor(80 / content.images.length)}vw`,
                     width: "auto",
                     height: "auto",
                     boxShadow: "0 50px 100px -20px rgba(0,0,0,0.4)",
@@ -230,7 +248,7 @@ export function ImageLightbox({
           </div>
         ) : (
           <img
-            src={solution.image}
+            src={content.src}
             alt=""
             className="rounded-2xl"
             style={{

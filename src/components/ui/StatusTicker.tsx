@@ -9,11 +9,17 @@ const STATUS_MESSAGES = [
   "사용자의 문제를 해결하고 싶습니다",
 ]
 
-export function StatusTicker() {
+// active=false 동안(슬라이드 등장 연출 중)에는 자체 위로-올라가는 순환을
+// 멈추고, 등장이 끝난 뒤(active=true)부터 메시지를 바꾼다.
+export function StatusTicker({ active = true }: { active?: boolean }) {
   const [index, setIndex] = useState(0)
   const [phase, setPhase] = useState<"visible" | "exit" | "enter">("visible")
 
   useEffect(() => {
+    if (!active) {
+      setPhase("visible")
+      return
+    }
     const id = setInterval(() => {
       setPhase("exit")
       setTimeout(() => {
@@ -23,7 +29,7 @@ export function StatusTicker() {
       }, 300)
     }, 2800)
     return () => clearInterval(id)
-  }, [])
+  }, [active])
 
   const transform =
     phase === "exit"
