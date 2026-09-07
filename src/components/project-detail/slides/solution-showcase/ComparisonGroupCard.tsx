@@ -9,9 +9,9 @@ interface ComparisonGroupCardProps {
 }
 
 // AS-IS 항목 전체(또는 TO-BE 항목 전체)를 한 카드에 묶어 보여준다 — "문제"/
-// "해결" 라벨은 카드 바깥이 아니라 카드 맨 위(구분선 포함)에 넣고, 항목이
-// 여러 개면 카드 내부를 구분선으로만 나눈다. 좌우 여백은 상하 여백과 비슷한
-// 크기로 맞춰 균형을 준다.
+// "해결" 라벨은 카드 맨 위(하단 구분선 포함)에 크게 넣고, 본문은 왼쪽 정렬해
+// 텍스트가 카드 좌우 여백에 딱 맞도록 채운다. 항목이 여러 개면 카드 내부를
+// 구분선으로만 나눈다.
 export function ComparisonGroupCard({
   label,
   items,
@@ -26,12 +26,12 @@ export function ComparisonGroupCard({
       }}
     >
       <div
-        className="px-3 pt-2.5 pb-2 text-center"
+        className="px-3 pt-3 pb-2.5"
         style={{ borderBottom: "1px solid rgba(12,15,26,0.08)" }}
       >
         <span
           style={{ fontFamily: "var(--font-mono)", color: accentColor }}
-          className="text-[11px] font-semibold tracking-[0.08em] uppercase"
+          className="text-sm font-semibold tracking-[0.06em] uppercase"
         >
           {label}
         </span>
@@ -45,26 +45,26 @@ export function ComparisonGroupCard({
               style={{ background: "rgba(12,15,26,0.1)" }}
             />
           )}
-          <div className="px-3 py-3 flex flex-col items-center text-center">
+          <div className="px-3 py-3.5 flex flex-col items-start text-left">
             <p
               style={{ fontFamily: "var(--font-body)" }}
               className="text-base font-semibold text-[#0C0F1A] leading-snug"
             >
               {item.title}
             </p>
-            <ul className="flex flex-col items-center gap-1 mt-2">
+            <ul className="flex flex-col gap-1 mt-2">
               {item.detail.map((line, j) => (
                 <li
                   key={j}
                   style={{ fontFamily: "var(--font-body)" }}
-                  className="text-xs text-[#0C0F1A]/60 leading-relaxed font-normal flex items-center gap-1.5"
+                  className="text-xs text-[#0C0F1A]/60 leading-relaxed font-normal flex items-start gap-1.5"
                 >
                   <span
                     aria-hidden="true"
-                    className="w-1 h-1 rounded-full shrink-0"
+                    className="w-1 h-1 rounded-full shrink-0 mt-1.5"
                     style={{ background: accentColor }}
                   />
-                  {renderWithEmphasis(line)}
+                  <span>{renderWithEmphasis(line)}</span>
                 </li>
               ))}
             </ul>
