@@ -12,3 +12,7 @@ logs/
 .claude-replay.*
 .tmp-*
 .claude/settings.local.json
+
+# macOS
+.DS_Store
+**/.DS_Store

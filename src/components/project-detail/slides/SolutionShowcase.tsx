@@ -9,7 +9,8 @@ import { getArrowColors } from "@/components/project-detail/lightbox/arrowColors
 import type { LightboxContent } from "@/components/project-detail/lightbox/ImageLightbox"
 import { useLightbox } from "@/components/project-detail/lightbox/LightboxProvider"
 import { ZoomableImage } from "@/components/project-detail/lightbox/ZoomableImage"
-import { ComparisonGroupCard } from "./solution-showcase/ComparisonGroupCard"
+import { ComparisonItemCard } from "./solution-showcase/ComparisonItemCard"
+import { ComparisonLabelPill } from "./solution-showcase/ComparisonLabelPill"
 import { FlowArrow } from "./solution-showcase/FlowArrow"
 import { useHorizontalStepKeys } from "@/hooks/useHorizontalStepKeys"
 
@@ -92,6 +93,7 @@ export function SolutionShowcase({
   })
 
   const solution = solutions[step]
+  const comparison = solution.comparison
 
   // 확대 시 보여줄 내용 — 여러 장이면 겹침(imagesOverlap) 여부에 따라 캐러셀
   // (한 장씩 좌우로 넘김) 또는 화살표로 이은 나란한 줄로 보여준다
@@ -429,45 +431,77 @@ export function SolutionShowcase({
                 "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
             }}
           >
-            {solution.comparison ? (
-              // 기존 상태를 개선한 항목(전처리 파이프라인)은 점 불릿 목록
-              // 대신 AS-IS 항목 전체를 한 카드로, TO-BE 항목 전체를 한
-              // 카드로 묶고(카드 내부는 구분선으로만 나눔) 화살표로 잇는
-              // 비교 구조로 보여준다 — 어려운 용어 없이 상태 변화 자체가
-              // 한눈에 읽히게
-              <div
-                className={
-                  (isMobile ? "flex flex-col" : "flex items-stretch mx-auto") +
-                  " gap-4 max-w-2xl"
-                }
-                style={{ minHeight: isMobile ? undefined : "288px" }}
-              >
-                <ComparisonGroupCard
-                  label="문제"
-                  items={solution.comparison.before}
-                  accentColor={accentColor}
-                  headerBackground={activeTabBackground}
-                />
-                <div className="flex flex-col items-center shrink-0">
+            {comparison ? (
+              // AS-IS 항목 하나 ↔ TO-BE 항목 하나를 각각 독립 카드로 떼어
+              // 같은 행에 두고 행마다 화살표로 잇는다 — 어려운 용어 없이
+              // 상태 변화 자체가 한눈에 읽히게. 데스크톱은 3열(문제 | 화살표
+              // | 해결), 모바일은 짝별로 세로로 쌓는다.
+              <div className="mx-auto flex max-w-2xl flex-col gap-3">
+                {!isMobile && (
+                  <div className="flex items-center gap-3">
+                    <div className="flex flex-1 justify-center">
+                      <ComparisonLabelPill
+                        label="문제"
+                        background={activeTabBackground}
+                      />
+                    </div>
+                    <div className="w-10 shrink-0" aria-hidden="true" />
+                    <div className="flex flex-1 justify-center">
+                      <ComparisonLabelPill
+                        label="해결"
+                        background={activeTabBackground}
+                      />
+                    </div>
+                  </div>
+                )}
+                {comparison.before.map((beforeEntry, i) => (
                   <div
-                    aria-hidden="true"
-                    className="flex-1 flex items-center justify-center"
-                    style={{ color: accentColor }}
+                    key={i}
+                    className={
+                      (isMobile ? "flex flex-col" : "flex items-stretch") +
+                      " gap-3"
+                    }
                   >
-                    <FlowArrow
-                      gradientId="solution-arrow-gradient-comparison"
-                      gradientStops={arrowGradientStops}
-                      shadowColor={arrowShadowColor}
-                      rotate={isMobile}
+                    {isMobile && (
+                      <div className="flex justify-center">
+                        <ComparisonLabelPill
+                          label="문제"
+                          background={activeTabBackground}
+                        />
+                      </div>
+                    )}
+                    <ComparisonItemCard
+                      entry={beforeEntry}
+                      accentColor={accentColor}
+                    />
+                    <div
+                      className="flex shrink-0 items-center justify-center self-center"
+                      style={{
+                        color: accentColor,
+                        width: isMobile ? undefined : "2.5rem",
+                      }}
+                    >
+                      <FlowArrow
+                        gradientId={`solution-arrow-gradient-comparison-${i}`}
+                        gradientStops={arrowGradientStops}
+                        shadowColor={arrowShadowColor}
+                        rotate={isMobile}
+                      />
+                    </div>
+                    {isMobile && (
+                      <div className="flex justify-center">
+                        <ComparisonLabelPill
+                          label="해결"
+                          background={activeTabBackground}
+                        />
+                      </div>
+                    )}
+                    <ComparisonItemCard
+                      entry={comparison.after[i]}
+                      accentColor={accentColor}
                     />
                   </div>
-                </div>
-                <ComparisonGroupCard
-                  label="해결"
-                  items={solution.comparison.after}
-                  accentColor={accentColor}
-                  headerBackground={activeTabBackground}
-                />
+                ))}
               </div>
             ) : (
               <div
