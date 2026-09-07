@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react"
-import { TabArrowButton } from "@/components/project-detail/TabArrowButton"
-import { DEFAULT_ACCENT } from "@/data/projects"
 import type { ProjectDetailCardItem } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
-import { hexToRgba, mixWithWhite, softPillGradient } from "@/lib/color"
+import { hexToRgba, mixWithWhite } from "@/lib/color"
 import { renderWithEmphasis } from "@/lib/emphasis"
-import { MediaPlaceholder } from "@/components/project-detail/MediaPlaceholder"
 import { getArrowColors } from "@/components/project-detail/lightbox/arrowColors"
-import type { LightboxContent } from "@/components/project-detail/lightbox/ImageLightbox"
 import { useLightbox } from "@/components/project-detail/lightbox/LightboxProvider"
-import { ZoomableImage } from "@/components/project-detail/lightbox/ZoomableImage"
 import { ComparisonItemCard } from "./solution-showcase/ComparisonItemCard"
 import { ComparisonLabelPill } from "./solution-showcase/ComparisonLabelPill"
 import { FlowArrow } from "./solution-showcase/FlowArrow"
+import { SolutionImageStage } from "./solution-showcase/SolutionImageStage"
+import { SolutionStepTabs } from "./solution-showcase/SolutionStepTabs"
 import { useHorizontalStepKeys } from "@/hooks/useHorizontalStepKeys"
 
 const SLIDE_TRANSITION_MS = 750
@@ -29,9 +26,10 @@ interface SolutionShowcaseProps {
   isActive: boolean
 }
 
-// Fintag SOLUTION 전용 — 3개의 해결 방안을 PROBLEM과 1:1로 짝지어 한 번에
-// 하나씩 보여준다. 탭(또는 이미지 옆 화살표)으로 스텝만 조용히 전환하고,
-// 세로 슬라이드 트랙이나 배경 blob 웜프는 건드리지 않는다.
+// PROBLEM과 1:1로 짝지은 해결 방안을 한 번에 하나씩 보여준다(Fintag·CoChat·
+// CoChat for Business·Gopssl 공용). 위에서부터 스텝 탭 → 이미지 영역 →
+// 문제/해결 비교 카드 순. 스텝 전환만 조용히 일어나고 세로 슬라이드 트랙은
+// 건드리지 않는다.
 export function SolutionShowcase({
   problems,
   solutions,
@@ -44,16 +42,8 @@ export function SolutionShowcase({
   isActive,
 }: SolutionShowcaseProps) {
   const [step, setStep] = useState(0)
-  const [imgHovered, setImgHovered] = useState(false)
-  const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(
-    null,
-  )
   const [revealed, setRevealed] = useState(false)
-  const {
-    open: openLightbox,
-    close: closeLightbox,
-    isOpen: lightboxOpen,
-  } = useLightbox()
+  const { close: closeLightbox, isOpen: lightboxOpen } = useLightbox()
 
   // 슬라이드를 나갔다 다시 들어와도 보던 스텝을 그대로 유지한다 — step은
   // 여기서 건드리지 않고, 프로젝트 자체가 바뀔 때만(아래 별도 effect) 0으로
@@ -61,7 +51,6 @@ export function SolutionShowcase({
   useEffect(() => {
     if (!isActive) {
       setRevealed(false)
-      setHoveredImageIndex(null)
       closeLightbox()
       return
     }
@@ -80,7 +69,6 @@ export function SolutionShowcase({
     const clamped = Math.max(0, Math.min(solutions.length - 1, next))
     if (clamped === step) return
     setStep(clamped)
-    setHoveredImageIndex(null)
     closeLightbox()
   }
 
@@ -96,44 +84,10 @@ export function SolutionShowcase({
   const solution = solutions[step]
   const comparison = solution.comparison
 
-  // 확대 시 보여줄 내용 — 여러 장이면 겹침(imagesOverlap) 여부에 따라 캐러셀
-  // (한 장씩 좌우로 넘김) 또는 화살표로 이은 나란한 줄로 보여준다
-  const buildImagesContent = (): LightboxContent => {
-    const imgs = solution.images ?? []
-    if (solution.imagesOverlap === true && imgs.length > 1) {
-      return { kind: "carousel", images: imgs, label: solution.title }
-    }
-    return {
-      kind: "row",
-      images: imgs,
-      showArrows: solution.imagesShowArrows !== false,
-      label: solution.title,
-    }
-  }
-  // 여러 장을 나란히 두기엔 폭이 부족한 경우, 데스크톱에서만 카드를 서로
-  // 살짝 겹쳐 부채꼴로 펼친다 — 모바일은 세로 스택이라 겹침이 부자연스럽다
-  const overlapImages =
-    !isMobile &&
-    solution.imagesOverlap === true &&
-    (solution.images?.length ?? 0) > 1
-  // 이미지를 hover하고 있다는 것만 따로 뽑아둔다 — "크게 보기" 버튼과
-  // 이전/다음 화살표 모두 자기 자신을 hover할 때뿐 아니라 이미지를
-  // hover할 때도 같이 강조되어야 하기 때문
-  const isImageHovered = imgHovered || hoveredImageIndex !== null
-
-  // 화살표 색은 AccentPill(태그) 배경 그라디언트와 같은 계열 — 라이트박스의
-  // 멀티 이미지 확대와도 값을 맞춰야 해서 헬퍼로 공유한다
+  // 문제↔해결 카드 사이 화살표 색 — AccentPill(태그) 배경 그라디언트 계열
   const { arrowGradientStops, arrowShadowColor } = getArrowColors(
     accent,
     projectId,
-  )
-
-  // 선택된 탭 배경 — 카드 태그(AccentPill) 계열의 pill 그라디언트를 쓰되,
-  // 분홍빛 페이지 배경에서도 선택 상태가 또렷하게 보이도록 문제·해결 라벨
-  // (흰색 혼합 0.5/0.2)보다 흰색을 덜 섞어 더 진하게 깐다.
-  const activeTabBackground = softPillGradient(
-    accent ?? DEFAULT_ACCENT,
-    projectId === "02" ? 0.12 : 0.32,
   )
 
   return (
@@ -145,287 +99,32 @@ export function SolutionShowcase({
       }
     >
       <div className="max-w-4xl w-full">
-        {/* eyebrow(왼쪽) + 세그먼트 탭(오른쪽)을 한 줄에 둬서 상단 우측의 남는
-            공간을 쓰고 이미지를 위로 끌어올린다. 모바일은 세로로 쌓는다.
-            탭: 옅은 중립 회색 컨테이너, 선택된 탭만 네비게이터 dot과 같은 색,
-            둥글기는 페이지 카드 톤에 맞춤. 라벨은 problems와 1:1로 맞으면
-            (Fintag) PROBLEM 쪽 표현을, 아니면 solution 제목을 쓴다. */}
-        <div
-          className={
-            isMobile
-              ? "mb-3 flex flex-col gap-2"
-              : "mb-3 flex items-center justify-between gap-4"
-          }
-        >
-          <span
-            style={{ fontFamily: "var(--font-mono)" }}
-            className="shrink-0 text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase"
-          >
-            Solution
-          </span>
-          {/* 탭도 revealed 기반 전환을 쓴다 — 등장할 땐 아래에서 위로
-              (12px → 0), 슬라이드를 떠날 땐 위에서 아래로(0 → 12px) 사라진다. */}
-          <div
-            className="inline-flex max-w-full flex-wrap items-center justify-end gap-y-1 rounded-lg p-1"
-            style={{
-              background: "rgba(12,15,26,0.045)",
-              transform: revealed ? "translateY(0)" : "translateY(12px)",
-              opacity: revealed ? 1 : 0,
-              transition:
-                "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
-            }}
-          >
-            {solutions.map((s, i) => {
-              const active = i === step
-              return (
-                <button
-                  key={s.title}
-                  onClick={() => goStep(i)}
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    // 비활성은 inline background를 비워 hover:bg 클래스(회색)가
-                    // 먹히게 한다 — inline style은 클래스보다 우선하기 때문.
-                    background: active ? activeTabBackground : undefined,
-                    color: active
-                      ? "rgba(255,255,255,0.98)"
-                      : "rgba(12,15,26,0.5)",
-                    WebkitTextStroke: active
-                      ? "0.3px rgba(255,255,255,0.98)"
-                      : undefined,
-                    boxShadow: active
-                      ? `0 6px 16px -8px ${hexToRgba(accentColor, 0.45)}`
-                      : "none",
-                    textShadow: active
-                      ? "0 1px 2px rgba(12,15,26,0.2)"
-                      : "none",
-                  }}
-                  className={
-                    "cursor-pointer whitespace-nowrap rounded-[7px] px-3 py-1 text-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 " +
-                    (active
-                      ? "font-bold hover:brightness-[1.04]"
-                      : "font-medium hover:bg-black/10 hover:text-[#0C0F1A]/80")
-                  }
-                >
-                  {problems[i]?.title ?? s.title}
-                </button>
-              )
-            })}
-          </div>
-        </div>
+        {/* 라벨은 problems와 1:1로 맞으면(Fintag) PROBLEM 쪽 표현을, 아니면
+            solution 제목을 쓴다. */}
+        <SolutionStepTabs
+          labels={solutions.map((s, i) => problems[i]?.title ?? s.title)}
+          activeIndex={step}
+          onSelect={goStep}
+          revealed={revealed}
+          accent={accent}
+          accentColor={accentColor}
+          projectId={projectId}
+          isMobile={isMobile}
+        />
 
-        {/* 이미지 영역 — 탭 컨테이너와 같은 옅은 중립 회색 배경으로 영역을
-            암시한다. 스텝 종류(단일/멀티/겹침/없음)와 무관하게 항상 같은
-            크기·안쪽 여백. 좌우 스텝 화살표는 영역 바깥(옆)에 뜬다. */}
-        <div className="relative">
-          <div
-            className="relative overflow-hidden rounded-2xl"
-            style={{
-              height: isMobile ? undefined : "340px",
-              minHeight: isMobile ? "40vh" : undefined,
-              background: "rgba(12,15,26,0.045)",
-              border: "1px solid rgba(12,15,26,0.05)",
-            }}
-          >
-              <div
-                key={step}
-                className="flex h-full w-full items-center justify-center px-6 py-4"
-                style={{
-                  animation: "step-in 0.5s cubic-bezier(0.16,1,0.3,1) both",
-                }}
-              >
-                {solution.images ? (
-                // 스텝별 스크린샷을 합성 이미지 한 장 대신 낱장으로 받아,
-                // 사이 화살표는 이미지에 미리 그려 넣지 않고 FlowArrow로
-                // 직접 그린다 — 다른 화살표들과 색·모양이 항상 일치한다.
-                // imagesOverlap이면 화살표 없이 카드를 겹쳐 부채꼴로 편다.
-                <div
-                  className={
-                    isMobile
-                      ? "flex flex-col items-center gap-3"
-                      : overlapImages
-                        ? "flex items-center justify-center"
-                        : "flex items-center justify-center gap-3"
-                  }
-                >
-                  {solution.images.map((img, i) => {
-                    const isHovered = hoveredImageIndex === i
-                    const mid = (solution.images!.length - 1) / 2
-                    const restTransform = overlapImages
-                      ? `translateY(${Math.abs(i - mid) * 4}px) rotate(${(i - mid) * 2}deg)`
-                      : "translateY(0) scale(1)"
-                    const hoverTransform = overlapImages
-                      ? "translateY(-10px) rotate(0deg) scale(1.04)"
-                      : "translateY(-3px) scale(1.012)"
-                    return (
-                      <div
-                        key={i}
-                        className={
-                          isMobile
-                            ? "flex flex-col items-center gap-3"
-                            : "flex items-center gap-3"
-                        }
-                        style={
-                          overlapImages && i > 0
-                            ? {
-                                marginLeft:
-                                  solution.images!.length >= 3
-                                    ? "-110px"
-                                    : "-155px",
-                              }
-                            : undefined
-                        }
-                      >
-                        {i > 0 &&
-                          !overlapImages &&
-                          solution.imagesShowArrows !== false && (
-                            <FlowArrow
-                              gradientId={`solution-arrow-gradient-img-${i}`}
-                              gradientStops={arrowGradientStops}
-                              shadowColor={arrowShadowColor}
-                              size={26}
-                              rotate={isMobile}
-                            />
-                          )}
-                        <div
-                          role="button"
-                          tabIndex={0}
-                          aria-label={`${solution.title} 이미지 크게 보기`}
-                          onMouseEnter={() => setHoveredImageIndex(i)}
-                          onMouseLeave={() => setHoveredImageIndex(null)}
-                          onMouseDown={(e) => e.preventDefault()}
-                          onClick={(e) =>
-                            openLightbox(
-                              e.currentTarget.getBoundingClientRect(),
-                              buildImagesContent(),
-                            )
-                          }
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault()
-                              openLightbox(
-                                e.currentTarget.getBoundingClientRect(),
-                                buildImagesContent(),
-                              )
-                            }
-                          }}
-                          className="rounded-2xl overflow-hidden border shrink-0 cursor-zoom-in"
-                          style={{
-                            position: overlapImages ? "relative" : undefined,
-                            // 겹침(부채꼴)은 원본을 자르지 않는다 — 높이만
-                            // 통일하고 폭은 원본 비율대로 두며(object 안 씀),
-                            // 이미지 영역 좌우 여백을 살리도록 겹침을 얕게 준다.
-                            // 3장짜리는 폭 합이 커지므로 높이를 더 낮춰 맞춘다.
-                            height: overlapImages
-                              ? solution.images!.length >= 3
-                                ? "224px"
-                                : "268px"
-                              : undefined,
-                            // 평상시엔 왼쪽 카드가 앞(부채꼴을 왼→오로 읽게),
-                            // hover한 카드는 항상 맨 위로
-                            zIndex: overlapImages
-                              ? isHovered
-                                ? 40
-                                : solution.images!.length - i
-                              : undefined,
-                            transformOrigin: overlapImages
-                              ? "center bottom"
-                              : undefined,
-                            borderColor: isHovered
-                              ? hexToRgba(accentColor, 0.35)
-                              : "rgba(12,15,26,0.1)",
-                            boxShadow: isHovered
-                              ? `0 20px 45px -14px ${hexToRgba(accentColor, 0.35)}, 0 8px 18px -8px rgba(12,15,26,0.28)`
-                              : "0 14px 34px -18px rgba(12,15,26,0.24), 0 4px 10px -6px rgba(12,15,26,0.12)",
-                            transform: isHovered
-                              ? hoverTransform
-                              : restTransform,
-                            transition:
-                              "transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease-out, border-color 0.4s ease-out",
-                          }}
-                        >
-                          <img
-                            src={img}
-                            alt=""
-                            aria-hidden="true"
-                            loading="eager"
-                            className={
-                              overlapImages
-                                ? "block h-full w-auto"
-                                : "block w-auto"
-                            }
-                            style={
-                              overlapImages
-                                ? undefined
-                                : {
-                                    height: isMobile
-                                      ? "32vh"
-                                      : // 가로로 넓은 다이어그램 2장을 나란히
-                                        // 두면 폭 합이 컨테이너를 넘어간다 —
-                                        // 3장 미만일 때는 낮춘 높이로 폭을 맞춘다
-                                        solution.images!.length >= 3
-                                        ? "258px"
-                                        : "210px",
-                                  }
-                            }
-                          />
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              ) : solution.image ? (
-                <ZoomableImage
-                  src={solution.image}
-                  accentColor={accentColor}
-                  width={imageWidth}
-                  height={imageHeight}
-                  onHoverChange={setImgHovered}
-                  frameClassName="inline-block max-w-full"
-                  imgClassName="block w-auto h-auto max-w-full"
-                  imgStyle={{ maxHeight: isMobile ? "36vh" : "288px" }}
-                />
-              ) : (
-                // 아직 스텝 이미지가 없는 solution — 자리와 카드 톤은
-                // 그대로 두고 자리표시자만 보여준다
-                <MediaPlaceholder
-                  kind="image"
-                  accentColor={accentColor}
-                  style={{
-                    aspectRatio: `${imageWidth} / ${imageHeight}`,
-                    maxWidth: "100%",
-                    height: isMobile ? "26vh" : "270px",
-                  }}
-                />
-              )}
-              </div>
-            </div>
-            {!isMobile && step > 0 && (
-              <TabArrowButton
-                direction="prev"
-                label="이전 해결 방안"
-                onClick={() => goStep(step - 1)}
-                revealed={revealed}
-                extraHintActive={isImageHovered}
-                accent={accent}
-                accentColor={accentColor}
-                projectId={projectId}
-                offsetClassName="-left-14"
-              />
-            )}
-            {!isMobile && step < solutions.length - 1 && (
-              <TabArrowButton
-                direction="next"
-                label="다음 해결 방안"
-                onClick={() => goStep(step + 1)}
-                revealed={revealed}
-                extraHintActive={isImageHovered}
-                accent={accent}
-                accentColor={accentColor}
-                projectId={projectId}
-                offsetClassName="-right-14"
-              />
-            )}
-          </div>
+        <SolutionImageStage
+          solution={solution}
+          step={step}
+          stepCount={solutions.length}
+          onStep={goStep}
+          revealed={revealed}
+          imageWidth={imageWidth}
+          imageHeight={imageHeight}
+          accent={accent}
+          accentColor={accentColor}
+          projectId={projectId}
+          isMobile={isMobile}
+        />
 
         {/* 이미지 영역과 문제/해결 영역을 나누는 divider */}
         <div
