@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import { TabArrowButton } from "@/components/project-detail/TabArrowButton"
+import { DEFAULT_ACCENT } from "@/data/projects"
 import type { ProjectDetailCardItem } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
-import { accentGradient, hexToRgba, mixWithWhite } from "@/lib/color"
+import { hexToRgba, mixWithWhite, softPillGradient } from "@/lib/color"
 import { renderWithEmphasis } from "@/lib/emphasis"
 import { MediaPlaceholder } from "@/components/project-detail/MediaPlaceholder"
 import { getArrowColors } from "@/components/project-detail/lightbox/arrowColors"
@@ -127,9 +128,13 @@ export function SolutionShowcase({
     projectId,
   )
 
-  // 선택된 탭 pill 배경 — 좌측 네비게이터의 선택된 dot과 완전히 같은 색
-  // (DetailNav의 dotBackground와 동일 규칙)
-  const activeTabBackground = accent ? accentGradient(accent) : "#4F6EF7"
+  // 선택된 탭 배경 — 카드 태그(AccentPill) 계열의 pill 그라디언트를 쓰되,
+  // 분홍빛 페이지 배경에서도 선택 상태가 또렷하게 보이도록 문제·해결 라벨
+  // (흰색 혼합 0.5/0.2)보다 흰색을 덜 섞어 더 진하게 깐다.
+  const activeTabBackground = softPillGradient(
+    accent ?? DEFAULT_ACCENT,
+    projectId === "02" ? 0.12 : 0.32,
+  )
 
   return (
     <div
@@ -182,16 +187,21 @@ export function SolutionShowcase({
                     color: active
                       ? "rgba(255,255,255,0.98)"
                       : "rgba(12,15,26,0.5)",
+                    WebkitTextStroke: active
+                      ? "0.3px rgba(255,255,255,0.98)"
+                      : undefined,
                     boxShadow: active
-                      ? `0 6px 14px -6px ${hexToRgba(accentColor, 0.5)}`
+                      ? `0 6px 16px -8px ${hexToRgba(accentColor, 0.45)}`
                       : "none",
                     textShadow: active
-                      ? "0 1px 2px rgba(12,15,26,0.25)"
+                      ? "0 1px 2px rgba(12,15,26,0.2)"
                       : "none",
                   }}
                   className={
-                    "whitespace-nowrap rounded-[7px] px-3 py-1 text-xs font-medium transition-all duration-300 " +
-                    (active ? "" : "hover:text-[#0C0F1A]/75")
+                    "cursor-pointer whitespace-nowrap rounded-[7px] px-3 py-1 text-xs transition-all duration-200 active:scale-95 " +
+                    (active
+                      ? "font-bold hover:brightness-[1.04]"
+                      : "font-medium hover:bg-[rgba(12,15,26,0.06)] hover:text-[#0C0F1A]/75")
                   }
                 >
                   {problems[i]?.title ?? s.title}
@@ -436,7 +446,7 @@ export function SolutionShowcase({
               // 같은 행에 두고 행마다 화살표로 잇는다 — 어려운 용어 없이
               // 상태 변화 자체가 한눈에 읽히게. 데스크톱은 3열(문제 | 화살표
               // | 해결), 모바일은 짝별로 세로로 쌓는다.
-              <div className="mx-auto flex max-w-2xl flex-col gap-3">
+              <div className="mx-auto flex max-w-3xl flex-col gap-3">
                 {!isMobile && (
                   <div className="flex items-center gap-3">
                     <div className="flex flex-1 justify-center">

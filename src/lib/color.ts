@@ -22,6 +22,13 @@ export function accentGradient(accent: ProjectAccent): string {
   return `linear-gradient(135deg, ${accent.blobs[0]}, ${accent.blobs[1]}, ${accent.blobs[2]})`
 }
 
+// 카드 태그(AccentPill)·SOLUTION 라벨/선택 탭이 공유하는 "은은한 pill" 배경 —
+// primary를 옅게 깐 radial 위에 blobs 3색을 흰색과 섞은 linear를 얹는다.
+// whiteMix가 클수록 파스텔에 가깝다(기본 0.5, CoChat for Business는 0.2).
+export function softPillGradient(accent: ProjectAccent, whiteMix = 0.5): string {
+  return `radial-gradient(ellipse at center, ${hexToRgba(accent.primary, 0.3)} 0%, transparent 72%), linear-gradient(135deg, ${mixWithWhite(accent.blobs[0], whiteMix)}, ${mixWithWhite(accent.blobs[1], whiteMix)}, ${mixWithWhite(accent.blobs[2], whiteMix)})`
+}
+
 // hex를 흰색과 섞어 옅게 만든다. 상세 페이지에서는 opacity를 낮추는 대신 이걸
 // 써서 색 자체를 옅은 톤으로 바꾼다 — opacity만 낮추면 blob overlay가 밑에
 // 깔린 파랑/보라 앰비언트 base를 다 못 가려서 색이 탁하게 섞여 보이기 때문.
