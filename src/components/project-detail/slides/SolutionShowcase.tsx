@@ -140,16 +140,17 @@ export function SolutionShowcase({
       <div className="max-w-4xl w-full">
         <span
           style={{ fontFamily: "var(--font-mono)" }}
-          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-3 block"
+          className="text-xs text-[#0C0F1A]/25 tracking-[0.04em] uppercase mb-2 block"
         >
           Solution
         </span>
-        {/* 세그먼트형 pill 탭 — 옅은 중립 회색 컨테이너 안, 선택된 탭만
-            네비게이터 dot과 같은 색으로 채워진다. 탭 라벨은 problems와 1:1로
-            맞으면(Fintag) PROBLEM 쪽 표현을, 아니면 solution 제목을 쓴다. */}
-        <div className="mb-6 flex">
+        {/* 세그먼트 탭 — 옅은 중립 회색 컨테이너 안, 선택된 탭만 네비게이터
+            dot과 같은 색으로 채워진다. 모서리 둥글기는 하단 카드·이미지 프레임
+            (rounded-2xl)에 맞춘다. 탭 라벨은 problems와 1:1로 맞으면(Fintag)
+            PROBLEM 쪽 표현을, 아니면 solution 제목을 쓴다. */}
+        <div className="mb-2 flex">
           <div
-            className="inline-flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full p-1"
+            className="inline-flex max-w-full items-center gap-0.5 overflow-x-auto rounded-xl p-1"
             style={{ background: "rgba(12,15,26,0.045)" }}
           >
             {solutions.map((s, i) => {
@@ -172,7 +173,7 @@ export function SolutionShowcase({
                       : "none",
                   }}
                   className={
-                    "whitespace-nowrap rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-all duration-300 " +
+                    "whitespace-nowrap rounded-lg px-3.5 py-1.5 text-[13px] font-medium transition-all duration-300 " +
                     (active ? "" : "hover:text-[#0C0F1A]/75")
                   }
                 >
@@ -186,12 +187,12 @@ export function SolutionShowcase({
         {/* 이미지 영역 — 배경 없이, 스텝 종류(단일/멀티/겹침/없음)와 무관하게
             항상 같은 크기의 영역을 차지해 탭을 바꿔도 레이아웃이 흔들리지
             않는다. 좌우 스텝 화살표는 이미지 옆에 뜬다. */}
-        <div className="relative mb-6">
+        <div className="relative mb-2">
           <div
             className="relative"
             style={{
-              height: isMobile ? undefined : "360px",
-              minHeight: isMobile ? "44vh" : undefined,
+              height: isMobile ? undefined : "300px",
+              minHeight: isMobile ? "38vh" : undefined,
             }}
           >
               <div
@@ -234,7 +235,7 @@ export function SolutionShowcase({
                         }
                         style={
                           overlapImages && i > 0
-                            ? { marginLeft: "-320px" }
+                            ? { marginLeft: "-280px" }
                             : undefined
                         }
                       >
@@ -279,8 +280,8 @@ export function SolutionShowcase({
                             // — 카드 크기를 고정하고 이미지는 object-cover로 채우며,
                             // 겹침 간격도 %가 아닌 고정 px로 줘서 부채꼴 폭이 항상
                             // 컨테이너(max-w-4xl) 안에 들어오고 화살표와 간격이 유지된다
-                            width: overlapImages ? "440px" : undefined,
-                            height: overlapImages ? "300px" : undefined,
+                            width: overlapImages ? "392px" : undefined,
+                            height: overlapImages ? "268px" : undefined,
                             // 평상시엔 왼쪽 카드가 앞(부채꼴을 왼→오로 읽게),
                             // hover한 카드는 항상 맨 위로
                             zIndex: overlapImages
@@ -324,8 +325,8 @@ export function SolutionShowcase({
                                         // 두면 폭 합이 컨테이너를 넘어간다 —
                                         // 3장 미만일 때는 낮춘 높이로 폭을 맞춘다
                                         solution.images!.length >= 3
-                                        ? "300px"
-                                        : "240px",
+                                        ? "270px"
+                                        : "220px",
                                   }
                             }
                           />
@@ -343,7 +344,7 @@ export function SolutionShowcase({
                   onHoverChange={setImgHovered}
                   frameClassName="inline-block max-w-full"
                   imgClassName="block w-auto h-auto max-w-full"
-                  imgStyle={{ maxHeight: isMobile ? "42vh" : "340px" }}
+                  imgStyle={{ maxHeight: isMobile ? "38vh" : "290px" }}
                 />
               ) : (
                 // 아직 스텝 이미지가 없는 solution — 자리와 카드 톤은
@@ -354,7 +355,7 @@ export function SolutionShowcase({
                   style={{
                     aspectRatio: `${imageWidth} / ${imageHeight}`,
                     maxWidth: "100%",
-                    height: isMobile ? "32vh" : "320px",
+                    height: isMobile ? "28vh" : "280px",
                   }}
                 />
               )}
