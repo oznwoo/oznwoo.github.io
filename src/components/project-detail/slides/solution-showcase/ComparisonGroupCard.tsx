@@ -9,9 +9,8 @@ interface ComparisonGroupCardProps {
 }
 
 // AS-IS 항목 전체(또는 TO-BE 항목 전체)를 한 카드에 묶어 보여준다 — "문제"/
-// "해결" 라벨은 카드 맨 위(하단 구분선 포함)에 크게 넣고, 본문은 왼쪽 정렬해
-// 텍스트가 카드 좌우 여백에 딱 맞도록 채운다. 항목이 여러 개면 카드 내부를
-// 구분선으로만 나눈다.
+// "해결" 라벨은 카드 맨 위(하단 구분선 포함)에 크게 넣고, 본문은 가운데
+// 정렬한다. 항목이 여러 개면 카드 내부를 구분선으로만 나눈다.
 export function ComparisonGroupCard({
   label,
   items,
@@ -26,7 +25,7 @@ export function ComparisonGroupCard({
       }}
     >
       <div
-        className="px-3 pt-3 pb-2.5"
+        className="px-3 pt-3 pb-2.5 text-center"
         style={{ borderBottom: "1px solid rgba(12,15,26,0.08)" }}
       >
         <span
@@ -45,26 +44,26 @@ export function ComparisonGroupCard({
               style={{ background: "rgba(12,15,26,0.1)" }}
             />
           )}
-          <div className="px-3 py-3.5 flex flex-col items-start text-left">
+          <div className="px-3 py-3 flex flex-col items-center text-center">
             <p
               style={{ fontFamily: "var(--font-body)" }}
               className="text-base font-semibold text-[#0C0F1A] leading-snug"
             >
               {item.title}
             </p>
-            <ul className="flex flex-col gap-1 mt-2">
+            <ul className="flex flex-col items-center gap-1 mt-2">
               {item.detail.map((line, j) => (
                 <li
                   key={j}
                   style={{ fontFamily: "var(--font-body)" }}
-                  className="text-xs text-[#0C0F1A]/60 leading-relaxed font-normal flex items-start gap-1.5"
+                  className="text-xs text-[#0C0F1A]/60 leading-relaxed font-normal flex items-center gap-1.5"
                 >
                   <span
                     aria-hidden="true"
-                    className="w-1 h-1 rounded-full shrink-0 mt-1.5"
+                    className="w-1 h-1 rounded-full shrink-0"
                     style={{ background: accentColor }}
                   />
-                  <span>{renderWithEmphasis(line)}</span>
+                  {renderWithEmphasis(line)}
                 </li>
               ))}
             </ul>

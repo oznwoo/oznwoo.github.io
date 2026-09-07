@@ -429,9 +429,10 @@ export function SolutionShowcase({
               // 한눈에 읽히게
               <div
                 className={
-                  (isMobile ? "flex flex-col" : "flex items-stretch") + " gap-2"
+                  (isMobile ? "flex flex-col" : "flex items-stretch mx-auto") +
+                  " gap-2 max-w-3xl"
                 }
-                style={{ height: isMobile ? undefined : "232px" }}
+                style={{ minHeight: isMobile ? undefined : "264px" }}
               >
                 <ComparisonGroupCard
                   label="문제"
