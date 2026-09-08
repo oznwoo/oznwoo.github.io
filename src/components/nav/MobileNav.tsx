@@ -1,4 +1,4 @@
-import logoImg from "@/imports/______________.png"
+import logoImg from "@/imports/personal-logo.png"
 
 // 모바일 전용 네비게이션 — 왼쪽 세로 dot rail 대신, 홈으로 가는 로고(좌상단)와
 // 이전/다음 화살표(우하단)로 가로 페이지를 넘긴다.

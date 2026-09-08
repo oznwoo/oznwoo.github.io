@@ -1,5 +1,5 @@
 import { useState } from "react"
-import logoImg from "@/imports/______________.png"
+import logoImg from "@/imports/personal-logo.png"
 import { SECTIONS } from "@/data/navigation"
 import type { ProjectAccent } from "@/lib/color"
 import { accentGradient } from "@/lib/color"
