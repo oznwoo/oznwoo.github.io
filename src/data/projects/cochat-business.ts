@@ -43,6 +43,7 @@ export const cochatBusinessDetail: ProjectDetail = {
   demoVideo: cochatBusinessDemoVideo,
   demoPoster: cochatBusinessDemoPoster,
   githubUrl: "https://github.com/oznwoo/cochat-for-business-frontend",
+  liveUrl: "https://cochat-for-business.vercel.app/",
   problem: [
     {
       title: "메신저의 다양화",
