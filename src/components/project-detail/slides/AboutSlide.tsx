@@ -7,7 +7,7 @@ import { renderWithEmphasis } from "@/lib/emphasis"
 import { MediaPlaceholder } from "@/components/project-detail/MediaPlaceholder"
 import { useLightbox } from "@/components/project-detail/lightbox/LightboxProvider"
 import { useHorizontalStepKeys } from "@/hooks/useHorizontalStepKeys"
-import { RoleContributionCard } from "@/components/project-detail/slides/about/RoleContributionCard"
+import { ContributionChart } from "@/components/project-detail/slides/about/ContributionChart"
 
 const SLIDE_TRANSITION_MS = 750
 
@@ -48,7 +48,7 @@ function BodyText({ text, centered }: { text: string; centered: boolean }) {
       style={{ fontFamily: "var(--font-body)" }}
       className={
         "text-sm sm:text-base text-[#0C0F1A]/55 leading-relaxed font-normal" +
-        (centered ? "" : " max-w-md")
+        (centered ? "" : " max-w-md text-left")
       }
     >
       {splitSentences(text).map((sentence, i) => (
@@ -337,31 +337,37 @@ export function AboutSlide({
                 "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
             }}
           >
-            {/* 기여도 데이터가 있는 스텝(담당 업무)은 headline·본문·기여도
-                차트를 한 납작한 카드에 담아 다른 탭의 본문 영역과 세로 높이를
-                맞춘다. 그 외 스텝은 마크다운 h1/h2 느낌으로 headline을 크게,
-                본문을 작고 옅게 슬라이드 중앙에 둔다 — 본문은 문장 경계에서만
-                줄바꿈되도록 문장 단위로 나눠 각각 한 줄로 보여주고, 핵심
-                단어만 **강조**로 굵게 표시한다 */}
+            {/* headline은 마크다운 h1 느낌으로 크고 진하게, 모든 스텝 공통.
+                본문(h2/보조 설명)은 작고 옅게 — 그 외 스텝은 슬라이드 중앙에
+                문장 단위로 한 줄씩, 핵심 단어만 **강조**로 굵게. 기여도
+                데이터가 있는 담당 업무 스텝만 본문을 왼쪽에 두고 좁은 기여도
+                차트를 오른쪽(모바일은 아래)에 나란히 놓는다 */}
+            <p
+              style={{ fontFamily: "var(--font-body)", lineHeight: 1.35 }}
+              className="text-lg sm:text-xl font-semibold text-[#0C0F1A]"
+            >
+              {current.headline}
+            </p>
             {current.contributions?.length ? (
-              <RoleContributionCard
-                headline={current.headline}
-                body={current.body}
-                items={current.contributions}
-                accentColor={accentColor}
-                revealed={revealed}
-                isMobile={isMobile}
-              />
+              <div
+                className={
+                  isMobile
+                    ? "flex flex-col items-center gap-5"
+                    : "flex flex-row items-center justify-center gap-8"
+                }
+              >
+                {current.body && (
+                  <BodyText text={current.body} centered={isMobile} />
+                )}
+                <ContributionChart
+                  items={current.contributions}
+                  accentColor={accentColor}
+                  revealed={revealed}
+                  isMobile={isMobile}
+                />
+              </div>
             ) : (
-              <>
-                <p
-                  style={{ fontFamily: "var(--font-body)", lineHeight: 1.35 }}
-                  className="text-lg sm:text-xl font-semibold text-[#0C0F1A]"
-                >
-                  {current.headline}
-                </p>
-                {current.body && <BodyText text={current.body} centered />}
-              </>
+              current.body && <BodyText text={current.body} centered />
             )}
           </div>
         </div>
