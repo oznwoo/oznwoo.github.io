@@ -20,6 +20,14 @@ export interface ProjectTechGroup {
   items: string[]
 }
 
+// About "담당 업무" 탭에서 roleBody 옆에 막대로 보여줄 영역별 기여도 한 항목.
+// percent는 "팀 전체 대비 내가 그 영역에 기여한 비중"(0–100)이고, 항목끼리
+// 독립적이라 합이 100일 필요는 없다.
+export interface ProjectContribution {
+  label: string
+  percent: number
+}
+
 // Problem/Solution 카드 슬라이드에서 쓰는 항목 하나
 export interface ProjectDetailCardItem {
   title: string
@@ -55,6 +63,12 @@ export interface ProjectDetailCardItem {
 export interface ProjectDetail {
   period: string
   role: string
+  // 협업 프로젝트의 팀 규모 — 있으면 Overview 히어로 메타줄에 "N인 팀"으로
+  // 함께 표시한다. 개인 프로젝트는 생략한다.
+  teamSize?: number
+  // 있으면 About "담당 업무" 스텝에서 roleBody 오른쪽(모바일은 아래)에
+  // 영역별 기여도 막대를 보여준다. 각 항목은 서로 독립적이다(합계 100 아님).
+  contributions?: ProjectContribution[]
   // About 슬라이드에서 마크다운 h1처럼 크고 진하게 보여줄 한 줄 — 서비스가
   // 무엇인지 설명하는 소개 문단의 첫 문장
   overviewHeadline: string

@@ -20,6 +20,13 @@ import type { ProjectDetail } from "./types"
 export const cochatBusinessDetail: ProjectDetail = {
   period: "2026.03 – 2026.04",
   role: "서비스 기획 총괄 | 풀스택 개발 | 팀 리더",
+  teamSize: 6,
+  contributions: [
+    { label: "기획·리딩", percent: 80 },
+    { label: "프론트엔드", percent: 50 },
+    { label: "백엔드", percent: 50 },
+    { label: "AI", percent: 0 },
+  ],
   // 여러 메신저 알림에 파묻히는 문제의식을 히어로 배경에 은은하게 암시
   heroEffect: "falling-messages",
   logoSrc: cochatBusinessLogo,

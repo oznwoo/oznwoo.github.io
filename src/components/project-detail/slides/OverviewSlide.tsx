@@ -129,6 +129,12 @@ export function OverviewSlide({
           <span>{detail.period}</span>
           <span className="w-1 h-1 rounded-full bg-[#0C0F1A]/30" />
           <span>{detail.role}</span>
+          {detail.teamSize && (
+            <>
+              <span className="w-1 h-1 rounded-full bg-[#0C0F1A]/30" />
+              <span>{detail.teamSize}인 팀</span>
+            </>
+          )}
         </div>
       </div>
     </div>

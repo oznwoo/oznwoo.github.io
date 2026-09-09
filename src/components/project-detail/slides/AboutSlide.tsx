@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react"
 import { TabArrowButton } from "@/components/project-detail/TabArrowButton"
-import type { Project, ProjectDetail } from "@/data/projects"
+import type { Project, ProjectContribution, ProjectDetail } from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
 import { hexToRgba } from "@/lib/color"
 import { renderWithEmphasis } from "@/lib/emphasis"
 import { MediaPlaceholder } from "@/components/project-detail/MediaPlaceholder"
 import { useLightbox } from "@/components/project-detail/lightbox/LightboxProvider"
 import { useHorizontalStepKeys } from "@/hooks/useHorizontalStepKeys"
+import { ContributionBars } from "@/components/project-detail/slides/about/ContributionBars"
 
 const SLIDE_TRANSITION_MS = 750
 
@@ -29,12 +30,37 @@ interface AboutStep {
   imageAlt?: string
   imageWidth?: number
   imageHeight?: number
+  // 있으면 body 오른쪽(모바일은 아래)에 영역별 기여도 막대를 붙인다.
+  contributions?: ProjectContribution[]
 }
 
 // 본문을 문장 단위로 쪼갠다 — 문장 중간이 아니라 문장 경계에서만
 // 줄바꿈되게 하려고, 마침표(.!?) 뒤 공백을 기준으로 나눈다.
 function splitSentences(text: string): string[] {
   return text.split(/(?<=[.!?])\s+/).filter(Boolean)
+}
+
+// About 본문 문단 — centered면 슬라이드 중앙 정렬(문장 경계에서만 줄바꿈),
+// 아니면 왼쪽 정렬로 자연스럽게 흐른다(기여도 막대와 2단으로 놓일 때).
+function BodyText({ text, centered }: { text: string; centered: boolean }) {
+  return (
+    <p
+      style={{ fontFamily: "var(--font-body)" }}
+      className={
+        "text-sm sm:text-base text-[#0C0F1A]/55 leading-relaxed font-normal" +
+        (centered ? "" : " max-w-md")
+      }
+    >
+      {splitSentences(text).map((sentence, i) => (
+        <span
+          key={i}
+          className={centered ? "block w-fit mx-auto sm:whitespace-nowrap" : "block"}
+        >
+          {renderWithEmphasis(sentence)}
+        </span>
+      ))}
+    </p>
+  )
 }
 
 // 소개 — Overview 히어로 다음, 프로젝트를 실제로 설명하는 전용 화면.
@@ -76,6 +102,7 @@ export function AboutSlide({
       imageAlt: `${project.title} 담당 기능 화면`,
       imageWidth: 1830,
       imageHeight: 1014,
+      contributions: detail.contributions,
     })
   }
   if (detail.stackDiagram) {
@@ -322,21 +349,29 @@ export function AboutSlide({
                 문장 중간에서 줄바꿈되면 가독성이 떨어져서, 문장 경계에서만
                 줄바꿈되도록 문장 단위로 나눠 각각 한 줄로 보여준다. 크기·명도를
                 올리는 대신, 핵심 단어만 **강조**로 굵게 표시해 옅은 텍스트
-                안에서도 눈에 잘 들어오는 지점을 만든다 */}
-            {current.body && (
-              <p
-                style={{ fontFamily: "var(--font-body)" }}
-                className="text-sm sm:text-base text-[#0C0F1A]/55 leading-relaxed font-normal"
+                안에서도 눈에 잘 들어오는 지점을 만든다.
+                기여도 막대가 있는 스텝(담당 업무)만 body를 왼쪽, 막대를
+                오른쪽에 2단으로 놓고, 모바일에서는 위아래로 쌓는다 */}
+            {current.contributions?.length ? (
+              <div
+                className={
+                  isMobile
+                    ? "flex flex-col items-center gap-5 w-full"
+                    : "flex flex-row items-start justify-center gap-8 w-full"
+                }
               >
-                {splitSentences(current.body).map((sentence, i) => (
-                  <span
-                    key={i}
-                    className="block w-fit mx-auto sm:whitespace-nowrap"
-                  >
-                    {renderWithEmphasis(sentence)}
-                  </span>
-                ))}
-              </p>
+                {current.body && (
+                  <BodyText text={current.body} centered={isMobile} />
+                )}
+                <ContributionBars
+                  items={current.contributions}
+                  accentColor={accentColor}
+                  revealed={revealed}
+                  isMobile={isMobile}
+                />
+              </div>
+            ) : (
+              current.body && <BodyText text={current.body} centered />
             )}
           </div>
         </div>

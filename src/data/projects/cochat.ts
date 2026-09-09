@@ -22,6 +22,13 @@ import type { ProjectDetail } from "./types"
 export const cochatDetail: ProjectDetail = {
   period: "2024.09 – 2025.06",
   role: "기획 총괄 | 모바일 풀스택 개발 | 논문 작성 (졸업 프로젝트)",
+  teamSize: 5,
+  contributions: [
+    { label: "기획·리딩", percent: 100 },
+    { label: "프론트엔드", percent: 80 },
+    { label: "백엔드", percent: 100 },
+    { label: "AI", percent: 100 },
+  ],
   // 자매 프로덕트 CoChat for Business와 같은 falling-messages 효과 — 색은
   // CoChat(2024) accent("04": 앰버·네이비·브릭)를 그대로 써서 for Business의
   // 밝은 노랑·파랑·핑크보다 어둡고 차분하게 구분된다.

@@ -22,6 +22,13 @@ import type { ProjectDetail } from "./types"
 export const fintagDetail: ProjectDetail = {
   period: "2026.04 – 2026.06",
   role: "백엔드 개발 | ML 엔지니어링 (인턴십)",
+  teamSize: 2,
+  contributions: [
+    { label: "기획·리딩", percent: 30 },
+    { label: "프론트엔드", percent: 20 },
+    { label: "백엔드", percent: 80 },
+    { label: "ML", percent: 90 },
+  ],
   heroEffect: "bars",
   overviewHeadline:
     "재무 전문가가 부재한 중소기업을 위한 AI 자금 관리 에이전트",

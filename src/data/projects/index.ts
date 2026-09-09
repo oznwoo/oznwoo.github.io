@@ -10,6 +10,7 @@ export type { Project } from "./list"
 export type {
   DetailIconKey,
   ProjectDetailCardItem,
+  ProjectContribution,
   ProjectDetail,
 } from "./types"
 
