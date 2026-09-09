@@ -7,7 +7,7 @@ import { renderWithEmphasis } from "@/lib/emphasis"
 import { MediaPlaceholder } from "@/components/project-detail/MediaPlaceholder"
 import { useLightbox } from "@/components/project-detail/lightbox/LightboxProvider"
 import { useHorizontalStepKeys } from "@/hooks/useHorizontalStepKeys"
-import { ContributionBars } from "@/components/project-detail/slides/about/ContributionBars"
+import { RoleContributionCard } from "@/components/project-detail/slides/about/RoleContributionCard"
 
 const SLIDE_TRANSITION_MS = 750
 
@@ -337,41 +337,31 @@ export function AboutSlide({
                 "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
             }}
           >
-            {/* 마크다운 h1 느낌 — 무엇을 만들었고 무슨 역할을 맡았는지 한 줄로
-                크고 진하게 먼저 보여준다 */}
-            <p
-              style={{ fontFamily: "var(--font-body)", lineHeight: 1.35 }}
-              className="text-lg sm:text-xl font-semibold text-[#0C0F1A]"
-            >
-              {current.headline}
-            </p>
-            {/* 마크다운 h2/본문 느낌 — 구체적인 과정·성과는 작고 옅게 보조 설명으로.
-                문장 중간에서 줄바꿈되면 가독성이 떨어져서, 문장 경계에서만
-                줄바꿈되도록 문장 단위로 나눠 각각 한 줄로 보여준다. 크기·명도를
-                올리는 대신, 핵심 단어만 **강조**로 굵게 표시해 옅은 텍스트
-                안에서도 눈에 잘 들어오는 지점을 만든다.
-                기여도 막대가 있는 스텝(담당 업무)만 body를 왼쪽, 막대를
-                오른쪽에 2단으로 놓고, 모바일에서는 위아래로 쌓는다 */}
+            {/* 기여도 데이터가 있는 스텝(담당 업무)은 headline·본문·기여도
+                차트를 한 납작한 카드에 담아 다른 탭의 본문 영역과 세로 높이를
+                맞춘다. 그 외 스텝은 마크다운 h1/h2 느낌으로 headline을 크게,
+                본문을 작고 옅게 슬라이드 중앙에 둔다 — 본문은 문장 경계에서만
+                줄바꿈되도록 문장 단위로 나눠 각각 한 줄로 보여주고, 핵심
+                단어만 **강조**로 굵게 표시한다 */}
             {current.contributions?.length ? (
-              <div
-                className={
-                  isMobile
-                    ? "flex flex-col items-center gap-5 w-full"
-                    : "flex flex-row items-center justify-center gap-8 w-full"
-                }
-              >
-                {current.body && (
-                  <BodyText text={current.body} centered={isMobile} />
-                )}
-                <ContributionBars
-                  items={current.contributions}
-                  accentColor={accentColor}
-                  revealed={revealed}
-                  isMobile={isMobile}
-                />
-              </div>
+              <RoleContributionCard
+                headline={current.headline}
+                body={current.body}
+                items={current.contributions}
+                accentColor={accentColor}
+                revealed={revealed}
+                isMobile={isMobile}
+              />
             ) : (
-              current.body && <BodyText text={current.body} centered />
+              <>
+                <p
+                  style={{ fontFamily: "var(--font-body)", lineHeight: 1.35 }}
+                  className="text-lg sm:text-xl font-semibold text-[#0C0F1A]"
+                >
+                  {current.headline}
+                </p>
+                {current.body && <BodyText text={current.body} centered />}
+              </>
             )}
           </div>
         </div>
