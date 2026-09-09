@@ -357,7 +357,7 @@ export function AboutSlide({
                 className={
                   isMobile
                     ? "flex flex-col items-center gap-5 w-full"
-                    : "flex flex-row items-start justify-center gap-8 w-full"
+                    : "flex flex-row items-center justify-center gap-8 w-full"
                 }
               >
                 {current.body && (
