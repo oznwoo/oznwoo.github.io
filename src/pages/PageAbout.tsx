@@ -1,5 +1,6 @@
-import profilePhoto from "@/imports/____________________.jpeg"
+import profilePhoto from "@/imports/profile-photo.webp"
 import { Page } from "@/components/layout/Page"
+import { PhotoLightbox } from "@/components/about/PhotoLightbox"
 import { Reveal } from "@/components/ui/Reveal"
 import { useSlideReveal } from "@/hooks/useSlideReveal"
 
@@ -23,18 +24,15 @@ export function PageAbout({ isActive = true }: { isActive?: boolean }) {
           About
         </span>
         {/* 사진은 등장 순서상 가장 마지막에 나타난다 (헤드라인·본문·스탯 뒤).
-            호버 떠오름·그림자·테두리 효과는 .lift-surface로 CONTACT 카드와 통일. */}
+            호버 떠오름·그림자·테두리 효과는 .lift-surface로 CONTACT 카드와 통일.
+            클릭하면 그 자리에서부터 커지는 라이트박스로 확대된다. */}
         <Reveal show={photoRevealed} className="shrink-0 md:order-2">
-          <div
-            className="lift-surface overflow-hidden w-40 sm:w-44 md:w-[260px] cursor-default"
-            style={{ aspectRatio: "3/4", borderRadius: "16px" }}
-          >
-            <img
-              src={profilePhoto}
-              alt="오진우"
-              className="w-full h-full object-cover object-top"
-            />
-          </div>
+          <PhotoLightbox
+            src={profilePhoto}
+            alt="오진우"
+            frameClassName="lift-surface w-40 sm:w-44 md:w-[260px]"
+            frameStyle={{ aspectRatio: "3/4", borderRadius: "16px" }}
+          />
         </Reveal>
         <div className="md:order-1">
           <span
