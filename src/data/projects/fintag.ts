@@ -215,7 +215,7 @@ export const fintagDetail: ProjectDetail = {
     },
   ],
   outcome: [
-    { stat: "76%", label: "평균 예측 오차율(MAPE) 감소", icon: "trend-down" },
+    { stat: "67%", label: "평균 예측 오차율(MAPE) 감소", icon: "trend-down" },
     {
       stat: "3단계",
       label: "Prophet·LightGBM·고정지출 파이프라인",
@@ -246,7 +246,7 @@ export const fintagDetail: ProjectDetail = {
       shortBody: [
         "급여일·카드결제일 등 **고정지출 패턴 등록** 완료",
         "잔차 보정으로 **안정적인 예측** 추세 확보",
-        "평균 예측 오차율(MAPE) **76% 감소**",
+        "평균 예측 오차율(MAPE) **67% 감소**",
       ],
       tags: ["잔차보정", "고정지출등록"],
       image: fintagOutcomeAccuracy,
