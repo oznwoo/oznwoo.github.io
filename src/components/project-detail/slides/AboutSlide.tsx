@@ -217,8 +217,10 @@ export function AboutSlide({
               ? "step-in 0.5s cubic-bezier(0.16,1,0.3,1) both"
               : undefined,
             // 스텝마다 이미지 비율·본문 길이가 달라 전환 시 이미지·텍스트
-            // 위치가 위아래로 밀리지 않도록, 콘텐츠 영역 높이를 고정한다
-            minHeight: hasTabs && !isMobile ? "600px" : undefined,
+            // 위치가 위아래로 밀리지 않도록, 콘텐츠 영역 높이를 고정한다.
+            // 기여도 차트가 붙는 '담당 업무' 스텝이 가장 길어(약 720px) 그
+            // 높이로 통일하고, 짧은 스텝은 아래쪽 여백으로 흡수한다.
+            minHeight: hasTabs && !isMobile ? "720px" : undefined,
           }}
           className="flex flex-col items-center gap-8 w-full"
         >
@@ -338,10 +340,10 @@ export function AboutSlide({
             }}
           >
             {/* headline은 마크다운 h1 느낌으로 크고 진하게, 모든 스텝 공통.
-                본문(h2/보조 설명)은 작고 옅게 — 그 외 스텝은 슬라이드 중앙에
-                문장 단위로 한 줄씩, 핵심 단어만 **강조**로 굵게. 기여도
-                데이터가 있는 담당 업무 스텝만 본문을 왼쪽에 두고 좁은 기여도
-                차트를 오른쪽(모바일은 아래)에 나란히 놓는다 */}
+                본문(h2/보조 설명)은 작고 옅게, 슬라이드 중앙에 문장 단위로 한
+                줄씩. 기여도 데이터가 있는 담당 업무 스텝은 본문 아래에 좁은
+                가로 막대 기여도 차트를 이어 붙인다 — 이미지·본문 위치는
+                다른 스텝과 동일하고, 차트만 그 아래로 더 내려간다. */}
             <p
               style={{ fontFamily: "var(--font-body)", lineHeight: 1.35 }}
               className="text-lg sm:text-xl font-semibold text-[#0C0F1A]"
@@ -349,21 +351,12 @@ export function AboutSlide({
               {current.headline}
             </p>
             {current.contributions?.length ? (
-              <div
-                className={
-                  isMobile
-                    ? "flex flex-col items-center gap-5"
-                    : "flex flex-row items-center justify-center gap-8"
-                }
-              >
-                {current.body && (
-                  <BodyText text={current.body} centered={isMobile} />
-                )}
+              <div className="mx-auto flex w-full max-w-md flex-col items-center gap-5">
+                {current.body && <BodyText text={current.body} centered />}
                 <ContributionChart
                   items={current.contributions}
                   accentColor={accentColor}
                   revealed={revealed}
-                  isMobile={isMobile}
                 />
               </div>
             ) : (
