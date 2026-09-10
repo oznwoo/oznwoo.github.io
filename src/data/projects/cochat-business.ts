@@ -21,11 +21,12 @@ export const cochatBusinessDetail: ProjectDetail = {
   period: "2026.03 – 2026.04",
   role: "서비스 기획 총괄 | 풀스택 개발 | 팀 리더",
   teamSize: 6,
+  teamLead: true,
   contributions: [
-    { label: "기획·리딩", percent: 80 },
+    { label: "기획", percent: 80 },
+    { label: "UI/UX", percent: 30 },
     { label: "프론트엔드", percent: 50 },
     { label: "백엔드", percent: 50 },
-    { label: "AI", percent: 0 },
   ],
   // 여러 메신저 알림에 파묻히는 문제의식을 히어로 배경에 은은하게 암시
   heroEffect: "falling-messages",
@@ -38,11 +39,11 @@ export const cochatBusinessDetail: ProjectDetail = {
   overviewHeadline:
     "개인용 앱 CoChat을 업무용(B2B) 메신저 통합 플랫폼으로 피벗한 프로젝트",
   overviewBody:
-    "여러 업무 메신저에 흩어진 알림을 한 곳에 모아 주는 팀 단위 **웹 서비스**입니다. AI가 급한 정도를 가려 집중모드에서 중요한 알림만 남깁니다.",
+    "여러 업무 메신저에 흩어진 알림을 한 곳에 모아 주는 팀 단위 **웹 서비스**입니다. AI가 급한 정도를 가려 집중모드에서 중요한 알림만 남깁니다. **2026 구름 해커톤**에 출품했습니다.",
   aboutImage: cochatBusinessAboutHero,
-  roleHeadline: "[2026 구름 해커톤]에서 팀 리더를 맡고 풀스택 개발에 직접 참여",
+  roleHeadline: "프론트엔드 · 백엔드 개발",
   roleBody:
-    "아이디어 제안부터 팀 구성, 기능 우선순위 결정까지 팀을 이끌었고 프론트엔드와 백엔드 개발에 함께 참여했습니다.",
+    "아이디어 제안부터 팀 구성, 기능 우선순위 결정까지 **팀을 이끌었고**, **프론트엔드·백엔드 개발**에 직접 참여했습니다.",
   roleImage: cochatBusinessAboutRole,
   demoHeadline: "메신저 알림을 모으고 AI가 급한 순서대로 정리하기까지",
   demoBody:

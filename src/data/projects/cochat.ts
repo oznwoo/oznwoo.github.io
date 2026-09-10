@@ -23,11 +23,12 @@ export const cochatDetail: ProjectDetail = {
   period: "2024.09 – 2025.06",
   role: "기획 총괄 | 모바일 풀스택 개발 | 논문 작성 (졸업 프로젝트)",
   teamSize: 5,
+  teamLead: true,
   contributions: [
     { label: "기획·리딩", percent: 100 },
     { label: "프론트엔드", percent: 80 },
     { label: "백엔드", percent: 100 },
-    { label: "AI", percent: 100 },
+    { label: "LLM", percent: 100 },
   ],
   // 자매 프로덕트 CoChat for Business와 같은 falling-messages 효과 — 색은
   // CoChat(2024) accent("04": 앰버·네이비·브릭)를 그대로 써서 for Business의
@@ -41,14 +42,13 @@ export const cochatDetail: ProjectDetail = {
   logoShowName: true,
   overviewHeadline: "Co(함께) + Chat(대화하자)",
   overviewBody:
-    "일상에서 쓰는 여러 메신저의 알림을 한 곳에 모아 주는 개인용(B2C) 모바일 앱입니다. AI가 취향에 맞는 메시지만 골라 요약해 알려 줍니다.",
+    "일상에서 쓰는 여러 메신저의 알림을 한 곳에 모아 주는 개인용(B2C) 모바일 앱입니다. AI가 취향에 맞는 메시지만 골라 요약해 알려 줍니다. **한양대학교 ERICA 컴퓨터공학과 캡스톤 디자인** 졸업 프로젝트입니다.",
   // About '프로젝트 소개' 탭 히어로 — Gopssl about-hero와 동일 포맷(폰 목업 + 큐브
   // 로고 + "Co-Chat" 워드마크 + 태그라인). About 탭 컨테이너 비율에 맞춰 1830×1014
   aboutImage: cochatAboutHero,
-  roleHeadline:
-    "한양대학교 ERICA 컴퓨터공학 [캡스톤 디자인]에 참여한 졸업 프로젝트입니다.",
+  roleHeadline: "전체 시스템 설계 · 백엔드 서버 개발",
   roleBody:
-    "5인 팀의 대표로 전체 시스템을 설계하고 일정과 역할을 조율했습니다. **OAuth 계정 통합**과 **백엔드 서버**는 직접 개발했고, 연구 내용을 정리해 KIPS 정보처리학회 학술대회에 **제1저자로 발표**했습니다.",
+    "**전체 시스템 설계**를 맡고 **OAuth 계정 통합·백엔드 서버**를 직접 개발했으며, 연구 내용을 **KIPS 학술대회에 제1저자로 발표**했습니다.",
   // '담당 업무' 탭 이미지 — CoChat for Business about-role와 같은 3D 클레이 계열이되,
   // 더 이전 학생 캡스톤 프로젝트라 아이 같은 3인 + 역할 3분할(가운데 리더 / 왼쪽
   // 기획·디자인 / 오른쪽 개발), 쿨 페리윙클 팔레트로 차별화. 1830×1014
@@ -245,7 +245,11 @@ export const cochatDetail: ProjectDetail = {
       label: "KIPS 정보처리학회 학술대회 발표 (제1저자)",
       icon: "sparkle",
     },
-    { stat: "5인", label: "팀 대표·PM로 기획·계정 연동·서버 담당", icon: "layers" },
+    {
+      stat: "5인",
+      label: "팀 대표·PM으로 기획·계정 연동·서버 담당",
+      icon: "layers",
+    },
     { stat: "→ B2B", label: "CoChat for Business로 이어짐", icon: "target" },
   ],
   outcomeGallery: [
@@ -287,7 +291,10 @@ export const cochatDetail: ProjectDetail = {
   // 프로젝트 메타데이터로서 실제 레포(frontend/backend/llm) 스택을 유지한다.
   tech: [
     { category: "App", items: ["React Native", "Expo", "Redux Toolkit"] },
-    { category: "Backend", items: ["FastAPI", "Python", "SQLite", "PostgreSQL"] },
+    {
+      category: "Backend",
+      items: ["FastAPI", "Python", "SQLite", "PostgreSQL"],
+    },
     {
       category: "AI",
       items: ["OpenAI GPT-4o", "text-embedding-3-small", "scikit-learn"],

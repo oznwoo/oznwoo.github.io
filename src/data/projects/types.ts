@@ -64,15 +64,21 @@ export interface ProjectDetail {
   period: string
   role: string
   // 협업 프로젝트의 팀 규모 — 있으면 Overview 히어로 메타줄에 "N인 팀"으로
-  // 함께 표시한다. 개인 프로젝트는 생략한다.
+  // 함께 표시하고, About "담당 업무" 탭 headline 뒤에 "| N인팀"으로 붙인다.
+  // 개인 프로젝트는 생략한다.
   teamSize?: number
+  // 그 팀에서 본인이 팀 리더였는지 — true면 "담당 업무" headline의 팀 규모
+  // 표기가 "| N인팀(리더)"가 된다. teamSize가 있을 때만 의미가 있다.
+  teamLead?: boolean
   // 있으면 About "담당 업무" 스텝에서 roleBody 오른쪽(모바일은 아래)에
   // 영역별 기여도 막대를 보여준다. 각 항목은 서로 독립적이다(합계 100 아님).
   contributions?: ProjectContribution[]
   // About 슬라이드에서 마크다운 h1처럼 크고 진하게 보여줄 한 줄 — 서비스가
   // 무엇인지 설명하는 소개 문단의 첫 문장
   overviewHeadline: string
-  // h2/본문처럼 작고 옅게 보여줄 나머지 문장 — 담당 역할·과정 설명
+  // h2/본문처럼 작고 옅게 보여줄 나머지 문장 — 담당 역할·과정 설명.
+  // 마지막 문장에 출품처·소속(해커톤, 캡스톤, 인턴십, 개인 프로젝트 등)을
+  // 자연스럽게 녹이고 그 부분만 **강조**로 표시한다.
   overviewBody: string
   // Overview 히어로에서 타이틀 텍스트 대신 보여줄 실제 로고. 있으면 텍스트
   // 타이틀을 대체한다 (Fintag처럼 워드마크 자체가 브랜드를 대변하는 경우)

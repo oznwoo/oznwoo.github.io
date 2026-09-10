@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react"
 import { TabArrowButton } from "@/components/project-detail/TabArrowButton"
-import type { Project, ProjectContribution, ProjectDetail } from "@/data/projects"
+import type {
+  Project,
+  ProjectContribution,
+  ProjectDetail,
+} from "@/data/projects"
 import type { ProjectAccent } from "@/lib/color"
 import { hexToRgba } from "@/lib/color"
 import { renderWithEmphasis } from "@/lib/emphasis"
@@ -32,6 +36,9 @@ interface AboutStep {
   imageHeight?: number
   // 있으면 body 오른쪽(모바일은 아래)에 영역별 기여도 막대를 붙인다.
   contributions?: ProjectContribution[]
+  // 협업 프로젝트면 headline 뒤에 "| N인팀"(리더면 "| N인팀(리더)")으로 붙인다.
+  teamSize?: number
+  teamLead?: boolean
 }
 
 // 본문을 문장 단위로 쪼갠다 — 문장 중간이 아니라 문장 경계에서만
@@ -40,25 +47,67 @@ function splitSentences(text: string): string[] {
   return text.split(/(?<=[.!?])\s+/).filter(Boolean)
 }
 
-// About 본문 문단 — centered면 슬라이드 중앙 정렬(문장 경계에서만 줄바꿈),
-// 아니면 왼쪽 정렬로 자연스럽게 흐른다(기여도 막대와 2단으로 놓일 때).
-function BodyText({ text, centered }: { text: string; centered: boolean }) {
+// hero: 슬라이드 폭을 다 쓰는 화면 — 문장 경계에서만 줄바꿈, 각 문장을 한 줄로
+//       가운데. column: 좁은 열 안 — 가운데 정렬하되 자연스럽게 줄바꿈.
+type BodyTextAlign = "hero" | "column"
+
+interface BodyTextProps {
+  text: string
+  align: BodyTextAlign
+}
+
+// About 본문 문단
+function BodyText({ text, align }: BodyTextProps) {
   return (
     <p
       style={{ fontFamily: "var(--font-body)" }}
       className={
         "text-sm sm:text-base text-[#0C0F1A]/55 leading-relaxed font-normal" +
-        (centered ? "" : " max-w-md text-left")
+        (align === "column" ? " text-center" : "")
       }
     >
       {splitSentences(text).map((sentence, i) => (
         <span
           key={i}
-          className={centered ? "block w-fit mx-auto sm:whitespace-nowrap" : "block"}
+          className={
+            align === "hero"
+              ? "block w-fit mx-auto sm:whitespace-nowrap"
+              : "block"
+          }
         >
           {renderWithEmphasis(sentence)}
         </span>
       ))}
+    </p>
+  )
+}
+
+interface HeadlineProps {
+  text: string
+  // compact면 한 단계 작게 — 기여도 차트와 2단으로 놓여 각 열 제목("프로젝트
+  // 기여도")과 크기를 맞출 때 쓴다.
+  compact?: boolean
+  // 있으면 headline 뒤에 " | {meta}"를 옅은 톤으로 덧붙인다(팀 규모 표기 등).
+  meta?: string
+}
+
+// About headline(마크다운 h1 느낌) — text-align은 감싼 컨테이너에서 상속받는다.
+function Headline({ text, compact = false, meta }: HeadlineProps) {
+  return (
+    <p
+      style={{ fontFamily: "var(--font-body)", lineHeight: 1.35 }}
+      className={
+        (compact ? "text-base sm:text-lg" : "text-lg sm:text-xl") +
+        " font-semibold text-[#0C0F1A]"
+      }
+    >
+      {text}
+      {meta && (
+        <span className="font-normal text-[#0C0F1A]/45">
+          {"  |  "}
+          {meta}
+        </span>
+      )}
     </p>
   )
 }
@@ -103,6 +152,8 @@ export function AboutSlide({
       imageWidth: 1830,
       imageHeight: 1014,
       contributions: detail.contributions,
+      teamSize: detail.teamSize,
+      teamLead: detail.teamLead,
     })
   }
   if (detail.stackDiagram) {
@@ -157,6 +208,10 @@ export function AboutSlide({
   })
 
   const current = steps[step]
+  // 협업 프로젝트의 "담당 업무" 스텝이면 headline 뒤에 붙일 팀 규모 표기
+  const teamMeta = current.teamSize
+    ? `${current.teamSize}인팀${current.teamLead ? "(리더)" : ""}`
+    : undefined
   // 실제 스크린샷/다이어그램이 들어온 스텝만 클릭해서 확대할 수 있다
   const isZoomableShot = !!current.image
 
@@ -217,10 +272,8 @@ export function AboutSlide({
               ? "step-in 0.5s cubic-bezier(0.16,1,0.3,1) both"
               : undefined,
             // 스텝마다 이미지 비율·본문 길이가 달라 전환 시 이미지·텍스트
-            // 위치가 위아래로 밀리지 않도록, 콘텐츠 영역 높이를 고정한다.
-            // 기여도 차트가 붙는 '담당 업무' 스텝이 가장 길어(약 720px) 그
-            // 높이로 통일하고, 짧은 스텝은 아래쪽 여백으로 흡수한다.
-            minHeight: hasTabs && !isMobile ? "720px" : undefined,
+            // 위치가 위아래로 밀리지 않도록, 콘텐츠 영역 높이를 고정한다
+            minHeight: hasTabs && !isMobile ? "600px" : undefined,
           }}
           className="flex flex-col items-center gap-8 w-full"
         >
@@ -339,28 +392,50 @@ export function AboutSlide({
                 "transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease-out",
             }}
           >
-            {/* headline은 마크다운 h1 느낌으로 크고 진하게, 모든 스텝 공통.
-                본문(h2/보조 설명)은 작고 옅게, 슬라이드 중앙에 문장 단위로 한
-                줄씩. 기여도 데이터가 있는 담당 업무 스텝은 본문 아래에 좁은
-                가로 막대 기여도 차트를 이어 붙인다 — 이미지·본문 위치는
-                다른 스텝과 동일하고, 차트만 그 아래로 더 내려간다. */}
-            <p
-              style={{ fontFamily: "var(--font-body)", lineHeight: 1.35 }}
-              className="text-lg sm:text-xl font-semibold text-[#0C0F1A]"
-            >
-              {current.headline}
-            </p>
+            {/* headline은 마크다운 h1 느낌으로 크고 진하게. 본문은 작고 옅게 —
+                기여도 데이터가 없는 스텝은 headline·본문 모두 슬라이드 중앙,
+                문장 단위로 한 줄씩. 기여도 데이터가 있는 담당 업무 스텝은
+                headline+본문을 하나의 가운데 정렬 열로 묶고, 세로 divider를
+                사이에 둔 뒤 가로 막대 기여도 차트를 오른쪽에 나란히 놓는다
+                (모바일은 headline·본문 중앙 + 차트 아래). */}
             {current.contributions?.length ? (
-              <div className="mx-auto flex w-full max-w-md flex-col items-center gap-5">
-                {current.body && <BodyText text={current.body} centered />}
-                <ContributionChart
-                  items={current.contributions}
-                  accentColor={accentColor}
-                  revealed={revealed}
-                />
-              </div>
+              isMobile ? (
+                <>
+                  <Headline text={current.headline} meta={teamMeta} />
+                  {current.body && (
+                    <BodyText text={current.body} align="hero" />
+                  )}
+                  <div className="mx-auto mt-2 w-full max-w-xs">
+                    <ContributionChart
+                      items={current.contributions}
+                      accentColor={accentColor}
+                      revealed={revealed}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-row items-start justify-center gap-8">
+                  <div className="flex max-w-md flex-col gap-3">
+                    <Headline text={current.headline} compact meta={teamMeta} />
+                    {current.body && (
+                      <BodyText text={current.body} align="column" />
+                    )}
+                  </div>
+                  <div className="w-px self-stretch bg-[#0C0F1A]/10" />
+                  <div className="w-60 shrink-0">
+                    <ContributionChart
+                      items={current.contributions}
+                      accentColor={accentColor}
+                      revealed={revealed}
+                    />
+                  </div>
+                </div>
+              )
             ) : (
-              current.body && <BodyText text={current.body} centered />
+              <>
+                <Headline text={current.headline} />
+                {current.body && <BodyText text={current.body} align="hero" />}
+              </>
             )}
           </div>
         </div>

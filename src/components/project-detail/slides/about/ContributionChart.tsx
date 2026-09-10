@@ -14,11 +14,12 @@ const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
-// "담당 업무" 스텝에서 본문 아래에 full-width로 놓는 가로 막대 차트.
-// 각 값은 "프로젝트 전체에서 그 영역에 기여한 정도"라 서로 독립적이고 합이
-// 100이 아니다. 퍼센트는 막대 바깥 오른쪽에 둬서 20%·30%처럼 짧은 값도
-// 높이 꼼수 없이 구분된다. 채우는 연출은 width가 아니라 transform: scaleX로
-// 돌려 레이아웃을 건드리지 않는다.
+// "담당 업무" 스텝에서 본문 오른쪽(모바일은 아래)에 놓는 가로 막대 차트.
+// 부모가 폭을 잡아주므로 여기선 w-full로 그 폭을 채운다. 각 값은 "프로젝트
+// 전체에서 그 영역에 기여한 정도"라 서로 독립적이고 합이 100이 아니다.
+// 퍼센트는 막대 바깥 오른쪽에 둬서 20%·30%처럼 짧은 값도 높이 꼼수 없이
+// 구분된다. 채우는 연출은 width가 아니라 transform: scaleX로 돌려 레이아웃을
+// 건드리지 않는다.
 export function ContributionChart({
   items,
   accentColor,
@@ -42,27 +43,27 @@ export function ContributionChart({
 
   return (
     <div className="w-full">
-      {/* 좌우 헤어라인 사이에 라벨 — About 스탯 구분선과 같은 옅은 톤 */}
-      <div className="mb-3 flex items-center gap-3">
-        <span className="h-px flex-1 bg-[#0C0F1A]/10" />
-        <span
-          style={{ fontFamily: "var(--font-mono)" }}
-          className="text-[0.62rem] uppercase tracking-[0.12em] text-[#0C0F1A]/40"
-        >
-          프로젝트 기여도
-        </span>
-        <span className="h-px flex-1 bg-[#0C0F1A]/10" />
-      </div>
+      {/* 열 제목 — 왼쪽 열의 headline(compact)과 같은 스타일로 맞춘다 */}
+      <p
+        style={{ fontFamily: "var(--font-body)", lineHeight: 1.35 }}
+        className="mb-2 text-center text-base font-semibold text-[#0C0F1A] sm:text-lg"
+      >
+        프로젝트 기여도
+      </p>
 
       {/* 한 그리드를 모든 행이 공유해야 라벨 길이와 무관하게 트랙 시작 x가
-          일렬로 맞는다 — 행마다 grid를 두면 열 폭이 제각각이 된다 */}
-      <div className="grid grid-cols-[auto_1fr_auto] items-center gap-x-3 gap-y-2">
+          일렬로 맞는다 — 행마다 grid를 두면 열 폭이 제각각이 된다.
+          좌측 텍스트 열과 높이를 맞추려 행 간격(gap-y)은 최소로 둔다 */}
+      <div className="grid grid-cols-[auto_1fr_auto] items-center gap-x-3 gap-y-1">
         {items.map((item, i) => {
           const zero = item.percent <= 0
           return (
             <Fragment key={item.label}>
               <span
-                style={{ fontFamily: "var(--font-body)", wordBreak: "keep-all" }}
+                style={{
+                  fontFamily: "var(--font-body)",
+                  wordBreak: "keep-all",
+                }}
                 className="whitespace-nowrap text-right text-xs text-[#0C0F1A]/55 sm:text-[0.8rem]"
               >
                 {item.label}

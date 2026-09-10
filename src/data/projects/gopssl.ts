@@ -22,18 +22,24 @@ import type { ProjectDetail } from "./types"
 export const gopsslDetail: ProjectDetail = {
   period: "2025.06 – 진행 중",
   role: "기획 | 디자인 | 풀스택 개발 (개인 프로젝트)",
+  // 개인 프로젝트라 전 영역을 혼자 담당 — LLM/AI는 없어 4개 영역으로 구성
+  contributions: [
+    { label: "기획", percent: 100 },
+    { label: "UI/UX", percent: 100 },
+    { label: "프론트엔드", percent: 100 },
+    { label: "백엔드", percent: 100 },
+  ],
   logoSrc: gopsslLogo,
   // 히어로 곳곳에 고정 배치된 미용 도구(가위·바리깡·손거울·스프레이·드라이기·고데기)가 호버 시 도구별로 움직임
   heroEffect: "salon-tools",
   overviewHeadline:
-    "예약제 없이 운영되는 소규모 미용실을 위한 고객·매출 관리 앱.",
+    "예약제 없이 운영되는 소규모 미용실을 위한 고객·매출 관리 앱",
   overviewBody:
-    "어머니가 미용실의 장부를 수기로 관리하시는 것을 보고 직접 기획했습니다. UI/UX 설계부터 React Native 앱 개발, 백엔드 서버 배포까지 전 과정을 혼자 진행했습니다.",
+    "어머니가 미용실 장부를 수기로 관리하시는 것을 보고 직접 기획했습니다. UI/UX 설계부터 React Native 앱 개발, 백엔드 서버 배포까지 전 과정을 혼자 진행한 **개인 프로젝트**입니다.",
   aboutImage: gopsslAboutHero,
-  roleHeadline:
-    "개인 프로젝트로 [기획] [디자인] [모바일 풀스택 개발] [배포]를 모두 담당",
+  roleHeadline: "기획 · 디자인 · 모바일 풀스택 개발 · 배포",
   roleBody:
-    "어머니의 미용실 운영을 곁에서 지켜보며 꼭 필요한 기능만 추렸고, 화면 설계와 앱·서버 개발, 배포를 이어서 진행했습니다.",
+    "어머니의 미용실 운영을 곁에서 지켜보며 **꼭 필요한 기능만** 추렸고, **화면 설계·앱·서버 개발·배포**까지 이어서 진행했습니다.",
   roleImage: gopsslAboutRole,
   demoHeadline: "고객 카드 등록부터 매출 입력, 월별 대시보드 확인까지",
   demoBody:
@@ -101,7 +107,10 @@ export const gopsslDetail: ProjectDetail = {
           },
           {
             title: "매달 구독료 부담",
-            detail: ["이용하려면 **월 구독료** 필요", "작은 매장엔 **비용 부담**"],
+            detail: [
+              "이용하려면 **월 구독료** 필요",
+              "작은 매장엔 **비용 부담**",
+            ],
           },
         ],
         after: [
@@ -140,7 +149,10 @@ export const gopsslDetail: ProjectDetail = {
           },
           {
             title: "찾기도 파악도 어려움",
-            detail: ["옮겨 적다 **누락·오기**", "누가 단골인지 **감으로 파악**"],
+            detail: [
+              "옮겨 적다 **누락·오기**",
+              "누가 단골인지 **감으로 파악**",
+            ],
           },
         ],
         after: [
