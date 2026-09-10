@@ -80,7 +80,7 @@ export function PageAbout({ isActive = true }: { isActive?: boolean }) {
           >
             {[
               ["24세", "AGE"],
-              ["INFJ", "MBTI"],
+              ["INFP", "MBTI"],
               ["4.22", "GPA / 4.5"],
             ].map(([n, l]) => (
               <div key={l}>
