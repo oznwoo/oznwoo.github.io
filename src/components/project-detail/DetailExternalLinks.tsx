@@ -4,21 +4,23 @@ import { hexToRgba } from "@/lib/color"
 interface DetailExternalLinksProps {
   githubUrl?: string
   liveUrl?: string
+  figmaUrl?: string
   accentColor: string
   isMobile: boolean
 }
 
 // 프로젝트 상세 우측 하단에 항상 떠 있는 외부 링크들.
 // 좌측 하단 페이지 카운터와 같은 위치·톤(mono, 흰 blur 배경)을 쓰되, 링크라서
-// hover 시 프로젝트 accent 색으로 살짝 떠오른다. 라이브 데모가 있으면 GitHub
-// 왼쪽에 나란히 놓아 "실제 서비스 → 소스"로 자연스럽게 읽히게 한다.
+// hover 시 프로젝트 accent 색으로 살짝 떠오른다. 라이브 데모·Figma 기획이 있으면
+// GitHub 왼쪽에 나란히 놓아 "실제 서비스/기획 → 소스"로 자연스럽게 읽히게 한다.
 export function DetailExternalLinks({
   githubUrl,
   liveUrl,
+  figmaUrl,
   accentColor,
   isMobile,
 }: DetailExternalLinksProps) {
-  if (!githubUrl && !liveUrl) return null
+  if (!githubUrl && !liveUrl && !figmaUrl) return null
 
   return (
     <div
@@ -43,6 +45,19 @@ export function DetailExternalLinks({
             <path d="M6 2H2.5A.5.5 0 0 0 2 2.5v11a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V10" />
             <path d="M9.5 2H14v4.5" />
             <path d="M14 2 7 9" />
+          </svg>
+        </LinkPill>
+      )}
+      {figmaUrl && (
+        <LinkPill href={figmaUrl} accentColor={accentColor} label="Figma">
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M8.148 24c2.352 0 4.259-1.907 4.259-4.259v-4.259H8.148c-2.352 0-4.259 1.907-4.259 4.259C3.889 22.093 5.796 24 8.148 24zM3.889 11.852c0-2.352 1.907-4.259 4.259-4.259h4.259v8.518H8.148c-2.352 0-4.259-1.907-4.259-4.259zM3.889 4.259C3.889 1.907 5.796 0 8.148 0h4.259v8.518H8.148c-2.352 0-4.259-1.907-4.259-4.259zM12.407 0h4.259c2.352 0 4.259 1.907 4.259 4.259s-1.907 4.259-4.259 4.259h-4.259V0zM20.926 11.852c0 2.352-1.907 4.259-4.259 4.259s-4.259-1.907-4.259-4.259 1.907-4.259 4.259-4.259 4.259 1.907 4.259 4.259z" />
           </svg>
         </LinkPill>
       )}

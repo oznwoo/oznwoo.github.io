@@ -260,11 +260,12 @@ export function ProjectDetailView({
         </span>
       </div>
 
-      {/* 우측 하단 — 라이브 데모·GitHub 외부 링크. 슬라이드와 무관하게 항상
-          떠 있어 어느 페이지에서든 바로 이동할 수 있다. */}
+      {/* 우측 하단 — 라이브 데모·Figma 기획·GitHub 외부 링크. 슬라이드와 무관하게
+          항상 떠 있어 어느 페이지에서든 바로 이동할 수 있다. */}
       <DetailExternalLinks
         githubUrl={detail.githubUrl}
         liveUrl={detail.liveUrl}
+        figmaUrl={detail.figmaUrl}
         accentColor={accentColor}
         isMobile={isMobile}
       />

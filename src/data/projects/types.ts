@@ -118,6 +118,9 @@ export interface ProjectDetail {
   // 배포된 라이브 서비스 주소(선택). 있으면 상세 우측 하단에 GitHub 왼쪽으로
   // 라이브 데모 링크 버튼이 나란히 뜬다.
   liveUrl?: string
+  // UI/UX 기획 Figma 파일 주소(선택). 있으면 상세 우측 하단에 GitHub 왼쪽으로
+  // Figma 링크 버튼이 나란히 뜬다.
+  figmaUrl?: string
   problem: ProjectDetailCardItem[]
   solution: ProjectDetailCardItem[]
   outcome: ProjectOutcomeStat[]
