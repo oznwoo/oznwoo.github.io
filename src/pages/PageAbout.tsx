@@ -59,19 +59,21 @@ export function PageAbout({ isActive = true }: { isActive?: boolean }) {
               style={{ fontFamily: "var(--font-body)" }}
               className="hidden sm:block"
             >
-              안녕하세요. 세상의 다양한 문제를 해결하고 싶은 오진우입니다.
+              안녕하세요. 아이디어를 현실에서 작동하는 서비스로 만드는 개발자
+              오진우입니다.
             </p>
             <p style={{ fontFamily: "var(--font-body)" }}>
-              AI 발전으로 누구나 적은 전문 지식으로도 원하는 결과를 구현할 수
-              있는 시대가 되었다고 생각합니다. 이제는 왜, 어떻게 잘 구현하는
-              것이 중요하다고 느낍니다.
+              사용자의 불편을 표면적으로 해결하는 데 그치지 않고, 다양한
+              관점에서 근본 원인을 살펴 쓸모 있는 해결책으로 구현하는 일을
+              좋아합니다.
             </p>
             <p
               style={{ fontFamily: "var(--font-body)" }}
               className="hidden md:block"
             >
-              일의 본질은 인간 세상의 문제를 해결하는 것이고 공감이 이에 대한
-              마스터키라고 생각합니다.
+              AI를 생각과 실행을 확장하는 도구로 활용하되, 무엇을 왜 만들고
+              어떻게 활용할지는 개발자가 판단해야 한다고 믿습니다. 과정을
+              꾸준히 쌓고, 의미 있는 결과로 증명하겠습니다.
             </p>
           </Reveal>
           <Reveal

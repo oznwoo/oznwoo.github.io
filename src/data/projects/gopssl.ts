@@ -47,6 +47,8 @@ export const gopsslDetail: ProjectDetail = {
   demoVideo: gopsslDemoVideo,
   demoPoster: gopsslDemoPoster,
   githubUrl: "https://github.com/oznwoo/gopssl-frontend",
+  figmaUrl:
+    "https://www.figma.com/design/sTChdV19y3gPEwFovYqFyD/%EA%B3%B1%EC%8A%AC%EB%A8%B8%EB%A6%AC?node-id=235-151",
   problem: [
     {
       title: "맞춤 서비스 부재",

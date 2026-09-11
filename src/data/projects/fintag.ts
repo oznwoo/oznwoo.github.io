@@ -45,6 +45,8 @@ export const fintagDetail: ProjectDetail = {
     "현금흐름 예측 생성부터 이상거래 탐지, 예측 근거 설명까지 실제 화면으로 이어지는 흐름을 담았습니다.",
   demoVideo: fintagDemoVideo,
   demoPoster: fintagDemoPoster,
+  githubDisabledReason:
+    "기업 프로덕션 환경에서 운영 중인 서비스로, 보안 정책상 소스 코드는 비공개입니다.",
   problem: [
     {
       title: "데이터 전처리 부재",

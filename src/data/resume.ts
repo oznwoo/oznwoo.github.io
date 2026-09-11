@@ -42,14 +42,29 @@ export const EXP_COLS = [
         sub: "CoChat for Business 팀 리더",
         date: "2026.04",
       },
-      { name: "KIPS 종합학술대회", sub: "CoChat 논문 발표", date: "2025.05" },
+      {
+        name: "KIPS 종합학술대회",
+        sub: "CoChat 논문 발표",
+        date: "2025.05",
+        link: "/documents/cochat-kips-paper.pdf",
+      },
     ],
   },
   {
     title: "자격증",
     items: [
-      { name: "정보처리기사", sub: "한국산업인력공단", date: "2026.09" },
-      { name: "GTQ 1급", sub: "한국생산성본부", date: "2024.09" },
+      {
+        name: "정보처리기사",
+        sub: "한국산업인력공단",
+        date: "2026.09",
+        link: "/documents/engineer-information-processing-certificate.pdf",
+      },
+      {
+        name: "GTQ 1급",
+        sub: "한국생산성본부",
+        date: "2024.09",
+        link: "/documents/gtq-1-certificate.pdf",
+      },
     ],
   },
 ]

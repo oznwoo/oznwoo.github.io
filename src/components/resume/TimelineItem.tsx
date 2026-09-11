@@ -10,7 +10,7 @@ export function TimelineItem({ item }: { item: TimelineEntry }) {
               href={item.link}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`${item.name} 증명서 PDF 열기`}
+              aria-label={`${item.name} PDF 열기`}
               className="shrink-0 self-center -m-2 p-2 text-[#0C0F1A]/45 transition-colors duration-150 hover:text-[#4F6EF7]"
             >
               <svg
