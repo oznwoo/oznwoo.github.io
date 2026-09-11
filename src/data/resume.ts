@@ -42,7 +42,12 @@ export const EXP_COLS = [
         sub: "CoChat for Business 팀 리더",
         date: "2026.04",
       },
-      { name: "KIPS 종합학술대회", sub: "CoChat 논문 발표", date: "2025.05" },
+      {
+        name: "KIPS 종합학술대회",
+        sub: "CoChat 논문 발표",
+        date: "2025.05",
+        link: "/documents/cochat-kips-paper.pdf",
+      },
     ],
   },
   {
