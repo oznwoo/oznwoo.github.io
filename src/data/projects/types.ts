@@ -115,6 +115,10 @@ export interface ProjectDetail {
   // 이 프로젝트의 GitHub 저장소(프론트엔드 repo). 있으면 상세 우측 하단에
   // 항상 GitHub로 가는 링크 버튼이 뜬다.
   githubUrl?: string
+  // 기업 사용 중 등의 이유로 소스를 공개할 수 없는 프로젝트용. githubUrl 없이
+  // 이 필드만 있으면 GitHub 버튼은 뜨되 링크는 아니고, hover/focus 시 여기
+  // 적은 사유가 툴팁으로 뜬다.
+  githubDisabledReason?: string
   // 배포된 라이브 서비스 주소(선택). 있으면 상세 우측 하단에 GitHub 왼쪽으로
   // 라이브 데모 링크 버튼이 나란히 뜬다.
   liveUrl?: string

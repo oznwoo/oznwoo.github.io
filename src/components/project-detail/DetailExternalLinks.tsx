@@ -3,6 +3,9 @@ import { hexToRgba } from "@/lib/color"
 
 interface DetailExternalLinksProps {
   githubUrl?: string
+  // githubUrl 없이 이 사유만 있으면 GitHub 버튼은 뜨되 링크는 아니고, hover 시
+  // 사유가 툴팁으로 뜬다. 기업 사용 중 등 소스 비공개 프로젝트용.
+  githubDisabledReason?: string
   liveUrl?: string
   figmaUrl?: string
   accentColor: string
@@ -15,12 +18,14 @@ interface DetailExternalLinksProps {
 // GitHub 왼쪽에 나란히 놓아 "실제 서비스/기획 → 소스"로 자연스럽게 읽히게 한다.
 export function DetailExternalLinks({
   githubUrl,
+  githubDisabledReason,
   liveUrl,
   figmaUrl,
   accentColor,
   isMobile,
 }: DetailExternalLinksProps) {
-  if (!githubUrl && !liveUrl && !figmaUrl) return null
+  if (!githubUrl && !githubDisabledReason && !liveUrl && !figmaUrl)
+    return null
 
   return (
     <div
@@ -63,18 +68,23 @@ export function DetailExternalLinks({
       )}
       {githubUrl && (
         <LinkPill href={githubUrl} accentColor={accentColor} label="GitHub">
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z" />
-          </svg>
+          <GithubIcon />
         </LinkPill>
       )}
+      {!githubUrl && githubDisabledReason && (
+        <DisabledLinkPill reason={githubDisabledReason} label="GitHub">
+          <GithubIcon />
+        </DisabledLinkPill>
+      )}
     </div>
+  )
+}
+
+function GithubIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z" />
+    </svg>
   )
 }
 
@@ -113,5 +123,52 @@ function LinkPill({ href, accentColor, label, children }: LinkPillProps) {
       {children}
       {label}
     </a>
+  )
+}
+
+interface DisabledLinkPillProps {
+  reason: string
+  label: string
+  children: ReactNode
+}
+
+// 소스 비공개 등으로 실제 링크는 없지만 이유를 알려주고 싶은 경우의 pill.
+// LinkPill과 같은 톤이되 클릭 이동은 하지 않고, hover/focus 시 위로 사유
+// 툴팁을 띄운다. 키보드 사용자도 접근 가능하도록 버튼으로 만들고 focus에도
+// 반응시킨다.
+function DisabledLinkPill({ reason, label, children }: DisabledLinkPillProps) {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        aria-describedby="github-disabled-tooltip"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onFocus={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
+        style={{
+          fontFamily: "var(--font-mono)",
+          color: "rgba(12,15,26,0.4)",
+          borderColor: "rgba(12,15,26,0.12)",
+        }}
+        className="flex cursor-default items-center gap-1.5 rounded-full border bg-white/45 backdrop-blur-sm px-3 py-1.5 text-xs uppercase tracking-[0.04em] select-none"
+      >
+        {children}
+        {label}
+      </button>
+      <div
+        id="github-disabled-tooltip"
+        role="tooltip"
+        style={{
+          fontFamily: "var(--font-body)",
+          opacity: hovered ? 1 : 0,
+        }}
+        className="pointer-events-none absolute bottom-full right-0 mb-2 w-56 rounded-lg border border-[#0C0F1A]/10 bg-white/95 backdrop-blur-sm px-3 py-2 text-[11px] leading-relaxed text-[#0C0F1A]/70 shadow-lg transition-opacity duration-200"
+      >
+        {reason}
+      </div>
+    </div>
   )
 }

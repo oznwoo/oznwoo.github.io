@@ -264,6 +264,7 @@ export function ProjectDetailView({
           항상 떠 있어 어느 페이지에서든 바로 이동할 수 있다. */}
       <DetailExternalLinks
         githubUrl={detail.githubUrl}
+        githubDisabledReason={detail.githubDisabledReason}
         liveUrl={detail.liveUrl}
         figmaUrl={detail.figmaUrl}
         accentColor={accentColor}
